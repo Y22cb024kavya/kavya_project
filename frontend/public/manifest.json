@@ -1,0 +1,10 @@
+{
+  "name": "VOKTAA Solutions",
+  "short_name": "VOKTAA",
+  "description": "Soft skills and communication training academy",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#071527",
+  "background_color": "#FAF7F2",
+  "icons": []
+}

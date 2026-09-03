@@ -1,0 +1,141 @@
+{
+  "project_context": {
+    "brand_name": "VOKTAA Solutions",
+    "tagline": "Speak. Shine. Succeed.",
+    "brand_line": "Every Voice Has An Ascent.",
+    "founder": "P. RAJA SEKHAR",
+    "industry": "Soft Skills, CRT Training, Professional Etiquette",
+    "target_audience": "Students, Corporate Professionals, Institutions in AP, India",
+    "design_ethos": "Awwwards Site-of-the-Day level. Premium, structured, high-contrast, motion-rich, authoritative. A hybrid of luxury editorial and high-performance corporate architecture."
+  },
+  "colors": {
+    "primary_navy": "#0B1F3D",
+    "deep_navy": "#071527",
+    "gold_accent": "#D9A23B",
+    "light_gold": "#F2C46D",
+    "page_background_ivory": "#FAF7F2",
+    "white": "#FFFFFF",
+    "body_text": "#1C2430",
+    "whatsapp_green": "#25D366"
+  },
+  "typography": {
+    "font_families": {
+      "headings": "Space Grotesk, sans-serif",
+      "body": "Inter, sans-serif",
+      "labels_stats": "'IBM Plex Mono', monospace"
+    },
+    "scale": {
+      "h1_hero": "text-5xl md:text-7xl font-bold tracking-tighter leading-[0.9]",
+      "h2_section": "text-4xl md:text-5xl font-bold tracking-tight leading-tight",
+      "h3_card": "text-2xl font-bold tracking-tight",
+      "body_large": "text-lg md:text-xl leading-relaxed text-[#1C2430]",
+      "body_standard": "text-base leading-relaxed text-[#1C2430]",
+      "labels": "text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-[#D9A23B]",
+      "stats_numbers": "text-4xl md:text-6xl font-bold tracking-tighter text-[#D9A23B]"
+    },
+    "rules": {
+      "headings": "Must be Space Grotesk, Bold. Use wide letter-spacing on subheadings only.",
+      "labels": "Must be IBM Plex Mono, uppercase, widely tracked (tracking-[0.2em]).",
+      "body": "Must be Inter, regular weight. Do not use Inter for headings."
+    }
+  },
+  "spacing_and_layout": {
+    "section_padding": "py-24 md:py-32",
+    "container_padding": "px-6 md:px-12 max-w-7xl mx-auto",
+    "grid_system": "Use 12-column bento grids for high-density areas. Use asymmetric 4-column spans for visual tension on marketing pages.",
+    "alternating_sections": "Strict rhythm: deep_navy -> page_background_ivory -> white. Ensure high contrast at the borders."
+  },
+  "component_styling": {
+    "border_radius": "Sharp edges. Use maximum `rounded-md` (4-6px). STRICTLY NO PILL SHAPES.",
+    "cards": {
+      "base": "bg-white or bg-[#0B1F3D] depending on section. 1px subtle border border-black/5 or border-white/10.",
+      "signature_accent": "EVERY card MUST have a 3px top-border of gold (#D9A23B) via `border-t-[3px] border-t-[#D9A23B]`.",
+      "shadow": "Subtle ambient shadow: `shadow-[0_8px_30px_rgba(0,0,0,0.04)]`"
+    },
+    "buttons": {
+      "primary": "bg-[#D9A23B] text-[#071527] font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-[4px] hover:bg-[#F2C46D] transition-colors duration-300",
+      "secondary": "border border-[#D9A23B] text-[#D9A23B] uppercase tracking-wider text-sm px-8 py-4 rounded-[4px] hover:bg-[#D9A23B] hover:text-[#071527] transition-colors duration-300"
+    },
+    "navbar": {
+      "behavior": "Sticky top-0, z-50",
+      "styling": "bg-[#071527]/90 backdrop-blur-xl border-b border-white/10. Logo text with gold gradient `bg-clip-text text-transparent bg-gradient-to-r from-[#D9A23B] to-[#F2C46D]`.",
+      "cta": "Gold CTA button on the right."
+    },
+    "whatsapp_button": {
+      "styling": "Fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer"
+    }
+  },
+  "motion_and_animation": {
+    "libraries": ["framer-motion", "lenis"],
+    "scrolling": "Implement @studio-freight/react-lenis for premium momentum scrolling. This is MANDATORY for the 'Awwwards' feel.",
+    "kinetic_hero_text": {
+      "effect": "Masked line-by-line reveal.",
+      "implementation": "Wrap lines in `overflow-hidden`. Use framer-motion to translate Y from `100%` to `0%` with a custom easing cubic-bezier(0.76, 0, 0.24, 1) over 1.2s."
+    },
+    "scroll_reveals": "Use `whileInView` framer-motion triggers. Subtle Y-axis translation (`y: 40` to `y: 0`) and opacity fade in (`opacity: 0` to `1`). Add staggered delays (e.g., `staggerChildren: 0.1`) for grids.",
+    "marquee": "Use react-fast-marquee. Slow, editorial drift. IBM Plex Mono, uppercase, light gold on deep navy background. Content: 'SPEAK. SHINE. SUCCEED. • EVERY VOICE HAS AN ASCENT • '",
+    "parallax_moment": "Apply subtle `useScroll` and `useTransform` from framer-motion on hero background elements and the founder photo to move at 0.5x scroll speed."
+  },
+  "hero_art_direction": {
+    "background": "Deep navy (#071527) with a gold dot-grid / radial dot pattern texture (opacity 10-15%).",
+    "typography": "Massive 'Every voice has an' (White) + 'ascent.' (Gold #D9A23B). Masked line reveal.",
+    "graphics": "Animated gold ascending growth-curve SVG intersecting behind the text. Path length animation using framer-motion (`strokeDasharray`, `strokeDashoffset`).",
+    "layout": "Bottom of hero should feature a high-contrast stats bar traversing the full width."
+  },
+  "image_treatment_and_urls": {
+    "rules": "Real product photography. Apply a 'spotlight' effect (radial gradient overlay) or 'clipped frames' (sharp rectangular masks with slight offset borders).",
+    "founder_photo": {
+      "url": "https://images.unsplash.com/photo-1764545973653-94c40d993495",
+      "treatment": "Place in a sharp rectangular frame. Use a gold 3px top border on the container. Add a subtle grayscale filter that transitions to full color on hover."
+    },
+    "training_culture": {
+      "urls": [
+        "https://images.pexels.com/photos/7648050/pexels-photo-7648050.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "https://images.pexels.com/photos/16970130/pexels-photo-16970130.jpeg"
+      ],
+      "treatment": "Clipped rectangular frames overlapping slightly, casting subtle shadows on the ivory background."
+    },
+    "programs_preview": {
+      "urls": [
+        "https://images.pexels.com/photos/15721718/pexels-photo-15721718.jpeg"
+      ],
+      "treatment": "Use inside cards with sharp 4px radius and gold top border."
+    }
+  },
+  "page_specific_features": {
+    "Home": {
+      "voktaa_acronym_strip": "6 vertical or horizontal letter cards on dark navy, revealing on scroll.",
+      "the_voktaa_edge": "5 numbered cards on ivory background.",
+      "4e_model": "Horizontal 4-step timeline on dark navy. Connecting gold line must animate width on scroll using framer-motion.",
+      "quotes_grid": "2x2 bento grid on ivory."
+    },
+    "About": {
+      "origin_story": "Large editorial pull-quote with a solid 4px gold left-border.",
+      "manifesto": "Numbered chapters using massive Space Grotesk numbers (opacity-20 watermark style) behind IBM Plex Mono text.",
+      "vision_mission": "Sharp dark navy boxes placed asymmetrically."
+    },
+    "Programs": {
+      "program_cards": "Detailed cards for Little Voices, Speak Bold, Launchpad 360. Include level badges and module bento grids."
+    },
+    "Contact": {
+      "layout": "Split layout. Dark navy info card on left, white enquiry form on right. Form must use strict rectangular inputs, no rounded pills. Focus state: `ring-1 ring-[#D9A23B] border-transparent`."
+    }
+  },
+  "admin_dashboard_styling": {
+    "theme": "Clean premium data cockpit. Must feel like a high-end financial terminal. Avoid basic SaaS looks.",
+    "background": "Deep navy (#071527) for sidebar, #FAF7F2 (ivory) for main content area to reduce eye strain for admins.",
+    "typography": "High legibility. Space Grotesk for metric totals, Inter for tables, IBM Plex Mono for timestamps and labels.",
+    "cards": "White background, sharp edges (4px), 3px gold top border. Use Shadcn UI charts customized with brand colors (#0B1F3D, #D9A23B).",
+    "metrics": "Display Cards for: Visits, Form Submissions, Contact Clicks, Program-Choice breakdown."
+  },
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Strictly honor the mandated colors and fonts. DO NOT introduce new colors outside the brand palette.",
+    "DO NOT use generic centered layouts. Emphasize asymmetry and editorial grid structures.",
+    "Every card MUST have the signature 3px gold top border. This is non-negotiable.",
+    "Use framer-motion for ALL scroll reveals. Static elements are forbidden on marketing pages.",
+    "Ensure lenis is configured in the root layout for smooth scrolling.",
+    "All interactive elements (buttons, form inputs) must have `data-testid` attributes (e.g., `data-testid=\"contact-submit-button\"`).",
+    "Maintain strict border-radius limits (max 6px). NO pill-shaped buttons or input fields.",
+    "Avoid using `transparent` for the navbar. Use `bg-[#071527]/90 backdrop-blur-xl`."
+  ]
+}

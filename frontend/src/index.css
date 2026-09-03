@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 40 33% 98%;
+  --foreground: 213 22% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 213 22% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 213 22% 15%;
+  --primary: 214 71% 14%;
+  --primary-foreground: 40 33% 98%;
+  --secondary: 40 20% 94%;
+  --secondary-foreground: 214 71% 14%;
+  --muted: 40 20% 94%;
+  --muted-foreground: 213 12% 40%;
+  --accent: 194 68% 48%;
+  --accent-foreground: 214 71% 14%;
+  --destructive: 0 72% 45%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 213 15% 88%;
+  --input: 213 15% 88%;
+  --ring: 194 68% 48%;
+  --chart-1: 214 71% 14%;
+  --chart-2: 194 68% 48%;
+  --chart-3: 194 60% 63%;
+  --chart-4: 213 22% 35%;
+  --chart-5: 194 30% 78%;
+  --radius: 1rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #FAF7F2;
+  color: #1C2430;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-mono, code {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Selection */
+::selection {
+  background: #27A9CC;
+  color: #071527;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #071527; }
+::-webkit-scrollbar-thumb { background: #27A9CC; }
+::-webkit-scrollbar-thumb:hover { background: #62C1DE; }
+
+/* Signature gold top-border card */
+.card-gold {
+  border-top: 3px solid #27A9CC;
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
+}
+.card-gold:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -12px rgba(11,31,61,0.22);
+}
+
+/* Gold dot-grid texture */
+.dot-grid {
+  background-image: radial-gradient(rgba(39,169,204,0.28) 1.2px, transparent 1.2px);
+  background-size: 26px 26px;
+}
+.dot-grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, #000 20%, transparent 75%);
+}
+
+/* Line reveal mask */
+.reveal-mask { overflow: hidden; display: block; }
+
+/* Marquee vertical safe */
+.marquee-item { white-space: nowrap; }
+
+/* Focus ring for inputs */
+.input-brand {
+  background: #ffffff;
+  border: 1px solid #d8d2c6;
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input-brand:focus {
+  outline: none;
+  border-color: #27A9CC;
+  box-shadow: 0 0 0 3px rgba(39,169,204,0.18);
+}
+
+@layer base {
+  [data-debug-wrapper="true"] { display: contents !important; }
+}
