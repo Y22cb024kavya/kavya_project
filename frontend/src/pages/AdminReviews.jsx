@@ -8,7 +8,7 @@ const STATUS_TABS = ["pending", "approved", "rejected", "all"];
 const Stars = ({ v }) => (
   <div className="flex items-center gap-0.5">
     {[1, 2, 3, 4, 5].map((i) => (
-      <Star key={i} size={14} className={i <= v ? "text-gold fill-gold" : "text-gold/25"} />
+      <Star key={i} size={14} className={i <= v ? "text-purple-600 fill-purple-600" : "text-purple-200"} />
     ))}
   </div>
 );
@@ -32,7 +32,7 @@ const AdminReviews = () => {
   useEffect(() => {
     if (!getToken()) { navigate("/admin/login"); return; }
     load();
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setStatus = async (id, status) => {
@@ -57,17 +57,17 @@ const AdminReviews = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ivory" data-testid="admin-reviews">
-      <header className="bg-navy-deep border-b border-gold/20">
+    <div className="min-h-screen bg-purple-50/30" data-testid="admin-reviews">
+      <header className="bg-purple-950 border-b border-purple-800/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
           <div>
-            <span className="font-heading font-bold text-xl tracking-[0.18em] bg-clip-text text-transparent bg-gradient-to-r from-gold to-gold-light">VOKTAA</span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/50 ml-3">Reviews Moderation</span>
+            <span className="font-heading font-bold text-xl tracking-[0.18em] text-white">VOKTAA</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-purple-300 ml-3">Reviews Moderation</span>
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/admin")} className="flex items-center gap-2 text-white/70 hover:text-gold font-mono text-xs uppercase tracking-wider"><ArrowLeft size={14} /> Analytics</button>
-            <button onClick={load} className="flex items-center gap-2 text-white/70 hover:text-gold font-mono text-xs uppercase tracking-wider" data-testid="admin-reviews-refresh"><RefreshCw size={14} /> Refresh</button>
-            <button onClick={logout} className="flex items-center gap-2 bg-gold text-navy-deep font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded-xl hover:bg-gold-light transition-colors"><LogOut size={14} /> Logout</button>
+            <button onClick={() => navigate("/admin")} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider"><ArrowLeft size={14} /> Analytics</button>
+            <button onClick={load} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-reviews-refresh"><RefreshCw size={14} /> Refresh</button>
+            <button onClick={logout} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded-xl hover:shadow-lg transition-all"><LogOut size={14} /> Logout</button>
           </div>
         </div>
       </header>
@@ -106,7 +106,7 @@ const AdminReviews = () => {
                   <div>
                     <div className="flex items-center gap-3 flex-wrap">
                       <p className="font-heading font-bold text-navy">{r.name}</p>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink/50 bg-ivory px-2 py-1 rounded-md">{r.role || "—"}</span>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink/50 bg-ivory px-2 py-1 rounded-md">{r.role || "-"}</span>
                       <span className={`font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1 rounded-md ${
                         r.status === "approved" ? "bg-green-100 text-green-800"
                         : r.status === "rejected" ? "bg-red-100 text-red-700"
@@ -114,7 +114,7 @@ const AdminReviews = () => {
                       }`}>{r.status}</span>
                     </div>
                     <p className="text-ink/60 text-xs mt-1">
-                      {r.organisation || "—"} · {r.program || "—"} · <span className="font-mono">{r.email}</span>
+                      {r.organisation || "-"} · {r.program || "-"} · <span className="font-mono">{r.email}</span>
                       {r.phone && <> · <span className="font-mono">{r.phone}</span></>}
                     </p>
                   </div>

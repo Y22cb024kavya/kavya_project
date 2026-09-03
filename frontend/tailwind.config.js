@@ -8,21 +8,35 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['"Space Grotesk"', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        heading: ['"Montserrat"', 'sans-serif'],
+        body: ['"Open Sans"', '"Lato"', 'sans-serif'],
+        nav: ['Arial', 'Helvetica', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'monospace'],
       },
       colors: {
+        purple: {
+          DEFAULT: '#6C5CE7',
+          deep: '#1E1B4B',
+          dark: '#5B46F6',
+          light: '#8B5CF6',
+          soft: '#F5F3FF',
+          border: '#DDD6FE',
+        },
+        lavender: {
+          DEFAULT: '#E0E7FF',
+          light: '#F0F3FF',
+          border: '#DDD6FE',
+        },
         navy: {
-          DEFAULT: '#0B1F3D',
-          deep: '#071527',
+          DEFAULT: '#1E1B4B',
+          deep: '#0F0C31',
         },
         gold: {
-          DEFAULT: '#27A9CC',
-          light: '#62C1DE',
+          DEFAULT: '#6C5CE7',
+          light: '#8B5CF6',
         },
-        ivory: '#FAF7F2',
-        ink: '#1C2430',
+        ivory: '#F8F7FF',
+        ink: '#2E2A72',
         whatsapp: '#25D366',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

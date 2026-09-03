@@ -183,7 +183,7 @@ def test_admin_review_approve_flow(api, auth_headers):
     r = api.post(f"{BASE_URL}/api/reviews", json=payload)
     assert r.status_code == 200
 
-    # list via admin — find it
+    # list via admin: find it
     lr = api.get(f"{BASE_URL}/api/admin/reviews", headers=auth_headers)
     assert lr.status_code == 200
     items = lr.json()
@@ -198,7 +198,7 @@ def test_admin_review_approve_flow(api, auth_headers):
     pr = api.patch(f"{BASE_URL}/api/admin/reviews/{rid}", json={"status": "approved"}, headers=auth_headers)
     assert pr.status_code == 200
 
-    # appears in public list now (by name — email is scrubbed)
+    # appears in public list now (by name: email is scrubbed)
     public = api.get(f"{BASE_URL}/api/reviews").json()
     assert any(x.get("name") == payload["name"] and x.get("id") == rid for x in public)
 

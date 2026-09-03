@@ -1,32 +1,30 @@
 import React, { useEffect } from "react";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2, Building2, Users2, School, ShieldCheck } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
 import { SectionLabel, PageHero, GoldLink, OutlineLink } from "../components/shared";
 
 const whyPoints = [
-  "Industry-focused learning",
-  "Experienced trainers",
-  "Practical, activity-based methodology",
-  "Customised programmes for your student profile",
-  "Student-centred approach",
-  "Measurable learning outcomes",
-  "Strong academic and industry partnerships",
-  "Commitment to continuous improvement",
+  "Customised curriculum matching student skill levels and target companies",
+  "Pre- and post-training assessments with detailed feedback reports",
+  "Activity-driven methodology focused on practice, not passive listening",
+  "Experienced trainers with industry and corporate backgrounds",
+  "Flexible delivery options: on-campus, hybrid, or online workshops",
+  "End-to-end management, from schedule alignment to progress tracking",
 ];
 
 const steps = [
-  { n: "01", t: "Consultation", d: "We understand your student profile, placement goals, and academic calendar." },
-  { n: "02", t: "Needs Assessment", d: "We identify the specific communication and employability gaps to address." },
-  { n: "03", t: "Programme Design", d: "Sessions are built around your institution's timeline and student strengths." },
-  { n: "04", t: "Delivery", d: "On-campus, hands-on, activity-based training." },
-  { n: "05", t: "Feedback & Outcomes", d: "Post-programme review shared with your placement or training cell." },
+  { n: "01", t: "Initial Consultation", d: "Understanding your student profile, placement goals, and schedule." },
+  { n: "02", t: "Needs Assessment", d: "Evaluating current skill levels to benchmark progress." },
+  { n: "03", t: "Custom Proposal", d: "Designing a module with clear learning outcomes and schedule." },
+  { n: "04", t: "Program Delivery", d: "Interactive, activity-driven sessions led by senior trainers." },
+  { n: "05", t: "Feedback & Report", d: "Post-training assessment and cell recommendations." },
 ];
 
-const audiences = [
-  { t: "Educational Institutions", items: ["Engineering colleges", "Degree colleges & universities", "Polytechnics"] },
-  { t: "Students", items: ["Undergraduates & final-years", "Fresh graduates", "Job aspirants"] },
-  { t: "Corporate Organisations", items: ["HR teams", "L&D departments", "Managers & employees"] },
-  { t: "Government & Agencies", items: ["Skill missions", "Training institutes", "NGOs"] },
+const serveList = [
+  { icon: School, t: "Engineering & Degree Colleges", d: "CRT, soft skills, interview prep, and career readiness." },
+  { icon: Building2, t: "Universities & Autonomous Institutions", d: "Multi-batch programmes and faculty development." },
+  { icon: Users2, t: "Corporate L&D Teams", d: "Communication, etiquette, and leadership for employees." },
+  { icon: ShieldCheck, t: "Government & Skill Missions", d: "Employability drives and train-the-trainer initiatives." },
 ];
 
 const Institutions = () => {
@@ -37,13 +35,13 @@ const Institutions = () => {
       <PageHero
         testid="institutions-hero"
         label="For Institutions"
-        title="Build a placement-ready,"
+        title="Partner with us to build an"
         gold="industry-confident student body."
         subtitle="A partnership designed for Training & Placement Officers, HR heads, and academic decision-makers who want measurable results, not just a workshop."
       />
 
-      <section className="bg-navy-deep py-14 relative overflow-hidden">
-        <div className="absolute inset-0 dot-grid dot-grid-fade opacity-40" />
+      <section className="bg-purple-950 py-12 relative overflow-hidden">
+        <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 text-center">
           <GoldLink to="/contact" track={{ category: "cta", label: "invite-demo-institutions" }} data-testid="invite-demo-button">
             Invite Us for a Free Demo <ArrowRight size={18} className="ml-2" />
@@ -52,19 +50,18 @@ const Institutions = () => {
       </section>
 
       {/* WHY CHOOSE US */}
-      <section className="bg-ivory py-24 md:py-32">
+      <section className="bg-purple-50/40 py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Reveal><SectionLabel className="block mb-3">Why Institutions Choose Us</SectionLabel></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="font-heading font-bold text-navy text-4xl md:text-5xl tracking-tight mb-3">What partnering with VOKTAA looks like</h2>
+            <h2 className="font-heading font-bold text-purple-950 text-4xl md:text-5xl tracking-tight mb-12">What partnering with VOKTAA looks like</h2>
           </Reveal>
-          <div className="w-12 h-[3px] bg-gold mb-14" />
           <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {whyPoints.map((p, i) => (
               <StaggerItem key={i}>
-                <div className="flex items-start gap-4 bg-white border border-black/5 border-t-[3px] border-t-gold p-5 rounded-xl">
-                  <CheckCircle2 size={20} className="text-gold mt-0.5 shrink-0" />
-                  <span className="text-ink/85">{p}</span>
+                <div className="flex items-start gap-4 bg-white border border-purple-100 border-t-[3px] border-t-purple-600 p-5 rounded-2xl shadow-sm">
+                  <CheckCircle2 size={20} className="text-purple-600 mt-0.5 shrink-0" />
+                  <span className="text-purple-950/85 font-medium">{p}</span>
                 </div>
               </StaggerItem>
             ))}
@@ -73,25 +70,24 @@ const Institutions = () => {
       </section>
 
       {/* HOW WE WORK */}
-      <section className="bg-white py-24 md:py-32">
+      <section className="bg-white py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Reveal><SectionLabel className="block mb-3">How We Work</SectionLabel></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="font-heading font-bold text-navy text-4xl md:text-5xl tracking-tight mb-3">A five-step engagement, start to finish</h2>
+            <h2 className="font-heading font-bold text-purple-950 text-4xl md:text-5xl tracking-tight mb-14">A five-step engagement, start to finish</h2>
           </Reveal>
-          <div className="w-12 h-[3px] bg-gold mb-14" />
 
           <div className="relative">
-            <div className="hidden md:block absolute top-8 left-0 right-0 h-[2px] bg-gold/40" />
+            <div className="hidden md:block absolute top-8 left-0 right-0 h-[2px] bg-purple-200" />
             <StaggerGroup className="grid grid-cols-1 md:grid-cols-5 gap-8">
               {steps.map((s, i) => (
                 <StaggerItem key={i}>
                   <div className="relative">
-                    <div className="w-16 h-16 rounded-full bg-gold text-navy-deep flex items-center justify-center font-heading font-bold text-lg relative z-10">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex items-center justify-center font-heading font-bold text-lg relative z-10 shadow-lg shadow-purple-500/25">
                       {s.n}
                     </div>
-                    <h3 className="font-heading font-bold text-lg text-navy mt-5">{s.t}</h3>
-                    <p className="text-ink/70 text-sm mt-2 leading-relaxed">{s.d}</p>
+                    <h3 className="font-heading font-bold text-lg text-purple-950 mt-5">{s.t}</h3>
+                    <p className="text-purple-900/70 text-sm mt-2 leading-relaxed">{s.d}</p>
                   </div>
                 </StaggerItem>
               ))}
@@ -101,25 +97,19 @@ const Institutions = () => {
       </section>
 
       {/* WHO WE SERVE */}
-      <section className="bg-ivory py-24 md:py-32">
+      <section className="bg-purple-50/40 py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Reveal><SectionLabel className="block mb-3">Who We Serve</SectionLabel></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="font-heading font-bold text-navy text-4xl md:text-5xl tracking-tight mb-3">Trusted across education, industry, and government</h2>
+            <h2 className="font-heading font-bold text-purple-950 text-4xl md:text-5xl tracking-tight mb-12">Trusted across education, industry, and government</h2>
           </Reveal>
-          <div className="w-12 h-[3px] bg-gold mb-14" />
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {audiences.map((a, i) => (
+          <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {serveList.map((s, i) => (
               <StaggerItem key={i}>
-                <div className="card-gold bg-white border border-black/5 p-8 h-full rounded-xl">
-                  <h3 className="font-heading font-bold text-xl text-navy">{a.t}</h3>
-                  <ul className="mt-4 space-y-2">
-                    {a.items.map((x, j) => (
-                      <li key={j} className="flex items-start gap-3 text-ink/75 text-sm">
-                        <span className="text-gold mt-1">→</span>{x}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="card-purple bg-white border border-purple-100 p-7 h-full rounded-2xl shadow-sm">
+                  <div className="w-12 h-12 flex items-center justify-center bg-purple-100 text-purple-600 rounded-xl"><s.icon size={22} /></div>
+                  <h3 className="font-heading font-bold text-lg text-purple-950 mt-5 leading-tight">{s.t}</h3>
+                  <p className="text-purple-900/70 text-sm mt-3 leading-relaxed">{s.d}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -127,32 +117,27 @@ const Institutions = () => {
         </div>
       </section>
 
-      {/* PARTNER INSTITUTIONS */}
-      <section className="bg-navy-deep py-24 md:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 dot-grid dot-grid-fade opacity-40" />
-        <div className="relative max-w-7xl mx-auto px-6 md:px-12">
-          <Reveal><SectionLabel dark className="block mb-3">Our Network</SectionLabel></Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="font-heading font-bold text-white text-3xl md:text-4xl tracking-tight mb-3">Growing our campus network</h2>
+      {/* NETWORK / GEOGRAPHY */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <Reveal>
+            <div className="card-purple bg-gradient-to-br from-purple-900 to-indigo-950 p-10 md:p-14 rounded-3xl text-white relative overflow-hidden shadow-xl">
+              <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
+              <div className="relative max-w-3xl">
+                <SectionLabel dark className="block mb-3">Reach &amp; Network</SectionLabel>
+                <h3 className="font-heading font-bold text-white text-3xl md:text-4xl tracking-tight">
+                  Headquartered in Guntur, serving institutions across India.
+                </h3>
+                <p className="text-purple-200/80 text-lg mt-4 leading-relaxed">
+                  While our primary training footprint spans Andhra Pradesh and Telangana, VOKTAA SOLUTIONS delivers
+                  programmes nationwide through on-campus deployments and hybrid formats.
+                </p>
+                <div className="mt-8">
+                  <GoldLink to="/contact" track={{ category: "cta", label: "start-conversation-inst" }}>Start a Conversation <ArrowRight size={18} className="ml-2" /></GoldLink>
+                </div>
+              </div>
+            </div>
           </Reveal>
-          <div className="w-12 h-[3px] bg-gold mb-10" />
-          <div className="border border-dashed border-white/20 rounded-xl p-10 text-center">
-            <p className="text-white/60 font-mono text-xs uppercase tracking-[0.2em]">
-              Partner institution logos will appear here as our campus network grows.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA BANNER */}
-      <section className="bg-white py-20 md:py-24">
-        <div className="max-w-5xl mx-auto px-6 md:px-12">
-          <div className="card-gold bg-ivory border border-black/5 p-10 md:p-14 rounded-2xl text-center">
-            <h2 className="font-heading font-bold text-navy text-3xl md:text-4xl tracking-tight">
-              Invite VOKTAA SOLUTIONS for a <span className="text-gold">free demo session</span> on your campus.
-            </h2>
-            <div className="mt-8"><GoldLink to="/contact" track={{ category: "cta", label: "institutions-get-in-touch" }}>Get in Touch <ArrowRight size={18} className="ml-2" /></GoldLink></div>
-          </div>
         </div>
       </section>
     </>

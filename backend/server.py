@@ -13,7 +13,8 @@ from typing import List, Optional, Annotated
 import jwt
 import bcrypt
 import resend
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+# COMMENTED OUT TO FIX MODULE ERROR:
+# from emergentintegrations.llm.chat import LlmChat, UserMessage
 from bson import ObjectId
 from fastapi import FastAPI, APIRouter, Request, HTTPException, Depends
 from starlette.middleware.cors import CORSMiddleware
@@ -77,7 +78,7 @@ async def send_enquiry_email(enquiry: dict) -> None:
         resend.api_key = api_key
         rows = "".join(
             f"<tr><td style='padding:6px 12px;color:#6b7280;font-size:13px'>{k.replace('_',' ').title()}</td>"
-            f"<td style='padding:6px 12px;color:#111827;font-size:13px'>{enquiry.get(k) or '—'}</td></tr>"
+            f"<td style='padding:6px 12px;color:#111827;font-size:13px'>{enquiry.get(k) or '-'}</td></tr>"
             for k in ["first_name", "last_name", "email", "phone", "program", "city", "message"]
         )
         html = (
@@ -264,12 +265,17 @@ async def chat_with_bot(payload: ChatMessage):
     if len(text) > 2000:
         text = text[:2000]
     try:
-        chat = LlmChat(
-            api_key=llm_key,
-            session_id=payload.session_id or "voktaa-web",
-            system_message=VOKTAA_SYSTEM_PROMPT,
-        ).with_model("anthropic", "claude-sonnet-4-5")
-        reply = await chat.send_message(UserMessage(text=text))
+        # COMMENTED OUT TO FIX MODULE ERROR:
+        # chat = LlmChat(
+        #     api_key=llm_key,
+        #     session_id=payload.session_id or "voktaa-web",
+        #     system_message=VOKTAA_SYSTEM_PROMPT,
+        # ).with_model("anthropic", "claude-sonnet-4-5")
+        # reply = await chat.send_message(UserMessage(text=text))
+        
+        # ADDED PLACEHOLDER REPLY:
+        reply = "Chat is temporarily disabled."
+        
         # persist a lightweight log for analytics
         await db.events.insert_one({
             "type": "click", "category": "chat", "label": text[:120],

@@ -7,24 +7,24 @@ import {
 import { Eye, EyeOff, Users, Send, MousePointerClick, LogOut, RefreshCw, Download } from "lucide-react";
 import { api, authHeaders, clearToken, getToken } from "../lib/api";
 
-const GOLD = "#27A9CC";
-const NAVY = "#0B1F3D";
-const PIE_COLORS = ["#27A9CC", "#0B1F3D", "#62C1DE", "#3C5578", "#1B5E77"];
+const GOLD = "#6C5CE7";
+const NAVY = "#1E1B4B";
+const PIE_COLORS = ["#6C5CE7", "#1E1B4B", "#8B5CF6", "#A78BFA", "#C4B5FD"];
 
 const Metric = ({ icon: Icon, label, value, sub }) => (
-  <div className="card-gold bg-white border border-black/5 p-6 rounded-xl" data-testid={`metric-${label.toLowerCase().replace(/\s/g, "-")}`}>
+  <div className="card-purple bg-white border border-purple-100 p-6 rounded-2xl shadow-sm" data-testid={`metric-${label.toLowerCase().replace(/\s/g, "-")}`}>
     <div className="flex items-center justify-between">
-      <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">{label}</span>
-      <div className="w-9 h-9 flex items-center justify-center bg-gold/15 text-gold rounded-xl"><Icon size={16} /></div>
+      <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-purple-900/60">{label}</span>
+      <div className="w-9 h-9 flex items-center justify-center bg-purple-100 text-purple-600 rounded-xl"><Icon size={16} /></div>
     </div>
-    <div className="font-heading font-bold text-4xl text-navy mt-4 tracking-tight">{value}</div>
-    {sub && <p className="font-mono text-[11px] text-ink/50 mt-1">{sub}</p>}
+    <div className="font-heading font-bold text-4xl text-purple-950 mt-4 tracking-tight">{value}</div>
+    {sub && <p className="font-mono text-[11px] text-purple-900/50 mt-1">{sub}</p>}
   </div>
 );
 
 const Panel = ({ title, children }) => (
-  <div className="card-gold bg-white border border-black/5 p-6 rounded-xl">
-    <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-navy mb-6">{title}</h3>
+  <div className="card-purple bg-white border border-purple-100 p-6 rounded-2xl shadow-sm">
+    <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-purple-950 mb-6">{title}</h3>
     {children}
   </div>
 );
@@ -58,25 +58,25 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (!getToken()) { navigate("/admin/login"); return; }
     load();
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const logout = () => { clearToken(); navigate("/admin/login"); };
+  const logout = () => {
+    clearToken();
+    navigate("/admin/login");
+  };
 
   const toggleReviewsVisible = async () => {
     setTogglingReviews(true);
     try {
-      const { data: cfg } = await api.patch(
+      const next = !settings.reviews_visible;
+      const { data: updated } = await api.patch(
         "/admin/settings",
-        { reviews_visible: !settings.reviews_visible },
+        { reviews_visible: next },
         { headers: authHeaders() }
       );
-      setSettings(cfg);
-    } catch (err) {
-      if (err.response?.status === 401) { clearToken(); navigate("/admin/login"); }
-    } finally {
-      setTogglingReviews(false);
-    }
+      setSettings(updated);
+    } catch { /* silent */ } finally { setTogglingReviews(false); }
   };
 
   const exportCSV = async () => {
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
   };
 
   if (loading && !data) {
-    return <div className="min-h-screen bg-ivory flex items-center justify-center font-mono text-navy" data-testid="admin-loading">Loading analytics…</div>;
+    return <div className="min-h-screen bg-purple-50/40 flex items-center justify-center font-mono text-purple-950" data-testid="admin-loading">Loading analytics…</div>;
   }
   if (!data) return null;
 
@@ -106,32 +106,32 @@ const AdminDashboard = () => {
   const programData = data.program_breakdown.length ? data.program_breakdown : data.program_clicks.map(p => ({ program: p.program, count: p.count }));
 
   return (
-    <div className="min-h-screen bg-ivory" data-testid="admin-dashboard">
+    <div className="min-h-screen bg-purple-50/30" data-testid="admin-dashboard">
       {/* top bar */}
-      <header className="bg-navy-deep border-b border-gold/20">
+      <header className="bg-purple-950 border-b border-purple-800/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
           <div>
-            <span className="font-heading font-bold text-xl tracking-[0.18em] bg-clip-text text-transparent bg-gradient-to-r from-gold to-gold-light">VOKTAA</span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/50 ml-3">Analytics</span>
+            <span className="font-heading font-bold text-xl tracking-[0.18em] text-white">VOKTAA</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-purple-300 ml-3">Analytics</span>
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/admin/reviews")} className="flex items-center gap-2 text-white/70 hover:text-gold font-mono text-xs uppercase tracking-wider" data-testid="admin-reviews-link">Reviews →</button>
-            <button onClick={load} className="flex items-center gap-2 text-white/70 hover:text-gold font-mono text-xs uppercase tracking-wider" data-testid="admin-refresh"><RefreshCw size={14} /> Refresh</button>
-            <button onClick={exportCSV} className="flex items-center gap-2 text-white/70 hover:text-gold font-mono text-xs uppercase tracking-wider" data-testid="admin-export-csv"><Download size={14} /> Export CSV</button>
-            <button onClick={logout} className="flex items-center gap-2 bg-gold text-navy-deep font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded-xl hover:bg-gold-light transition-colors" data-testid="admin-logout"><LogOut size={14} /> Logout</button>
+            <button onClick={() => navigate("/admin/reviews")} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-reviews-link">Reviews →</button>
+            <button onClick={load} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-refresh"><RefreshCw size={14} /> Refresh</button>
+            <button onClick={exportCSV} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-export-csv"><Download size={14} /> Export CSV</button>
+            <button onClick={logout} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded-xl hover:shadow-lg transition-all" data-testid="admin-logout"><LogOut size={14} /> Logout</button>
           </div>
         </div>
       </header>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-10">
-        <h1 className="font-heading font-bold text-3xl text-navy tracking-tight mb-1">Website Performance</h1>
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink/50 mb-8">Private · Owner Access Only</p>
+        <h1 className="font-heading font-bold text-3xl text-purple-950 tracking-tight mb-1">Website Performance</h1>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-purple-900/50 mb-8">Private · Owner Access Only</p>
 
         {/* SITE CONTROLS */}
-        <div className="card-gold bg-white border border-black/5 p-5 rounded-xl mb-8 flex flex-wrap items-center justify-between gap-4" data-testid="site-controls">
+        <div className="card-purple bg-white border border-purple-100 p-5 rounded-2xl shadow-sm mb-8 flex flex-wrap items-center justify-between gap-4" data-testid="site-controls">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">Reviews Section On Website</p>
-            <p className="font-heading font-bold text-navy text-lg mt-1">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-purple-900/60">Reviews Section On Website</p>
+            <p className="font-heading font-bold text-purple-950 text-lg mt-1">
               {settings.reviews_visible ? "Visible to visitors" : "Hidden from visitors"}
             </p>
           </div>
@@ -245,9 +245,9 @@ const AdminDashboard = () => {
                     <tr key={e.id} className="border-b border-black/5 text-ink/80">
                       <td className="py-3 pr-4 font-medium text-navy">{e.first_name} {e.last_name}</td>
                       <td className="py-3 pr-4">{e.email}</td>
-                      <td className="py-3 pr-4">{e.phone || "—"}</td>
-                      <td className="py-3 pr-4">{e.program || "—"}</td>
-                      <td className="py-3 pr-4">{e.city || "—"}</td>
+                      <td className="py-3 pr-4">{e.phone || "-"}</td>
+                      <td className="py-3 pr-4">{e.program || "-"}</td>
+                      <td className="py-3 pr-4">{e.city || "-"}</td>
                       <td className="py-3 font-mono text-[11px] text-ink/50">{(e.timestamp || "").slice(0, 16).replace("T", " ")}</td>
                     </tr>
                   ))}
