@@ -38,16 +38,16 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/95 backdrop-blur-xl border-b border-purple-100 shadow-sm" : "bg-white/80 backdrop-blur-md border-b border-purple-100/40"
+        scrolled ? "bg-white border-b border-purple-100 shadow-sm" : "bg-white border-b border-purple-100/60"
       }`}
       data-testid="navbar"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
-        <Link to="/" onClick={() => setOpen(false)} data-testid="navbar-logo">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 md:h-22 flex items-center justify-between">
+        <Link to="/" onClick={() => setOpen(false)} className="-ml-1 sm:-ml-2 flex items-center" data-testid="navbar-logo">
           <Logo />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-7">
+        <nav className="hidden lg:flex items-center gap-6 lg:gap-7 xl:gap-8">
           {links.map((l) => (
             <NavLink
               key={l.to}
@@ -55,10 +55,10 @@ const Navbar = () => {
               end={l.to === "/"}
               data-testid={`nav-link-${l.label.toLowerCase().replace(/\s+/g, "-")}`}
               className={({ isActive }) =>
-                `font-nav text-[12px] font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap relative py-1 ${
+                `font-nav text-xs sm:text-[13px] md:text-sm font-extrabold uppercase tracking-wider transition-all duration-200 whitespace-nowrap relative py-1.5 ${
                   isActive
-                    ? "text-purple-700 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-purple-600 after:rounded-full"
-                    : "text-purple-950/80 hover:text-purple-900"
+                    ? "text-[#003366] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-[#157082] after:rounded-full"
+                    : "text-[#003366]/80 hover:text-[#157082]"
                 }`
               }
             >
@@ -71,19 +71,19 @@ const Navbar = () => {
           <button
             onClick={goDemo}
             data-testid="navbar-demo-button"
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-xs px-6 py-3 rounded-full shadow-md shadow-purple-500/20 hover:shadow-purple-500/35 hover:scale-[1.02] transition-all duration-300 whitespace-nowrap"
+            className="bg-gradient-to-r from-[#003366] to-[#157082] text-white font-bold uppercase tracking-wider text-xs md:text-sm px-7 py-3.5 rounded-full shadow-md shadow-[#157082]/20 hover:shadow-[#157082]/35 hover:scale-[1.02] transition-all duration-300 whitespace-nowrap"
           >
             Book a Demo →
           </button>
         </div>
 
         <button
-          className="lg:hidden text-purple-900"
+          className="lg:hidden text-[#003366]"
           onClick={() => setOpen((v) => !v)}
           data-testid="navbar-hamburger"
           aria-label="Toggle menu"
         >
-          {open ? <X size={28} /> : <Menu size={28} />}
+          {open ? <X size={32} /> : <Menu size={32} />}
         </button>
       </div>
 
@@ -130,7 +130,7 @@ const Navbar = () => {
             <button
               onClick={goDemo}
               data-testid="mobile-demo-button"
-              className="mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full shadow-lg shadow-purple-500/25 self-start"
+              className="mt-4 bg-gradient-to-r from-[#003366] to-[#157082] text-white font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full shadow-lg shadow-[#157082]/25 self-start"
             >
               Book a Demo →
             </button>

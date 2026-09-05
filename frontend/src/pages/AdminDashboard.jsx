@@ -7,9 +7,9 @@ import {
 import { Eye, EyeOff, Users, Send, MousePointerClick, LogOut, RefreshCw, Download } from "lucide-react";
 import { api, authHeaders, clearToken, getToken } from "../lib/api";
 
-const GOLD = "#6C5CE7";
-const NAVY = "#1E1B4B";
-const PIE_COLORS = ["#6C5CE7", "#1E1B4B", "#8B5CF6", "#A78BFA", "#C4B5FD"];
+const GOLD = "#D9A23B";
+const NAVY = "#0B3943";
+const PIE_COLORS = ["#157082", "#0B3943", "#2F8D9B", "#5FAAB5", "#8FC7CF"];
 
 const Metric = ({ icon: Icon, label, value, sub }) => (
   <div className="card-purple bg-white border border-purple-100 p-6 rounded-2xl shadow-sm" data-testid={`metric-${label.toLowerCase().replace(/\s/g, "-")}`}>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { CheckCircle2, ArrowRight, Award, Sparkles, Handshake, Zap, Lightbulb, ShieldCheck } from "lucide-react";
+import { CheckCircle2, ArrowRight, Award, Sparkles, Handshake, Zap, Lightbulb, ShieldCheck, Mail, User } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem, MaskLine } from "../components/Reveal";
-import { SectionLabel, GoldLink, OutlineLink } from "../components/shared";
+import { SectionLabel, GoldLink, OutlineLink, GlassBubble } from "../components/shared";
 
 const acronym = [
   { l: "V", w: "Voice" },
@@ -35,63 +35,67 @@ const About = () => {
 
   return (
     <>
-      {/* GLASSMORPHIC HERO SECTION MATCHING USER REFERENCE IMAGE media_1788437508822.png */}
-      <section className="relative bg-gradient-to-br from-purple-100/80 via-indigo-50/50 to-cyan-100/60 pt-36 pb-24 md:pt-44 md:pb-32 overflow-hidden border-b border-purple-100/80" data-testid="about-hero">
-        {/* Large Glowing Ambient Spheres/Orbs matching media_1788437508822.png */}
-        <div className="absolute -top-24 -left-24 w-[520px] h-[520px] rounded-full bg-gradient-to-tr from-purple-400/45 via-purple-300/35 to-indigo-300/20 blur-3xl pointer-events-none" />
-        <div className="absolute top-10 -right-20 w-[580px] h-[580px] rounded-full bg-gradient-to-bl from-cyan-400/40 via-sky-300/30 to-indigo-400/25 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-indigo-300/30 blur-3xl pointer-events-none" />
+      {/* GLASSMORPHIC HERO SECTION */}
+      <section className="relative bg-gradient-to-br from-[#F0F5FA] via-[#F2FAFC] to-white pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden border-b border-[#CCE0F5]" data-testid="about-hero">
+        {/* Floating Glassmorphism Bubbles */}
+        <GlassBubble size="w-48 h-48 sm:w-64 sm:h-64" className="-top-10 -left-10" delay={0} duration={7} />
+        <GlassBubble size="w-40 h-40 sm:w-52 sm:h-52" className="top-1/4 -right-10" delay={1.5} duration={6} />
+        <GlassBubble size="w-28 h-28 sm:w-36 sm:h-36" className="bottom-8 left-1/3" delay={3} duration={8} />
+
+        {/* Large Glowing Ambient Spheres/Orbs */}
+        <div className="absolute -top-24 -left-24 w-[520px] h-[520px] rounded-full bg-[#157082]/15 blur-3xl pointer-events-none" />
+        <div className="absolute top-10 -right-20 w-[580px] h-[580px] rounded-full bg-[#003366]/15 blur-3xl pointer-events-none" />
 
         {/* Background Dot Grid */}
         <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto px-6 md:px-12 text-center z-10">
-          <span className="font-mono text-xs uppercase tracking-[0.3em] block mb-5 text-purple-700 font-extrabold">
+          <span className="font-mono text-xs uppercase tracking-wide block mb-5 text-[#157082] font-black">
             About VOKTAA Solutions
           </span>
 
-          <h1 className="font-heading font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08] text-purple-950 mb-4">
+          <h1 className="font-heading font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-[#003366] mb-4">
             <MaskLine>Communication changes</MaskLine>
             <MaskLine
               delay={0.15}
-              className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 drop-shadow-[0_8px_20px_rgba(108,92,231,0.25)]"
+              className="text-transparent bg-clip-text bg-gradient-to-r from-[#003366] via-[#157082] to-[#68CEDB]"
             >
               destinies.
             </MaskLine>
           </h1>
 
-          <p className="text-lg md:text-xl leading-relaxed mt-6 max-w-2xl mx-auto font-medium text-purple-900/80">
+          <p className="text-xl md:text-2xl leading-relaxed mt-6 max-w-2xl mx-auto font-bold text-[#333333] text-center">
             That single observation, made across classrooms, training halls, and placement interviews in Guntur, Andhra Pradesh, is why VOKTAA SOLUTIONS exists.
           </p>
 
-          {/* Glassmorphic Micro-Badge Card */}
-          <div className="mt-8 inline-flex items-center gap-3 bg-white/75 backdrop-blur-2xl border border-white/90 shadow-[0_15px_35px_rgba(108,92,231,0.15)] px-6 py-3 rounded-full text-xs font-mono font-bold text-purple-950 uppercase tracking-widest">
-            <Sparkles size={16} className="text-purple-600" />
+          {/* Glassmorphic Micro-Badge Card (Enlarged Size) */}
+          <div className="mt-10 inline-flex items-center gap-4 bg-white/90 backdrop-blur-2xl border-2 border-[#CCE0F5] shadow-[0_20px_40px_rgba(21,112,130,0.18)] px-8 py-4 sm:px-10 sm:py-5 rounded-full text-sm sm:text-base font-mono font-black text-[#003366] uppercase tracking-widest hover:scale-105 transition-all">
+            <Sparkles size={22} className="text-[#157082]" />
             <span>Empowering Careers & Leadership</span>
           </div>
         </div>
       </section>
 
-      {/* ACRONYM SECTION WITH GLASSMORPHIC GLOW CARDS */}
-      <section className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-950 text-white py-20 md:py-24 relative overflow-hidden" data-testid="acronym-section">
-        {/* Background Ambient Glow Orbs */}
-        <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-[450px] h-[450px] bg-indigo-500/25 rounded-full blur-3xl pointer-events-none" />
+      {/* ACRONYM SECTION WITH BUBBLE GLASS CARDS */}
+      <section className="bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] text-white py-20 md:py-24 relative overflow-hidden" data-testid="acronym-section">
+        {/* Floating Glass Bubbles */}
+        <GlassBubble size="w-36 h-36" className="top-5 left-10" delay={0.5} duration={6} />
+        <GlassBubble size="w-44 h-44" className="bottom-5 right-10" delay={2} duration={8} />
         <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 z-10">
           <Reveal><SectionLabel dark className="block mb-3">The Meaning</SectionLabel></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="font-heading font-extrabold text-white text-3xl md:text-4xl tracking-tight mb-12">
-              What <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300">VOKTAA</span> stands for.
+            <h2 className="font-heading font-extrabold text-white text-3xl md:text-5xl tracking-tight mb-12">
+              What <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-sky-200 to-cyan-300">VOKTAA</span> stands for.
             </h2>
           </Reveal>
-          <StaggerGroup className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <StaggerGroup className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
             {acronym.map((a, i) => (
               <StaggerItem key={i}>
-                <div className="card-purple bg-white/10 backdrop-blur-xl border border-white/20 p-6 h-full flex flex-col items-center text-center rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] hover:bg-white/15 transition-all duration-300 group cursor-pointer">
-                  <span className="font-heading font-black text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-white via-purple-200 to-purple-300 group-hover:scale-110 transition-transform duration-300">{a.l}</span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-purple-200 font-bold mt-3">{a.w}</span>
+                <div className="card-purple bg-white/15 backdrop-blur-2xl border-2 border-white/30 p-6 h-full flex flex-col items-center text-center rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.25)] hover:bg-white/25 hover:border-white/50 transition-all duration-300 group cursor-pointer">
+                  <span className="font-heading font-black text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-teal-200 group-hover:scale-110 transition-transform duration-300">{a.l}</span>
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-teal-200 font-extrabold mt-3">{a.w}</span>
                 </div>
               </StaggerItem>
             ))}
@@ -100,43 +104,44 @@ const About = () => {
       </section>
 
       {/* OUR STORY WITH AMBIENT GLASS CARDS */}
-      <section className="relative bg-gradient-to-b from-white via-purple-50/30 to-purple-100/40 py-20 md:py-28 overflow-hidden" data-testid="story-section">
-        <div className="absolute top-1/3 right-10 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative bg-gradient-to-b from-white via-[#F0F5FA] to-[#F2FAFC] py-20 md:py-24 overflow-hidden" data-testid="story-section">
+        {/* Floating Glass Bubbles */}
+        <GlassBubble size="w-40 h-40" className="top-10 right-12" delay={1} duration={7} />
+        <GlassBubble size="w-32 h-32" className="bottom-12 left-10" delay={2.5} duration={6} />
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-12 items-start z-10">
           <div>
             <Reveal><SectionLabel className="block mb-3">Our Story</SectionLabel></Reveal>
             <Reveal delay={0.05}>
-              <h2 className="font-heading font-bold text-purple-950 text-4xl md:text-5xl tracking-tight leading-tight mb-6">
-                Born from what we saw in the room
+              <h2 className="font-heading font-bold text-[#003366] text-4xl md:text-5xl tracking-tight leading-tight mb-6">
+                Born from what we saw in the classroom
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <div className="space-y-4 text-purple-900/80 text-lg leading-relaxed text-justify font-medium">
-                <p>Some students know more than they can say. Some graduates know exactly what to do but hesitate when asked to speak. Some teachers carry years of knowledge yet struggle to make it travel from their minds to their students. VOKTAA SOLUTIONS began with these realities.</p>
-                <p>We grew out of a simple observation: communication changes destinies: sometimes quietly, sometimes all at once. An interview goes differently. A classroom responds differently. A child begins raising a hand that has stayed down for years.</p>
-                <p>We work across three core areas: Employability & Corporate Communication Training (including CRT) for engineering graduates, Public Speaking, Debate & Personality Development for school and college students, and Train-the-Trainer programmes for educators.</p>
+              <div className="space-y-5 text-[#333333] text-base sm:text-lg leading-relaxed font-medium text-left">
+                <p className="text-left">Some students know more than they can say. Some graduates know exactly what to do but hesitate when asked to speak. Some teachers carry years of knowledge yet struggle to make it travel from their minds to their students. VOKTAA SOLUTIONS began with these realities.</p>
+                <p className="text-left">VOKTAA SOLUTIONS was born in Guntur, Andhra Pradesh from that simple observation: communication changes destinies: sometimes quietly, sometimes all at once. An interview goes differently. A classroom responds differently. A child begins raising a hand that has stayed down for years.</p>
+                <p className="text-left">We work across three core areas: Employability & Corporate Communication Training (including CRT) for engineering graduates, Public Speaking, Debate & Personality Development for school and college students, and Train-the-Trainer programmes for educators.</p>
               </div>
             </Reveal>
           </div>
           <div className="space-y-6">
             <Reveal delay={0.1}>
-              <div className="card-purple bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-950 p-10 rounded-3xl text-white relative overflow-hidden shadow-2xl border border-purple-400/30 backdrop-blur-2xl">
+              <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-10 rounded-3xl text-white text-left relative overflow-hidden shadow-[0_20px_50px_rgba(21,112,130,0.3)] border border-[#CCE0F5]/40 backdrop-blur-2xl">
                 <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
-                <div className="relative">
-                  <span className="font-heading font-bold text-6xl text-purple-400/40 leading-none block">“</span>
-                  <p className="font-heading text-xl md:text-2xl text-white leading-snug -mt-4">
+                <div className="relative text-left">
+                  <span className="font-heading font-bold text-6xl text-white/70 leading-none block text-left">“</span>
+                  <p className="text-white text-base sm:text-lg leading-relaxed font-bold -mt-4 text-left">
                     Ours is a training culture, not a tuition culture. Conversations matter here. Participation matters. Practice matters even more.
                   </p>
                 </div>
               </div>
             </Reveal>
             <Reveal delay={0.15}>
-              <div className="card-purple bg-white/85 backdrop-blur-xl border border-purple-100 p-8 rounded-3xl shadow-lg">
-                <div className="w-12 h-12 flex items-center justify-center bg-purple-600 text-white rounded-xl shadow-md"><Sparkles size={22} /></div>
-                <h3 className="font-heading font-bold text-2xl text-purple-950 mt-5">Speak. Shine. Succeed.</h3>
-                <p className="text-purple-950/85 mt-3 leading-relaxed font-semibold">
+              <div className="card-purple bg-white/90 backdrop-blur-xl border border-[#CCE0F5] p-8 rounded-3xl shadow-lg text-left">
+                <div className="w-12 h-12 flex items-center justify-center bg-[#157082] text-white rounded-xl shadow-md"><Sparkles size={22} /></div>
+                <h3 className="font-heading font-bold text-2xl text-[#003366] mt-5">Speak. Shine. Succeed.</h3>
+                <p className="text-[#333333] mt-3 text-base sm:text-lg leading-relaxed font-bold text-left">
                   Learners speak, present, discuss, question, disagree, rethink, and try again until confidence becomes second nature.
                 </p>
               </div>
@@ -145,46 +150,51 @@ const About = () => {
         </div>
       </section>
 
-      {/* FOUNDER'S MESSAGE, VISION & MISSION WITH GLASS CARDS */}
-      <section className="bg-purple-50/50 py-20 md:py-28 relative overflow-hidden" data-testid="founder-section">
-        <div className="absolute top-1/4 left-10 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200/40 rounded-full blur-3xl pointer-events-none" />
+      {/* FOUNDER'S MESSAGE, VISION & MISSION WITH CO-ORDINATOR DETAILS */}
+      <section className="relative bg-[#F0F5FA] py-20 md:py-24 overflow-hidden" data-testid="founder-section">
+        {/* Floating Glass Bubbles */}
+        <GlassBubble size="w-48 h-48 sm:w-60 sm:h-60" className="-top-12 -left-12" delay={0} duration={8} />
+        <GlassBubble size="w-36 h-36" className="bottom-8 right-10" delay={2} duration={7} />
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-3 gap-8 z-10">
           <Reveal className="lg:col-span-2">
-            <div className="card-purple bg-white/90 backdrop-blur-2xl border border-purple-100 p-8 md:p-12 rounded-3xl h-full shadow-lg">
+            <div className="card-purple bg-white/90 backdrop-blur-2xl border-2 border-white/95 p-8 md:p-12 rounded-3xl h-full shadow-[0_20px_50px_rgba(0,51,102,0.15)] text-left">
               <SectionLabel className="block mb-4">Founder's Message</SectionLabel>
-              <h2 className="font-heading font-bold text-purple-950 text-3xl md:text-4xl tracking-tight leading-tight mb-6">
+              <h2 className="font-heading font-bold text-[#003366] text-3xl md:text-4xl tracking-tight leading-tight mb-6">
                 Welcome to VOKTAA Solutions
               </h2>
-              <div className="space-y-4 text-purple-900/85 leading-relaxed text-justify font-medium">
+              <div className="space-y-5 text-[#333333] text-base sm:text-lg leading-relaxed font-medium text-left">
                 <p>Every successful professional journey begins with confident communication, critical thinking, effective leadership, and continuous learning. VOKTAA SOLUTIONS was established to bridge the gap between academic education and industry expectations, because while technical knowledge creates opportunities, it is communication, professionalism, and adaptability that build lasting careers.</p>
                 <p>Our training extends beyond the classroom. We focus on developing individuals who can excel in interviews, contribute effectively within teams, and lead with integrity. Our mission remains unwavering: to create confident communicators, skilled professionals, and future-ready leaders.</p>
               </div>
-              <div className="mt-8 pt-6 border-t border-purple-100">
-                <p className="font-heading font-extrabold text-purple-950 text-xl">P. RAJA SEKHAR</p>
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-purple-600 font-bold mt-1">Founder & Director, VOKTAA Solutions</p>
+              
+              {/* FOUNDER DETAILS */}
+              <div className="mt-10 pt-8 border-t border-[#CCE0F5] text-left">
+                <div>
+                  <p className="font-heading font-black text-[#003366] text-xl md:text-2xl">P. RAJA SEKHAR</p>
+                  <p className="font-mono text-xs uppercase tracking-wider text-[#157082] font-extrabold mt-1">Founder & Director, VOKTAA Solutions</p>
+                </div>
               </div>
             </div>
           </Reveal>
 
           <div className="space-y-6">
             <Reveal delay={0.1}>
-              <div className="card-purple bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-950 p-8 rounded-3xl text-white h-full shadow-xl border border-purple-400/30 backdrop-blur-xl">
+              <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-8 rounded-3xl text-white h-full shadow-[0_20px_45px_rgba(21,112,130,0.3)] border border-[#CCE0F5]/40 backdrop-blur-xl text-left">
                 <SectionLabel dark className="block mb-4">Vision</SectionLabel>
-                <p className="text-white font-heading text-lg md:text-xl leading-snug">
+                <p className="text-white text-base sm:text-lg leading-relaxed font-bold">
                   To become India's most trusted Corporate Learning and Employability Solutions organisation, empowering
                   individuals and institutions to achieve excellence through transformative learning experiences.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={0.15}>
-              <div className="card-purple bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-950 p-8 rounded-3xl text-white shadow-xl border border-purple-400/30 backdrop-blur-xl">
+              <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-8 rounded-3xl text-white shadow-[0_20px_45px_rgba(21,112,130,0.3)] border border-[#CCE0F5]/40 backdrop-blur-xl text-left">
                 <SectionLabel dark className="block mb-4">Mission</SectionLabel>
-                <ul className="space-y-3">
+                <ul className="space-y-3.5">
                   {mission.map((m, i) => (
-                    <li key={i} className="flex items-start gap-3 text-purple-100 text-sm font-medium">
-                      <CheckCircle2 size={16} className="text-purple-400 mt-0.5 shrink-0" />
+                    <li key={i} className="flex items-start gap-3 text-white text-base font-bold">
+                      <CheckCircle2 size={18} className="text-teal-300 mt-0.5 shrink-0" />
                       <span>{m}</span>
                     </li>
                   ))}
@@ -195,30 +205,28 @@ const About = () => {
         </div>
       </section>
 
-      {/* CORE VALUES WITH GLASSMORPHISM AMBIENT ORBS & CRISP HIGH-CONTRAST TEXT */}
-      <section className="relative bg-gradient-to-br from-purple-100/70 via-indigo-50/40 to-cyan-50/50 py-20 md:py-28 overflow-hidden" data-testid="values-section">
-        {/* Ambient Glowing Color Orbs */}
-        <div className="absolute top-10 left-10 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto px-6 md:px-12 z-10">
+      {/* CORE VALUES WITH GLASSMORPHISM BUBBLE ORBS */}
+      <section className="relative bg-gradient-to-br from-[#F0F5FA] via-[#F2FAFC] to-white py-20 md:py-28 overflow-hidden" data-testid="values-section">
+        {/* Floating Glass Bubbles */}
+        <GlassBubble size="w-44 h-44" className="top-10 left-8" delay={1} duration={7} />
+        <GlassBubble size="w-36 h-36" className="bottom-10 right-10" delay={3} duration={6} />
+        <div className="relative max-w-7xl mx-auto px-6 md:px-12 z-10 text-left">
           <Reveal><SectionLabel className="block mb-3">What We Stand For</SectionLabel></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="font-heading font-black text-purple-950 text-4xl md:text-5xl tracking-tight mb-14">
-              Our Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Values</span>
+            <h2 className="font-heading font-black text-[#003366] text-4xl md:text-5xl tracking-tight mb-14">
+              Our Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#003366] to-[#157082]">Values</span>
             </h2>
           </Reveal>
 
           <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {values.map((v, i) => (
               <StaggerItem key={i}>
-                <div className="card-purple bg-white/85 backdrop-blur-2xl border-2 border-white/95 p-8 h-full rounded-3xl shadow-[0_20px_45px_rgba(108,92,231,0.14)] hover:shadow-[0_30px_60px_rgba(108,92,231,0.25)] hover:-translate-y-2 transition-all duration-300 group cursor-pointer">
-                  <div className="w-14 h-14 flex items-center justify-center bg-purple-100/90 text-purple-600 rounded-2xl shadow-inner group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+                <div className="card-purple bg-white/90 backdrop-blur-2xl border-2 border-white/95 p-8 h-full rounded-3xl shadow-[0_20px_45px_rgba(0,51,102,0.12)] hover:shadow-[0_30px_60px_rgba(0,51,102,0.22)] hover:-translate-y-2 transition-all duration-300 group cursor-pointer text-left">
+                  <div className="w-14 h-14 flex items-center justify-center bg-[#F0F5FA] text-[#157082] rounded-2xl shadow-inner group-hover:scale-110 group-hover:bg-[#157082] group-hover:text-white transition-all duration-300">
                     <v.icon size={26} className="stroke-[2.2]" />
                   </div>
-                  <h3 className="font-heading font-extrabold text-xl text-purple-950 mt-6 tracking-tight">{v.t}</h3>
-                  <p className="text-purple-950/85 text-sm sm:text-base mt-3 leading-relaxed font-semibold">{v.d}</p>
+                  <h3 className="font-heading font-extrabold text-2xl text-[#003366] mt-6 tracking-tight">{v.t}</h3>
+                  <p className="text-[#333333] text-base sm:text-lg mt-3 leading-relaxed font-bold">{v.d}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -227,14 +235,10 @@ const About = () => {
       </section>
 
       {/* CTA BANNER WITH GLASSMORPHIC GLOW */}
-      <section className="bg-gradient-to-br from-purple-950 via-purple-900 to-indigo-950 py-20 md:py-24 relative overflow-hidden text-white">
-        <div className="absolute top-0 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-96 h-96 bg-indigo-500/25 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
-
+      <section className="bg-gradient-to-r from-[#003366] via-[#157082] to-[#002244] py-20 md:py-24 relative overflow-hidden text-white">
         <div className="relative max-w-4xl mx-auto px-6 text-center z-10">
           <h2 className="font-heading font-extrabold text-white text-3xl md:text-4xl tracking-tight leading-tight">
-            Want to know how VOKTAA can work with your <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300">institution or team?</span>
+            Want to know how VOKTAA can work with your <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-sky-200 to-cyan-300">institution or team?</span>
           </h2>
           <div className="flex flex-wrap gap-4 justify-center mt-8">
             <GoldLink to="/institutions" track={{ category: "cta", label: "about-for-institutions" }}>For Institutions <ArrowRight size={18} className="ml-2" /></GoldLink>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Star, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Star, ArrowRight, CheckCircle2, Sparkles, Filter, MessageSquareQuote, MessageSquare, Brain, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../components/ui/select";
 import { Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
-import { SectionLabel, PageHero } from "../components/shared";
-import { api, trackClick } from "../lib/api";
+import { SectionLabel, PageHero, GoldLink, StagePedestalDisc } from "../components/shared";
+import { api } from "../lib/api";
 
 const ROLE_OPTIONS = ["Student", "Placement Officer", "Corporate Professional", "Educator", "Other"];
 const PROGRAM_OPTIONS = [
@@ -15,13 +16,14 @@ const PROGRAM_OPTIONS = [
   "Leadership Development", "Corporate Training", "Train-the-Trainer", "Other",
 ];
 
-const PLACEHOLDER_REVIEWS = [
-  { id: "p1", name: "Student Name", role: "Student", organisation: "Engineering College · 2025 Batch", program: "Campus Recruitment Training", rating: 5, review: "The mock interviews and GD practice changed how I walked into placements. I stopped rehearsing fear and started rehearsing answers.", isPlaceholder: true },
-  { id: "p2", name: "T&P Officer", role: "Placement Officer", organisation: "Partner Institution", program: "Corporate Training", rating: 5, review: "Structured, activity-based, and calibrated to our students. The feedback report after the programme was genuinely useful for our placement cell.", isPlaceholder: true },
-  { id: "p3", name: "L&D Manager", role: "Corporate Professional", organisation: "Corporate Partner", program: "Corporate Training", rating: 5, review: "Practical scenarios, real practice, and a trainer who understood our team. Our associates came out sharper on both communication and workplace etiquette.", isPlaceholder: true },
+const INITIAL_FALLBACK_REVIEWS = [
+  { id: "r1", name: "Tejasri Penubothu", role: "Student", organisation: "Student", program: "Soft Skills Development", rating: 5, review: "I started using VOKTAA Solutions last week to improve my communication skills, leadership qualities, and interview skills. The training sessions are engaging, well-organized, and easy to understand. The trainers explain every concept clearly with practical examples, which has helped me build confidence. Whenever I had a question, the support team responded quickly and was very helpful. Overall, it has been a great learning experience, and I highly recommend VOKTAA Solutions to anyone looking to improve their soft skills." },
+  { id: "r2", name: "Sahithi Srinivas S", role: "Student", organisation: "Student", program: "Campus Recruitment Training", rating: 5, review: "I started using VOKTAA Solutions last week to fix my communication skills, leadership qualities and Interview Tips. The app is very clean and fast. When I had a question, their online/offline sessions helped my interviews and the support team replied in minutes. Highly recommend." },
+  { id: "r3", name: "N Venkata Bhargavi", role: "Student", organisation: "Student", program: "Communication Skills", rating: 5, review: "This session will definitely be useful for those who want to build a strong foundation on communication skills and also boost them with confidence to face the interviews. I learned a lot of tips which helped me in my interviews." },
+  { id: "r4", name: "Anumula Abhinaya", role: "Student", organisation: "Student", program: "Public Speaking & Debate", rating: 5, review: "The session was very useful and interactive. I learned many things that will help me improve my communication and confidence." }
 ];
 
-const Stars = ({ value = 0, onChange, size = 20, testid }) => {
+const Stars = ({ value = 5, onChange, size = 20, testid }) => {
   const [hover, setHover] = useState(0);
   return (
     <div className="flex items-center gap-1" data-testid={testid}>
@@ -35,7 +37,7 @@ const Stars = ({ value = 0, onChange, size = 20, testid }) => {
           className={onChange ? "cursor-pointer transition-transform hover:scale-110" : "cursor-default"}
           aria-label={`${v} star${v > 1 ? "s" : ""}`}
         >
-          <Star size={size} className={(hover || value) >= v ? "text-purple-600 fill-purple-600" : "text-purple-200"} />
+          <Star size={size} className={(hover || value) >= v ? "text-amber-400 fill-amber-400 drop-shadow-sm" : "text-purple-200/80"} />
         </button>
       ))}
     </div>
@@ -43,32 +45,40 @@ const Stars = ({ value = 0, onChange, size = 20, testid }) => {
 };
 
 const ReviewCard = ({ r }) => (
-  <div className="card-purple bg-white border border-purple-100 p-7 h-full rounded-2xl shadow-sm" data-testid={`review-card-${r.id}`}>
-    <span className="font-heading font-bold text-6xl text-purple-200 leading-none block">“</span>
-    <Stars value={r.rating} />
-    <p className="font-heading text-lg text-purple-950 leading-snug mt-4">{r.review}</p>
-    <div className="mt-5 flex items-center justify-between gap-3 flex-wrap">
-      <div>
-        <p className="font-bold text-purple-950">{r.name}</p>
-        <p className="text-purple-900/60 text-xs">{r.role || "Student"}</p>
+  <div className="card-purple bg-white/90 backdrop-blur-2xl border-2 border-white/95 p-7 md:p-8 h-full rounded-3xl shadow-[0_20px_45px_rgba(108,92,231,0.12)] hover:shadow-[0_30px_60px_rgba(108,92,231,0.22)] hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group" data-testid={`review-card-${r.id}`}>
+    <div>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <Stars value={r.rating} size={18} />
+        <span className="font-mono text-[10px] uppercase tracking-wider text-purple-900 bg-purple-100/90 font-bold px-3 py-1 rounded-full shadow-inner">
+          {r.role || "Student"}
+        </span>
       </div>
-      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-purple-900 bg-purple-100/70 px-3 py-1.5 rounded-lg">
-        {r.role || "Student"}
-      </span>
+      <p className="font-medium text-purple-950 text-base sm:text-lg leading-relaxed text-left mt-2">
+        "{r.review}"
+      </p>
     </div>
-    {r.isPlaceholder && <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-purple-900/40 mt-4">Sample layout</p>}
+
+    <div className="mt-6 pt-5 border-t border-purple-100/80 flex items-center justify-between gap-3 flex-wrap">
+      <div>
+        <p className="font-heading font-extrabold text-purple-950 text-base">{r.name}</p>
+        <p className="text-purple-900/70 text-xs font-semibold mt-0.5">{r.organisation || r.program || "VOKTAA Learner"}</p>
+      </div>
+      <div className="w-8 h-8 rounded-full bg-purple-100/80 text-purple-600 flex items-center justify-center font-heading font-bold text-xs shadow-inner">
+        {r.name ? r.name.charAt(0).toUpperCase() : "V"}
+      </div>
+    </div>
   </div>
 );
 
 const Reviews = () => {
-  useEffect(() => { document.title = "Reviews | VOKTAA Solutions"; }, []);
+  useEffect(() => { document.title = "Student & Partner Reviews | VOKTAA Solutions"; }, []);
 
   const [reviews, setReviews] = useState([]);
+  const [activeTab, setActiveTab] = useState("all");
   const [visible, setVisible] = useState(6);
   const [loadingList, setLoadingList] = useState(true);
-  const [sectionOn, setSectionOn] = useState(true);
 
-  const empty = { name: "", email: "", phone: "", role: "", organisation: "", program: "", rating: 0, review: "" };
+  const empty = { name: "", email: "", phone: "", role: "", organisation: "", program: "", rating: 5, review: "" };
   const [form, setForm] = useState(empty);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -78,13 +88,17 @@ const Reviews = () => {
   const load = async () => {
     setLoadingList(true);
     try {
-      const [rev, cfg] = await Promise.all([
-        api.get("/reviews"),
-        api.get("/settings").catch(() => ({ data: { reviews_visible: true } })),
-      ]);
-      setReviews(rev.data);
-      setSectionOn(cfg.data?.reviews_visible !== false);
-    } catch { /* silent */ } finally { setLoadingList(false); }
+      const rev = await api.get("/reviews");
+      if (Array.isArray(rev.data) && rev.data.length > 0) {
+        setReviews(rev.data);
+      } else {
+        setReviews(INITIAL_FALLBACK_REVIEWS);
+      }
+    } catch {
+      setReviews(INITIAL_FALLBACK_REVIEWS);
+    } finally {
+      setLoadingList(false);
+    }
   };
 
   useEffect(() => { load(); }, []);
@@ -99,7 +113,7 @@ const Reviews = () => {
     try {
       await api.post("/reviews", form);
       setSubmitted(true);
-      toast.success("Review posted!");
+      toast.success("Review posted successfully!");
       setForm(empty);
       load();
     } catch (err) {
@@ -109,8 +123,15 @@ const Reviews = () => {
     }
   };
 
-  const list = reviews.length ? reviews : PLACEHOLDER_REVIEWS;
-  const shown = list.slice(0, visible);
+  // Filter logic
+  const filteredReviews = reviews.filter((r) => {
+    if (activeTab === "student") return (r.role || "").toLowerCase().includes("student");
+    if (activeTab === "officer") return (r.role || "").toLowerCase().includes("officer") || (r.role || "").toLowerCase().includes("placement");
+    if (activeTab === "corporate") return (r.role || "").toLowerCase().includes("corporate") || (r.role || "").toLowerCase().includes("educator") || (r.role || "").toLowerCase().includes("manager");
+    return true;
+  });
+
+  const shown = filteredReviews.slice(0, visible);
 
   return (
     <>
@@ -119,30 +140,113 @@ const Reviews = () => {
         label="Reviews"
         title="In their own"
         gold="words."
-        subtitle="Real reactions from students, institutions, and partners, collected directly, in their own voice."
-      />
+        subtitle="Real reactions from students, placement officers, and corporate partners, collected directly from our active training cohorts."
+      >
+        <div className="relative flex flex-col items-center justify-center w-full">
+          {/* 3D Stage Pedestal Disc Platform (Image 2 style) */}
+          <StagePedestalDisc />
 
-      {/* DISPLAY */}
-      {sectionOn && (
-      <section className="bg-purple-50/40 py-20 md:py-28" data-testid="reviews-display">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          {/* 3D Stage Pedestal Cards (COMMUNICATE, THINK, LEAD) beside the text */}
+          <div className="relative w-full max-w-lg flex items-center justify-center gap-1.5 sm:gap-4 z-10 py-2 px-1 sm:px-0">
+            {/* Card 1: COMMUNICATE */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              whileHover={{ y: -8 }}
+              className="card-purple bg-white/95 backdrop-blur-2xl border-2 border-white/95 p-2.5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-[0_20px_45px_rgba(108,92,231,0.15)] flex flex-col items-center text-center flex-1 max-w-[110px] sm:max-w-none sm:w-44 group"
+            >
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-purple-100/90 text-purple-600 flex items-center justify-center shadow-inner group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                <MessageSquare size={18} className="sm:w-[22px] sm:h-[22px]" />
+              </div>
+              <span className="font-heading font-extrabold text-[10px] sm:text-sm text-purple-950 mt-2 sm:mt-4 tracking-tight">COMMUNICATE</span>
+              <span className="text-purple-900/70 text-[9px] sm:text-xs mt-0.5 sm:mt-1 font-semibold">with Confidence</span>
+            </motion.div>
+
+            {/* Card 2: THINK (Center Featured) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45, duration: 0.6 }}
+              whileHover={{ y: -8 }}
+              className="card-purple bg-white backdrop-blur-2xl border-2 border-white p-3.5 sm:p-7 rounded-2xl sm:rounded-3xl shadow-[0_25px_55px_rgba(108,92,231,0.22)] flex flex-col items-center text-center flex-1 max-w-[125px] sm:max-w-none sm:w-48 -mt-4 sm:-mt-8 group z-20"
+            >
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-md shadow-purple-500/30 group-hover:scale-110 transition-transform duration-300">
+                <Brain size={22} className="sm:w-[26px] sm:h-[26px]" />
+              </div>
+              <span className="font-heading font-extrabold text-xs sm:text-base text-purple-950 mt-2 sm:mt-4 tracking-tight">THINK</span>
+              <span className="text-purple-900/70 text-[10px] sm:text-sm mt-0.5 sm:mt-1 font-semibold">Critically</span>
+            </motion.div>
+
+            {/* Card 3: LEAD */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              whileHover={{ y: -8 }}
+              className="card-purple bg-white/95 backdrop-blur-2xl border-2 border-white/95 p-2.5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-[0_20px_45px_rgba(108,92,231,0.15)] flex flex-col items-center text-center flex-1 max-w-[110px] sm:max-w-none sm:w-44 group"
+            >
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-purple-100/90 text-purple-600 flex items-center justify-center shadow-inner group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                <TrendingUp size={18} className="sm:w-[22px] sm:h-[22px]" />
+              </div>
+              <span className="font-heading font-extrabold text-[10px] sm:text-sm text-purple-950 mt-2 sm:mt-4 tracking-tight">LEAD</span>
+              <span className="text-purple-900/70 text-[9px] sm:text-xs mt-0.5 sm:mt-1 font-semibold">Effectively</span>
+            </motion.div>
+          </div>
+        </div>
+      </PageHero>
+
+      {/* REVIEWS DISPLAY WITH AMBIENT GLASSMORPHISM CANVAS */}
+      <section className="relative bg-gradient-to-br from-purple-100/70 via-indigo-50/40 to-cyan-50/50 pt-2 md:pt-4 pb-12 overflow-hidden" data-testid="reviews-display">
+        {/* Ambient Color Orbs */}
+        <div className="absolute top-10 left-10 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-6 md:px-12 z-10">
+          
+          {/* Category Filter Tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+            {[
+              { id: "all", label: "All Reviews" },
+              { id: "student", label: "Students" },
+              { id: "officer", label: "Placement Officers" },
+              { id: "corporate", label: "Corporate & Faculty" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setVisible(6); }}
+                className={`px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 shadow-sm ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/25 scale-105"
+                    : "bg-white/80 backdrop-blur-md border border-purple-100 text-purple-950 hover:bg-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           {loadingList ? (
-            <p className="text-purple-900/50 text-center font-mono text-sm">Loading reviews…</p>
+            <p className="text-purple-950 font-bold text-center font-mono text-sm">Loading verified database reviews…</p>
           ) : (
             <>
-              <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {shown.map((r) => (
-                  <StaggerItem key={r.id}><ReviewCard r={r} /></StaggerItem>
+              <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {shown.map((r, idx) => (
+                  <StaggerItem key={r.id || idx}>
+                    <ReviewCard r={r} />
+                  </StaggerItem>
                 ))}
               </StaggerGroup>
-              {list.length > visible && (
+
+              {filteredReviews.length > visible && (
                 <div className="text-center mt-12">
                   <button
-                    onClick={() => setVisible((v) => v + 6)}
-                    className="inline-flex items-center border border-purple-600 text-purple-600 font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full hover:bg-purple-600 hover:text-white transition-colors shadow-sm"
+                    onClick={() => setVisible((prev) => prev + 6)}
+                    className="inline-flex items-center bg-white/90 border-2 border-purple-200 text-purple-950 font-bold uppercase tracking-wider text-xs px-8 py-4 rounded-full shadow-md hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all duration-300"
                     data-testid="reviews-load-more"
                   >
-                    Load More <ArrowRight size={18} className="ml-2" />
+                    Load More Reviews <ArrowRight size={16} className="ml-2" />
                   </button>
                 </div>
               )}
@@ -150,35 +254,37 @@ const Reviews = () => {
           )}
         </div>
       </section>
-      )}
 
-      {/* SUBMIT */}
-      <section className="bg-white py-20 md:py-28" data-testid="reviews-submit-section">
+      {/* SUBMIT REVIEW SECTION WITH Sleek GLASS FORM */}
+      <section className="bg-white py-20 md:py-28 relative overflow-hidden" data-testid="reviews-submit-section">
         <div className="max-w-3xl mx-auto px-6 md:px-12">
           <div className="text-center">
-            <Reveal><SectionLabel className="block mb-3">Your Turn</SectionLabel></Reveal>
+            <Reveal><SectionLabel className="block mb-3">Your Experience</SectionLabel></Reveal>
             <Reveal delay={0.05}>
-              <h2 className="font-heading font-bold text-purple-950 text-4xl md:text-5xl tracking-tight mb-6">Share your experience</h2>
+              <h2 className="font-heading font-bold text-purple-950 text-4xl md:text-5xl tracking-tight mb-4">Share your feedback</h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="text-purple-900/70 max-w-xl mx-auto">
-                Just finished a VOKTAA session? Tell us what stayed with you. Your feedback helps the next batch of students know what to expect.
+              <p className="text-purple-900/80 text-base sm:text-lg max-w-xl mx-auto font-medium">
+                Just completed a VOKTAA session? Tell us what stayed with you. Your feedback inspires the next batch of students!
               </p>
             </Reveal>
           </div>
 
-          <div className="card-purple bg-white border border-purple-100 p-8 md:p-10 rounded-3xl shadow-lg mt-10">
+          <div className="card-purple bg-gradient-to-br from-purple-50/80 via-white to-purple-50/50 border-2 border-purple-100 p-8 md:p-12 rounded-3xl shadow-xl mt-10 relative overflow-hidden">
             {submitted ? (
               <div className="py-10 text-center" data-testid="review-success">
-                <div className="w-16 h-16 mx-auto flex items-center justify-center bg-purple-100 rounded-full">
+                <div className="w-16 h-16 mx-auto flex items-center justify-center bg-purple-100 rounded-full shadow-inner">
                   <CheckCircle2 size={36} className="text-purple-600" />
                 </div>
-                <h3 className="font-heading font-bold text-2xl text-purple-950 mt-6">Thank you!</h3>
-                <p className="text-purple-900/70 mt-3 max-w-md mx-auto">
-                  Your review is now live on the site.
+                <h3 className="font-heading font-bold text-2xl text-purple-950 mt-6">Thank You!</h3>
+                <p className="text-purple-950/80 font-medium mt-3 max-w-md mx-auto">
+                  Your review has been saved to the database and is now live on the site.
                 </p>
-                <button onClick={() => setSubmitted(false)} className="mt-6 border border-purple-600 text-purple-600 font-bold uppercase tracking-wider text-sm px-6 py-3 rounded-xl hover:bg-purple-600 hover:text-white transition-colors">
-                  Write Another
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="mt-6 border-2 border-purple-600 text-purple-700 font-bold uppercase tracking-wider text-xs px-6 py-3 rounded-full hover:bg-purple-600 hover:text-white transition-all shadow-sm"
+                >
+                  Submit Another Review
                 </button>
               </div>
             ) : (
@@ -186,22 +292,23 @@ const Reviews = () => {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <label className="block">
                     <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Full Name *</span>
-                    <input className="input-brand w-full px-4 py-3" value={form.name} onChange={set("name")} data-testid="review-name" />
+                    <input className="input-brand w-full px-4 py-3 text-purple-950 font-medium" placeholder="Your Name" value={form.name} onChange={set("name")} data-testid="review-name" />
                   </label>
                   <label className="block">
                     <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Email *</span>
-                    <input type="email" className="input-brand w-full px-4 py-3" value={form.email} onChange={set("email")} data-testid="review-email" />
+                    <input type="email" className="input-brand w-full px-4 py-3 text-purple-950 font-medium" placeholder="name@domain.com" value={form.email} onChange={set("email")} data-testid="review-email" />
                   </label>
                 </div>
+
                 <div className="grid sm:grid-cols-2 gap-5">
                   <label className="block">
                     <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Phone / WhatsApp</span>
-                    <input className="input-brand w-full px-4 py-3" value={form.phone} onChange={set("phone")} data-testid="review-phone" />
+                    <input className="input-brand w-full px-4 py-3 text-purple-950 font-medium" placeholder="+91 98765 43210" value={form.phone} onChange={set("phone")} data-testid="review-phone" />
                   </label>
                   <label className="block">
                     <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Role *</span>
                     <Select value={form.role} onValueChange={(v) => setForm((f) => ({ ...f, role: v }))}>
-                      <SelectTrigger className="input-brand w-full px-4 py-3 h-auto rounded-xl" data-testid="review-role">
+                      <SelectTrigger className="input-brand w-full px-4 py-3 h-auto rounded-xl text-purple-950 font-medium" data-testid="review-role">
                         <SelectValue placeholder="Select role" />
                       </SelectTrigger>
                       <SelectContent>
@@ -210,15 +317,16 @@ const Reviews = () => {
                     </Select>
                   </label>
                 </div>
+
                 <div className="grid sm:grid-cols-2 gap-5">
                   <label className="block">
                     <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">College / Organisation</span>
-                    <input className="input-brand w-full px-4 py-3" value={form.organisation} onChange={set("organisation")} data-testid="review-organisation" />
+                    <input className="input-brand w-full px-4 py-3 text-purple-950 font-medium" placeholder="e.g. Engineering College Guntur" value={form.organisation} onChange={set("organisation")} data-testid="review-organisation" />
                   </label>
                   <label className="block">
                     <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Programme Attended *</span>
                     <Select value={form.program} onValueChange={(v) => setForm((f) => ({ ...f, program: v }))}>
-                      <SelectTrigger className="input-brand w-full px-4 py-3 h-auto rounded-xl" data-testid="review-program">
+                      <SelectTrigger className="input-brand w-full px-4 py-3 h-auto rounded-xl text-purple-950 font-medium" data-testid="review-program">
                         <SelectValue placeholder="Select programme" />
                       </SelectTrigger>
                       <SelectContent>
@@ -227,21 +335,24 @@ const Reviews = () => {
                     </Select>
                   </label>
                 </div>
+
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Star Rating *</span>
+                  <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Rating *</span>
                   <Stars value={form.rating} size={26} onChange={(v) => setForm((f) => ({ ...f, rating: v }))} testid="review-stars" />
                 </div>
+
                 <label className="block">
                   <span className="font-mono text-xs uppercase tracking-[0.15em] text-purple-950 font-bold block mb-2">Your Review *</span>
-                  <textarea rows={4} className="input-brand w-full px-4 py-3 resize-none" placeholder="What did you gain from the session? What would you tell someone considering VOKTAA training?" value={form.review} onChange={set("review")} data-testid="review-text" />
+                  <textarea rows={4} className="input-brand w-full px-4 py-3 resize-none text-purple-950 font-medium" placeholder="What did you gain from the session? What would you tell someone considering VOKTAA training?" value={form.review} onChange={set("review")} data-testid="review-text" />
                 </label>
+
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all disabled:opacity-60"
+                  className="w-full inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-xs px-8 py-4 rounded-full shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.01] transition-all disabled:opacity-60"
                   data-testid="review-submit-button"
                 >
-                  {submitting ? "Submitting..." : "Submit Review"} <ArrowRight size={18} className="ml-2" />
+                  {submitting ? "Submitting..." : "Submit Review"} <ArrowRight size={16} className="ml-2" />
                 </button>
               </form>
             )}

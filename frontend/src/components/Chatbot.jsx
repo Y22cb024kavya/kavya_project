@@ -68,7 +68,7 @@ const Chatbot = () => {
         onClick={toggle}
         aria-label={open ? "Close chat" : "Open chat"}
         data-testid="chatbot-toggle"
-        className="fixed bottom-6 right-24 z-[60] w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-[0_10px_30px_rgba(108,92,231,0.45)] hover:scale-110 transition-transform duration-300"
+        className="fixed bottom-6 right-24 z-[60] w-14 h-14 rounded-full bg-gradient-to-r from-[#003366] to-[#157082] text-white flex items-center justify-center shadow-[0_10px_30px_rgba(21,112,130,0.45)] hover:scale-110 transition-transform duration-300"
       >
         {open ? <X size={24} /> : <MessageSquare size={24} />}
       </button>
@@ -76,17 +76,17 @@ const Chatbot = () => {
       {/* Chat window */}
       {open && (
         <div
-          className="fixed z-[65] bg-white rounded-2xl shadow-[0_25px_60px_rgba(30,27,75,0.25)] border border-purple-100 overflow-hidden flex flex-col
+          className="fixed z-[65] bg-white rounded-2xl shadow-[0_25px_60px_rgba(0,51,102,0.25)] border border-[#CCE0F5] overflow-hidden flex flex-col
                      bottom-24 right-4 sm:right-24 w-[calc(100vw-2rem)] sm:w-[350px] h-[70vh] sm:h-[500px] max-h-[600px]"
           data-testid="chatbot-window"
         >
           {/* Header */}
-          <div className="bg-purple-900 px-4 py-4 flex items-center justify-between border-b border-purple-700/50">
+          <div className="bg-[#003366] px-4 py-4 flex items-center justify-between border-b border-[#002244]">
             <div className="flex items-center gap-3">
               <Logo light className="scale-75 origin-left" />
               <div>
                 <p className="text-white font-heading font-bold text-sm leading-tight">VOKTAA Assistant</p>
-                <p className="text-purple-300 font-mono text-[9px] uppercase tracking-[0.2em] mt-0.5">Online</p>
+                <p className="text-[#68CEDB] font-mono text-[9px] uppercase tracking-[0.2em] mt-0.5">Online</p>
               </div>
             </div>
             <button onClick={toggle} aria-label="Close" className="text-white/70 hover:text-white" data-testid="chatbot-close">
@@ -95,14 +95,14 @@ const Chatbot = () => {
           </div>
 
           {/* Message list */}
-          <div ref={listRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-purple-50/40" data-testid="chatbot-messages">
+          <div ref={listRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F0F5FA]" data-testid="chatbot-messages">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                     m.role === "user"
-                      ? "bg-purple-600 text-white rounded-2xl rounded-br-sm shadow-sm"
-                      : "bg-white text-purple-950 border border-purple-100 rounded-2xl rounded-bl-sm shadow-sm"
+                      ? "bg-[#157082] text-white rounded-2xl rounded-br-sm shadow-sm"
+                      : "bg-white text-[#333333] border border-[#CCE0F5] rounded-2xl rounded-bl-sm shadow-sm"
                   }`}
                 >
                   {m.text}
@@ -111,7 +111,7 @@ const Chatbot = () => {
             ))}
             {sending && (
               <div className="flex justify-start">
-                <div className="bg-white border border-purple-100 rounded-2xl rounded-bl-sm shadow-sm">
+                <div className="bg-white border border-[#CCE0F5] rounded-2xl rounded-bl-sm shadow-sm">
                   <TypingDots />
                 </div>
               </div>
@@ -119,7 +119,7 @@ const Chatbot = () => {
           </div>
 
           {/* Input */}
-          <form onSubmit={send} className="border-t border-purple-100 p-3 flex items-center gap-2 bg-white">
+          <form onSubmit={send} className="border-t border-[#CCE0F5] p-3 flex items-center gap-2 bg-white">
             <input
               type="text"
               value={input}
@@ -134,7 +134,7 @@ const Chatbot = () => {
               disabled={sending || !input.trim()}
               aria-label="Send"
               data-testid="chatbot-send"
-              className="w-10 h-10 flex items-center justify-center bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors disabled:opacity-40"
+              className="w-10 h-10 flex items-center justify-center bg-[#157082] text-white rounded-full hover:bg-[#003366] transition-colors disabled:opacity-40"
             >
               <Send size={16} />
             </button>

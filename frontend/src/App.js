@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Programs from "@/pages/Programs";
+import ProgramSyllabus from "@/pages/ProgramSyllabus";
 import Institutions from "@/pages/Institutions";
 import Reviews from "@/pages/Reviews";
 import Contact from "@/pages/Contact";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={withLayout(Home)} />
         <Route path="/about" element={withLayout(About)} />
         <Route path="/programs" element={withLayout(Programs)} />
+        <Route path="/programs/:slug" element={withLayout(ProgramSyllabus)} />
         <Route path="/institutions" element={withLayout(Institutions)} />
         <Route path="/reviews" element={withLayout(Reviews)} />
         <Route path="/contact" element={withLayout(Contact)} />

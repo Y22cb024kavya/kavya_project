@@ -22,9 +22,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, EmailStr, BeforeValidator, ConfigDict
 
 # ------------------------------------------------------------------ DB
-mongo_url = os.environ['MONGO_URL']
+mongo_url = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+db_name = os.getenv('DB_NAME', 'voktaa_db')
+
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[db_name]
 
 # ------------------------------------------------------------------ App
 app = FastAPI(title="VOKTAA Solutions API")
@@ -32,6 +34,11 @@ api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("voktaa")
+
+if "mongodb+srv" in mongo_url:
+    logger.info("🟢 Connected to MongoDB Atlas Cloud Database")
+else:
+    logger.info("🟡 Connected to Local MongoDB Database")
 
 # ------------------------------------------------------------------ Helpers
 PyObjectId = Annotated[str, BeforeValidator(str)]
@@ -166,6 +173,167 @@ class ChatMessage(BaseModel):
     message: str
 
 
+# The supplied course-content document is represented as a public catalogue so
+# the frontend can resolve a program to its own syllabus instead of guessing.
+PROGRAM_SYLLABI = {
+    "campus-recruitment-training": {
+        "title": "Campus Recruitment Training",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Aptitude & Logical Reasoning", "Group Discussion Techniques",
+            "Resume & Cover Letter Building", "Personal Interview Preparation",
+            "Verbal & Written Communication", "Body Language & First Impressions",
+            "Corporate Etiquette", "Email & Business Writing",
+            "Mock Placement Drives", "Industry & Current Affairs Awareness",
+            "Confidence Building",
+        ],
+    },
+    "soft-skills-development": {
+        "title": "Soft Skills Development",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Communication Skills", "Teamwork & Collaboration", "Time Management",
+            "Emotional Intelligence", "Problem-Solving & Decision Making",
+            "Adaptability & Flexibility", "Interpersonal Skills", "Conflict Resolution",
+            "Active Listening", "Self-Motivation", "Networking Skills",
+        ],
+    },
+    "communication-business-skills": {
+        "title": "Communication & Business Skills",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Business Communication Foundations", "Professional Email & Report Writing",
+            "Effective Workplace Conversation", "Presentation & Deck Delivery",
+            "Cross-Cultural Communication", "Client Pitching & Negotiation",
+            "Active Listening & Feedback", "Meeting Facilitation & Minutes",
+            "Corporate Vocabulary & Etiquette",
+        ],
+    },
+    "personality-development": {
+        "title": "Personality Development",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Self-Awareness & Confidence Building", "Body Language & Non-Verbal Communication",
+            "Grooming & Professional Etiquette", "Public Speaking", "Emotional Intelligence",
+            "Attitude & Mindset Building", "Goal Setting & Self-Discipline",
+            "Stress & Anger Management", "Social Etiquette & Networking",
+        ],
+    },
+    "public-speaking-debate": {
+        "title": "Public Speaking & Debate",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Stage Presence & Overcoming Fear", "Speech Structuring & Storytelling",
+            "Voice Modulation & Articulation", "Debate Formats & Rebuttal Strategies",
+            "Body Language & Micro-Gestures", "Impromptu Speaking (Extempore)",
+            "Persuasive Argumentation", "Audience Engagement Techniques",
+            "Mic & Podium Management",
+        ],
+    },
+    "interview-skills-mock-gds": {
+        "title": "Interview Skills & Mock GDs",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Resume & CV Building", "Types of Interviews (HR, Technical, Panel)",
+            "Common Interview Questions & Answers", "Body Language in Interviews",
+            "Group Discussion Skills", "Mock Interview Practice",
+            "Salary Negotiation Techniques", "Post-Interview Follow-Up Etiquette",
+        ],
+    },
+    "career-guidance-programme": {
+        "title": "Career Guidance Programme",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Self-Assessment & Aptitude Analysis", "Career Path Mapping",
+            "Skill Gap Identification", "Resume & Portfolio Building",
+            "Industry & Job Market Awareness", "Goal Setting & Career Planning",
+            "Networking & Personal Branding", "Higher Education & Certification Guidance",
+        ],
+    },
+    "leadership-development": {
+        "title": "Leadership Development",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Leadership Styles & Self-Assessment", "Decision Making & Problem Solving",
+            "Delegation & Empowerment", "Team Building & Motivation",
+            "Emotional Intelligence for Leaders", "Strategic & Critical Thinking",
+            "Conflict & Change Management", "Coaching & Mentoring",
+            "Effective Leadership Communication", "Performance Management",
+        ],
+    },
+    "corporate-training-modules": {
+        "title": "Corporate Training Modules",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Workplace Communication", "Professional Email & Report Writing",
+            "Corporate Etiquette & Grooming", "Presentation Skills", "Team Collaboration",
+            "Time & Priority Management", "Conflict Management at Workplace",
+            "Stress Management", "Cross-Functional Coordination",
+            "Business Communication Tools",
+        ],
+    },
+    "company-specific-training": {
+        "title": "Company Specific Training",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Organizational Culture & Values Orientation", "Role-Specific Communication Standards",
+            "Company Process & SOP Training", "Client Handling & Domain Etiquette",
+            "Tools & Software Familiarization", "Compliance & Policy Awareness",
+            "Team Integration Workshops", "Customized Case Studies & Simulations",
+            "Performance Expectation Alignment",
+        ],
+    },
+    "technical-skills": {
+        "title": "Technical Skills",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Generative AI Tools & Prompt Engineering", "Python Programming",
+            "Data Analysis & Visualization (Excel, Power BI)", "Cloud Computing Fundamentals (AWS / Azure / GCP)",
+            "Cybersecurity Fundamentals", "DevOps & CI/CD Automation",
+            "Web Development (HTML, CSS, JavaScript Frameworks)", "SQL & Database Management",
+            "Machine Learning Fundamentals", "Git & Version Control",
+            "MS Office & AI Copilot Tools", "UI/UX Design Basics",
+            "Low-Code / No-Code App Development", "Digital Marketing & Social Media Tools",
+            "Tally & Accounting Software",
+        ],
+    },
+    "faculty-development-programmes": {
+        "title": "Faculty Development Programmes",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Modern Teaching Pedagogies", "Curriculum & Lesson Planning",
+            "Classroom Management Techniques", "Student Engagement Strategies",
+            "Assessment & Evaluation Methods", "Technology-Integrated Teaching",
+            "Communication Skills for Educators", "Research & Publication Skills",
+            "Outcome-Based Education (OBE)",
+        ],
+    },
+    "train-the-trainer-programme": {
+        "title": "Train-the-Trainer Programme",
+        "source_document": "Voktaa_Course_Wise_Subjects_Content.docx",
+        "subjects": [
+            "Instructional Design Basics", "Facilitation Skills",
+            "Presentation Skills for Trainers", "Content Development & Session Planning",
+            "Handling Difficult Participants", "Training Delivery Techniques",
+            "Use of Training Aids & Technology", "Feedback & Evaluation Methods",
+            "Training Needs Analysis",
+        ],
+    },
+}
+
+# Add URL aliases to PROGRAM_SYLLABI
+PROGRAM_SYLLABI["tech-skills"] = PROGRAM_SYLLABI["technical-skills"]
+PROGRAM_SYLLABI["corporate-training"] = PROGRAM_SYLLABI["corporate-training-modules"]
+PROGRAM_SYLLABI["career-guidance"] = PROGRAM_SYLLABI["career-guidance-programme"]
+PROGRAM_SYLLABI["interview-skills"] = PROGRAM_SYLLABI["interview-skills-mock-gds"]
+PROGRAM_SYLLABI["faculty-development"] = PROGRAM_SYLLABI["faculty-development-programmes"]
+PROGRAM_SYLLABI["faculty-development-fdp"] = PROGRAM_SYLLABI["faculty-development-programmes"]
+PROGRAM_SYLLABI["train-the-trainer"] = PROGRAM_SYLLABI["train-the-trainer-programme"]
+PROGRAM_SYLLABI["public-speaking"] = PROGRAM_SYLLABI["public-speaking-debate"]
+
+
+
+
 VOKTAA_SYSTEM_PROMPT = """You are the VOKTAA Solutions website assistant. VOKTAA is a Corporate Learning and Employability Solutions company based in Guntur, Andhra Pradesh, India, founded by P. Raja Sekhar.
 Contact: +91 74161 13199 | voktaasolutions@gmail.com | www.voktaa.com
 
@@ -227,6 +395,21 @@ async def me(admin: dict = Depends(get_current_admin)):
 @api_router.get("/")
 async def root():
     return {"message": "VOKTAA Solutions API"}
+
+
+@api_router.get("/programs/{program_slug}")
+async def get_program_syllabus(program_slug: str):
+    """Return the syllabus mapped to one program, including a safe missing state."""
+    syllabus = PROGRAM_SYLLABIES.get(program_slug)
+    if syllabus is None:
+        raise HTTPException(status_code=404, detail="Program not found")
+    return {
+        "slug": program_slug,
+        "title": syllabus["title"],
+        "available": bool(syllabus["source_document"] and syllabus["subjects"]),
+        "source_document": syllabus["source_document"],
+        "subjects": syllabus["subjects"],
+    }
 
 
 @api_router.post("/track")

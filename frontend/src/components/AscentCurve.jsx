@@ -1,19 +1,19 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-// Animated gold ascending growth-curve used in the hero.
+// Animated teal ascending growth-curve used in the hero.
 const AscentCurve = ({ className = "" }) => (
   <svg viewBox="0 0 400 400" fill="none" className={className} data-testid="ascent-curve">
     <defs>
       <linearGradient id="goldStroke" x1="0" y1="400" x2="400" y2="0">
-        <stop offset="0%" stopColor="#27A9CC" stopOpacity="0.4" />
-        <stop offset="100%" stopColor="#62C1DE" />
+        <stop offset="0%" stopColor="#157082" stopOpacity="0.4" />
+        <stop offset="100%" stopColor="#68CEDB" />
       </linearGradient>
     </defs>
 
     {/* baseline dots */}
     {[0, 1, 2, 3, 4, 5].map((i) => (
-      <circle key={i} cx={30 + i * 70} cy={370} r="2.5" fill="#27A9CC" opacity="0.4" />
+      <circle key={i} cx={30 + i * 70} cy={370} r="2.5" fill="#157082" opacity="0.4" />
     ))}
 
     {/* ascending curve */}
@@ -38,7 +38,7 @@ const AscentCurve = ({ className = "" }) => (
         key={i}
         x={b.x}
         width="26"
-        fill="#27A9CC"
+        fill="#157082"
         fillOpacity={0.12 + i * 0.06}
         initial={{ height: 0, y: 360 }}
         animate={{ height: b.h, y: 360 - b.h }}
@@ -49,7 +49,7 @@ const AscentCurve = ({ className = "" }) => (
     {/* arrow head */}
     <motion.path
       d="M355 30 L380 30 L380 55"
-      stroke="#62C1DE"
+      stroke="#68CEDB"
       strokeWidth="4"
       strokeLinecap="round"
       strokeLinejoin="round"

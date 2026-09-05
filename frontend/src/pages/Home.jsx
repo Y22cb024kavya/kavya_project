@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, GraduationCap, MessageSquare, Building2, UserCog, CheckCircle2, Play, Brain, TrendingUp, Sparkles } from "lucide-react";
 import Marquee from "react-fast-marquee";
 import { MaskLine, Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
-import { SectionLabel, GoldLink, OutlineLink } from "../components/shared";
+import { SectionLabel, GoldLink, OutlineLink, StagePedestalDisc } from "../components/shared";
 
 const pills = [
   { icon: Sparkles, text: "SOFT SKILLS" },
@@ -226,7 +226,7 @@ const Home = () => {
   return (
     <>
       {/* HERO SECTION */}
-      <section ref={heroRef} className="relative bg-gradient-to-b from-purple-100/70 via-purple-50/30 to-white pt-28 sm:pt-32 pb-8 md:pb-12 overflow-hidden" data-testid="hero-section">
+      <section ref={heroRef} className="relative bg-gradient-to-b from-purple-100/70 via-purple-50/30 to-white pt-20 sm:pt-24 pb-2 md:pb-4 overflow-hidden" data-testid="hero-section">
         <motion.div style={{ y: gridY }} className="absolute inset-0 dot-grid dot-grid-fade opacity-40" />
 
         {/* Ambient background glow elements */}
@@ -234,7 +234,7 @@ const Home = () => {
         <div className="absolute top-1/3 left-10 w-80 h-80 bg-indigo-200/40 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center" data-testid="hero-content">
-          {/* Left Column: Clean Headline, Description, Feature Pills & CTAs (Removed Image Card) */}
+          {/* Left Column: Clean Headline, Description, Feature Pills & CTAs */}
           <div className="lg:col-span-6 text-left relative z-10">
             <h1 className="font-heading font-bold text-purple-950 text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.1] mb-5">
               <MaskLine>
@@ -246,7 +246,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-purple-900/70 text-sm sm:text-base leading-relaxed mb-8 max-w-lg text-justify"
+              className="text-purple-900/75 text-base sm:text-lg leading-relaxed mb-8 max-w-lg text-left"
             >
               VOKTAA SOLUTIONS helps engineering graduates, college students, educators, and corporate teams
               communicate with confidence, think critically, and lead effectively to turn potential into performance.
@@ -271,70 +271,69 @@ const Home = () => {
             </motion.div>
           </div>
 
-          {/* Right Column: 3 Real Classroom Photo Cards Assembly Matching User Reference Image media_1788439319154.png */}
-          <div className="lg:col-span-6 relative flex items-center justify-center overflow-visible">
-            {/* Ambient Glowing Background Light */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-purple-300/30 via-indigo-200/40 to-purple-300/30 rounded-full blur-3xl pointer-events-none" />
+          {/* Right Column: 3 Photo Cards with Floating Badge Numbers, Titles & 3D Stage Pedestal Circle */}
+          <div className="lg:col-span-6 relative flex flex-col items-center justify-center pt-4 lg:pt-0" data-testid="hero-photo-cards">
+            {/* 3D Stage Pedestal Disc Platform (Image 2 style) */}
+            <StagePedestalDisc />
 
-            {/* 3 Real Photo Cards Row with Numbered Badges 01, 02, 03 */}
-            <div className="relative z-10 flex items-center justify-center gap-3 sm:gap-4 w-full">
-              {/* Card 01: Main Presentation Photo (Largest) */}
+            <div className="relative w-full max-w-2xl flex items-stretch justify-center gap-3 sm:gap-4 z-10 py-2">
+              {/* Card 01 */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                whileHover={{ scale: 1.03 }}
-                className="relative rounded-3xl border-2 border-white shadow-xl overflow-hidden w-64 sm:w-80 h-72 sm:h-88 shrink-0 group cursor-pointer"
+                whileHover={{ y: -8 }}
+                className="relative flex-1 rounded-[2rem] bg-white p-1.5 shadow-[0_15px_40px_rgba(108,92,231,0.18)] border-2 border-white group overflow-hidden flex flex-col"
               >
-                <img
-                  src="/classroom_training.jpg"
-                  alt="Practical Training 01"
-                  className="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-950/70 via-transparent to-transparent" />
-                {/* Circle Badge 01 */}
-                <div className="absolute bottom-4 left-4 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white text-purple-950 font-heading font-black text-sm sm:text-base flex items-center justify-center shadow-lg border border-purple-100">
-                  01
+                <div className="relative h-48 sm:h-64 w-full rounded-xl overflow-hidden bg-purple-100">
+                  <img src="/classroom_training.jpg" alt="Interactive Training Architecture" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-md shadow-md flex items-center justify-center font-heading font-extrabold text-purple-950 text-xs sm:text-sm border border-purple-100">
+                    01
+                  </div>
+                </div>
+                <div className="pt-2.5 pb-1.5 px-1 text-center bg-white flex-1 flex flex-col justify-center">
+                  <p className="font-heading font-extrabold text-purple-950 text-xs sm:text-sm tracking-tight leading-snug">Interactive Classroom</p>
+                  <p className="text-[10px] sm:text-xs text-purple-900/65 font-medium mt-0.5">Activity-Based Learning</p>
                 </div>
               </motion.div>
 
-              {/* Card 02: Students Hands-On Practice (Medium Vertical) */}
+              {/* Card 02 (Center Featured / Elevated) */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 25 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.65, duration: 0.8 }}
-                whileHover={{ scale: 1.03 }}
-                className="relative rounded-2xl border-2 border-white shadow-lg overflow-hidden w-36 sm:w-44 h-64 sm:h-80 shrink-0 group cursor-pointer"
+                whileHover={{ y: -8 }}
+                className="relative flex-1 rounded-[2rem] bg-white p-1.5 shadow-[0_20px_50px_rgba(108,92,231,0.25)] border-2 border-white group overflow-hidden -mt-4 sm:-mt-6 z-20 flex flex-col"
               >
-                <img
-                  src="/interview_mock_gd.jpg"
-                  alt="Practical Training 02"
-                  className="w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-950/60 via-transparent to-transparent" />
-                {/* Circle Badge 02 */}
-                <div className="absolute bottom-4 left-4 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white text-purple-950 font-heading font-black text-xs sm:text-sm flex items-center justify-center shadow-lg border border-purple-100">
-                  02
+                <div className="relative h-56 sm:h-72 w-full rounded-xl overflow-hidden bg-purple-100">
+                  <img src="/interview_mock_gd.jpg" alt="Career Acceleration & Discussion" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-md shadow-md flex items-center justify-center font-heading font-extrabold text-purple-950 text-xs sm:text-sm border border-purple-100">
+                    02
+                  </div>
+                </div>
+                <div className="pt-2.5 pb-1.5 px-1 text-center bg-white flex-1 flex flex-col justify-center">
+                  <p className="font-heading font-extrabold text-purple-950 text-xs sm:text-sm tracking-tight leading-snug">Career Acceleration</p>
+                  <p className="text-[10px] sm:text-xs text-purple-900/65 font-medium mt-0.5">Interview & GD Practice</p>
                 </div>
               </motion.div>
 
-              {/* Card 03: Interactive Session (Compact Vertical) */}
+              {/* Card 03 */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 35 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
-                whileHover={{ scale: 1.03 }}
-                className="relative rounded-2xl border-2 border-white shadow-md overflow-hidden w-28 sm:w-36 h-56 sm:h-72 shrink-0 group cursor-pointer hidden sm:block"
+                whileHover={{ y: -8 }}
+                className="relative flex-1 rounded-[2rem] bg-white p-1.5 shadow-[0_15px_40px_rgba(108,92,231,0.18)] border-2 border-white group overflow-hidden flex flex-col"
               >
-                <img
-                  src="/leadership_development.jpg"
-                  alt="Practical Training 03"
-                  className="w-full h-full object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-950/60 via-transparent to-transparent" />
-                {/* Circle Badge 03 */}
-                <div className="absolute bottom-4 left-4 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white text-purple-950 font-heading font-black text-xs flex items-center justify-center shadow-lg border border-purple-100">
-                  03
+                <div className="relative h-48 sm:h-64 w-full rounded-xl overflow-hidden bg-purple-100">
+                  <img src="/leadership_development.jpg" alt="Corporate Leadership" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-md shadow-md flex items-center justify-center font-heading font-extrabold text-purple-950 text-xs sm:text-sm border border-purple-100">
+                    03
+                  </div>
+                </div>
+                <div className="pt-2.5 pb-1.5 px-1 text-center bg-white flex-1 flex flex-col justify-center">
+                  <p className="font-heading font-extrabold text-purple-950 text-xs sm:text-sm tracking-tight leading-snug">Corporate Leadership</p>
+                  <p className="text-[10px] sm:text-xs text-purple-900/65 font-medium mt-0.5">Executive Excellence</p>
                 </div>
               </motion.div>
             </div>
@@ -343,7 +342,7 @@ const Home = () => {
       </section>
 
       {/* WHO WE ARE */}
-      <section className="bg-white pt-12 md:pt-16 pb-6 md:pb-8" data-testid="who-we-are">
+      <section className="bg-white pt-2 md:pt-4 pb-4 md:pb-6" data-testid="who-we-are">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <Reveal><SectionLabel className="block mb-3">Who We Are</SectionLabel></Reveal>
@@ -353,14 +352,14 @@ const Home = () => {
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="text-purple-900/75 text-lg leading-relaxed text-justify">
+              <p className="text-purple-900/75 text-base sm:text-lg leading-relaxed text-left">
                 VOKTAA SOLUTIONS was born in Guntur, Andhra Pradesh from that simple observation. We work across three
                 core areas: Employability & Corporate Communication Training for engineering graduates, Public Speaking
                 and Personality Development for students, and Train-the-Trainer programmes for educators.
               </p>
             </Reveal>
             <Reveal delay={0.15}>
-              <p className="text-purple-900/75 text-lg leading-relaxed mt-4 text-justify">
+              <p className="text-purple-900/75 text-base sm:text-lg leading-relaxed mt-4 text-left">
                 Ours is a training culture, not a tuition culture. Learners speak, present, discuss, question, and
                 practise until confidence becomes second nature.
               </p>
@@ -372,14 +371,14 @@ const Home = () => {
             </Reveal>
           </div>
           <Reveal delay={0.15}>
-            <div className="card-purple bg-gradient-to-br from-purple-900 to-indigo-950 p-10 rounded-3xl text-white relative overflow-hidden shadow-xl">
+            <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-10 rounded-3xl text-white text-left relative overflow-hidden shadow-[0_20px_50px_rgba(21,112,130,0.3)] border border-[#CCE0F5]/40">
               <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
-              <div className="relative">
-                <span className="font-heading font-bold text-6xl text-purple-400/40 leading-none block">“</span>
-                <p className="font-heading text-xl md:text-2xl text-white leading-snug -mt-4">
+              <div className="relative text-left">
+                <span className="font-heading font-bold text-6xl text-white/70 leading-none block text-left">“</span>
+                <p className="text-white text-base sm:text-lg leading-relaxed font-bold -mt-4 text-left">
                   Learning is not merely about acquiring knowledge; it is about transforming potential into performance.
                 </p>
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-purple-300 mt-6">VOKTAA Solutions</p>
+                <p className="font-mono text-xs uppercase tracking-wide text-teal-200 mt-6 font-bold text-left">VOKTAA Solutions</p>
               </div>
             </div>
           </Reveal>
@@ -396,7 +395,7 @@ const Home = () => {
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-purple-900/70 text-lg max-w-2xl mb-14 text-justify">
+            <p className="text-purple-900/75 text-base sm:text-lg max-w-2xl mb-14 text-justify">
               From campus placements to corporate leadership, every VOKTAA programme is built on one principle:
               practice creates confidence.
             </p>
@@ -429,7 +428,7 @@ const Home = () => {
                       <h3 className="font-heading font-bold text-2xl text-white tracking-tight leading-snug">
                         Practical, Activity-Based Learning Architecture
                       </h3>
-                      <p className="text-purple-200/90 text-sm mt-3 leading-relaxed text-justify">
+                      <p className="text-purple-200/90 text-sm mt-3 leading-relaxed text-left">
                         Learners actively present, discuss, question, and practice under expert trainer supervision until workplace confidence becomes second nature.
                       </p>
                       <div className="mt-6 pt-4 border-t border-white/20 flex items-center justify-between gap-3">
@@ -478,7 +477,7 @@ const Home = () => {
       </section>
 
       {/* WHY VOKTAA */}
-      <section className="bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-purple-950 py-20 md:py-28 relative overflow-hidden text-white" data-testid="why-voktaa">
+      <section className="bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-700 py-12 md:py-16 relative overflow-hidden text-white" data-testid="why-voktaa">
         <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
         <div className="relative max-w-7xl mx-auto px-6 md:px-12">
           <Reveal><SectionLabel dark className="block mb-3">Why VOKTAA</SectionLabel></Reveal>
@@ -488,9 +487,9 @@ const Home = () => {
           <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {why.map((p, i) => (
               <StaggerItem key={i}>
-                <div className="flex items-start gap-3 bg-white/10 border border-white/15 p-4 rounded-xl backdrop-blur-sm">
-                  <CheckCircle2 size={18} className="text-purple-300 mt-0.5 shrink-0" />
-                  <span className="text-purple-100">{p}</span>
+                <div className="flex items-start gap-3 bg-white/15 border border-white/20 p-4 rounded-xl backdrop-blur-md">
+                  <CheckCircle2 size={18} className="text-purple-200 mt-0.5 shrink-0" />
+                  <span className="text-white font-medium">{p}</span>
                 </div>
               </StaggerItem>
             ))}
@@ -499,7 +498,7 @@ const Home = () => {
       </section>
 
       {/* WHO WE SERVE - FULL IMAGE OVERLAY CARDS WITHOUT ICONS */}
-      <section className="bg-white py-20 md:py-28" data-testid="who-we-serve">
+      <section className="bg-white pt-8 md:pt-12 pb-14 md:pb-20" data-testid="who-we-serve">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <Reveal><SectionLabel className="block mb-3">Who We Serve</SectionLabel></Reveal>
           <Reveal delay={0.05}>
@@ -535,7 +534,7 @@ const Home = () => {
       </section>
 
       {/* SCROLLING COMPANY PLACEMENT CARDS */}
-      <section className="bg-gradient-to-r from-purple-900/90 via-indigo-900/95 to-purple-900/90 py-16 md:py-20 relative overflow-hidden text-white" data-testid="placements-strip">
+      <section className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 py-16 md:py-20 relative overflow-hidden text-white" data-testid="placements-strip">
         <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 mb-8 text-left">
           <Reveal><SectionLabel dark className="block mb-2">Recent Placements</SectionLabel></Reveal>
@@ -563,15 +562,15 @@ const Home = () => {
       {/* COMPACT & ATTRACTIVE CTA BANNER WITH BRIGHT WHITE BUTTON TEXT */}
       <section className="bg-gradient-to-b from-white via-purple-50/40 to-purple-100/60 py-12 md:py-16 relative overflow-hidden" data-testid="cta-band">
         <div className="max-w-4xl mx-auto px-6 md:px-12">
-          <div className="relative card-purple bg-gradient-to-br from-purple-900 via-indigo-800 to-purple-900 border border-purple-700/60 p-8 sm:p-10 md:p-12 rounded-[2rem] text-center shadow-xl overflow-hidden">
+          <div className="relative card-purple bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 border border-purple-400/40 p-8 sm:p-10 md:p-12 rounded-[2rem] text-center shadow-[0_20px_50px_rgba(108,92,231,0.3)] overflow-hidden">
             {/* Ambient Background Glows */}
             <div className="absolute -top-20 -left-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/25 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
 
             <div className="relative z-10 max-w-2xl mx-auto">
-              <span className="inline-flex items-center gap-2 bg-purple-500/20 border border-purple-400/30 text-purple-200 font-mono text-[10px] font-bold uppercase tracking-widest px-3.5 py-1 rounded-full mb-4 shadow-inner">
-                <Sparkles size={12} className="text-purple-300" />
+              <span className="inline-flex items-center gap-2.5 bg-purple-500/20 border border-purple-400/40 text-purple-100 font-mono text-xs sm:text-sm font-extrabold uppercase tracking-wider px-5 py-2 rounded-full mb-5 shadow-md">
+                <Sparkles size={16} className="text-purple-300" />
                 PARTNER WITH VOKTAA SOLUTIONS
               </span>
 
@@ -599,18 +598,18 @@ const Home = () => {
                 </OutlineLink>
               </div>
 
-              {/* Bottom Feature Micro-Badges */}
-              <div className="pt-6 border-t border-purple-800/60 flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-xs text-purple-200/80 font-medium">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+              {/* Bottom Feature Micro-Badges (Enlarged Size - Image 4) */}
+              <div className="pt-6 border-t border-purple-800/60 flex flex-wrap justify-center items-center gap-5 sm:gap-8 text-sm sm:text-base text-purple-100 font-bold">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={18} className="text-emerald-400 shrink-0 stroke-[2.5]" />
                   <span>Customised Campus Modules</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={18} className="text-emerald-400 shrink-0 stroke-[2.5]" />
                   <span>Experienced Industry Trainers</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={18} className="text-emerald-400 shrink-0 stroke-[2.5]" />
                   <span>Measurable Learning Outcomes</span>
                 </div>
               </div>

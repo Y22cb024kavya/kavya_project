@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    darkMode: ["class"],
-    content: [
+  darkMode: ["class"],
+  content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html"
   ],
@@ -14,29 +14,112 @@ module.exports = {
         mono: ['"IBM Plex Mono"', 'monospace'],
       },
       colors: {
+        // Main Prussian Blue (#003366), Deep Sky-Blue/Teal (#157082), Dark Charcoal Gray (#333333)
+        prussian: {
+          50: '#F0F5FA',
+          100: '#CCE0F5',
+          200: '#99C2EB',
+          300: '#66A3E0',
+          400: '#3385D6',
+          500: '#0066CC',
+          600: '#00509E',
+          700: '#004080',
+          800: '#003366',
+          900: '#002244',
+          950: '#001A33',
+          DEFAULT: '#003366',
+        },
+        teal: {
+          50: '#F2FAFC',
+          100: '#D4F3F7',
+          200: '#A1E2EA',
+          300: '#68CEDB',
+          400: '#35B5CD',
+          500: '#1E94AB',
+          600: '#157082',
+          700: '#126373',
+          800: '#0F5563',
+          900: '#0B3A44',
+          950: '#06252C',
+          DEFAULT: '#157082',
+        },
+        charcoal: {
+          50: '#FAFAFA',
+          100: '#F5F5F5',
+          200: '#E5E5E5',
+          300: '#D4D4D4',
+          400: '#A3A3A3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#333333',
+          900: '#262626',
+          950: '#1A1A1A',
+          DEFAULT: '#333333',
+        },
+        // Legacy alias maps to enforce new palette across all component utility classes
         purple: {
-          DEFAULT: '#6C5CE7',
-          deep: '#1E1B4B',
-          dark: '#5B46F6',
-          light: '#8B5CF6',
-          soft: '#F5F3FF',
-          border: '#DDD6FE',
+          50: '#F0F5FA',
+          100: '#CCE0F5',
+          200: '#99C2EB',
+          300: '#68CEDB',
+          400: '#35B5CD',
+          500: '#1E94AB',
+          600: '#157082',
+          700: '#00509E',
+          800: '#004080',
+          900: '#003366',
+          950: '#001A33',
+          DEFAULT: '#003366',
+          deep: '#001A33',
+          dark: '#003366',
+          light: '#157082',
+          soft: '#F0F5FA',
+          border: '#CCE0F5',
+        },
+        violet: {
+          50: '#F0F5FA',
+          100: '#CCE0F5',
+          200: '#99C2EB',
+          300: '#68CEDB',
+          400: '#35B5CD',
+          500: '#157082',
+          600: '#157082',
+          700: '#00509E',
+          800: '#004080',
+          900: '#003366',
+          950: '#001A33',
+          DEFAULT: '#003366',
+        },
+        indigo: {
+          50: '#F0F5FA',
+          100: '#CCE0F5',
+          200: '#99C2EB',
+          300: '#68CEDB',
+          400: '#35B5CD',
+          500: '#157082',
+          600: '#157082',
+          700: '#00509E',
+          800: '#004080',
+          900: '#003366',
+          950: '#001A33',
+          DEFAULT: '#003366',
         },
         lavender: {
-          DEFAULT: '#E0E7FF',
-          light: '#F0F3FF',
-          border: '#DDD6FE',
+          DEFAULT: '#CCE0F5',
+          light: '#F0F5FA',
+          border: '#CCE0F5',
         },
         navy: {
-          DEFAULT: '#1E1B4B',
-          deep: '#0F0C31',
+          DEFAULT: '#003366',
+          deep: '#001A33',
         },
         gold: {
-          DEFAULT: '#6C5CE7',
-          light: '#8B5CF6',
+          DEFAULT: '#D9A23B',
+          light: '#F2C46D',
         },
-        ivory: '#F8F7FF',
-        ink: '#2E2A72',
+        ivory: '#F8FAF9',
+        ink: '#333333',
         whatsapp: '#25D366',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -49,34 +132,34 @@ module.exports = {
           foreground: 'hsl(var(--popover-foreground))'
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))'
+          DEFAULT: '#003366',
+          foreground: '#FFFFFF'
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))'
+          DEFAULT: '#157082',
+          foreground: '#FFFFFF'
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))'
+          DEFAULT: '#F0F5FA',
+          foreground: '#333333'
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))'
+          DEFAULT: '#157082',
+          foreground: '#FFFFFF'
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))'
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
+        border: '#CCE0F5',
+        input: '#CCE0F5',
+        ring: '#157082',
         chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))'
+          '1': '#003366',
+          '2': '#157082',
+          '3': '#68CEDB',
+          '4': '#333333',
+          '5': '#CCE0F5'
         }
       },
       borderRadius: {

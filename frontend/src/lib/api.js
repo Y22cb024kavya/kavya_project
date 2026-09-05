@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || (process.env.NODE_ENV === "development" ? "http://localhost:8000" : "");
 export const API = `${BACKEND_URL}/api`;
 
 export const CONTACT = {
@@ -10,6 +10,9 @@ export const CONTACT = {
   email: "voktaasolutions@gmail.com",
   location: "Guntur, Andhra Pradesh, India",
   website: "www.voktaa.com",
+  linkedin: "https://www.linkedin.com/in/voktaa-undefined-6331a8434/",
+  instagram: "https://www.instagram.com/voktaasolutions/",
+  facebook: "https://www.facebook.com/search/top?q=voktaa%20solutions",
 };
 
 export const api = axios.create({ baseURL: API });
