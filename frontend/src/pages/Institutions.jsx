@@ -75,7 +75,7 @@ const Institutions = () => {
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-12 gap-10 items-center z-10">
           {/* Left Column: Left-Aligned Text */}
           <div className="lg:col-span-7 text-left">
-            <span className="font-mono text-xs uppercase tracking-wider text-purple-600 font-bold block mb-4">
+            <span className="font-heading text-xs uppercase tracking-normal text-purple-600 font-bold block mb-4">
               For Institutions
             </span>
 

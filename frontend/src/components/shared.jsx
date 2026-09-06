@@ -6,7 +6,7 @@ import { trackClick } from "../lib/api";
 
 export const SectionLabel = ({ children, dark = false, className = "" }) => (
   <span
-    className={`font-mono text-xs sm:text-sm font-black uppercase tracking-wide ${dark ? "text-teal-300" : "text-[#157082]"} ${className}`}
+    className={`font-heading text-xs sm:text-sm font-bold uppercase tracking-normal ${dark ? "text-teal-300" : "text-[#157082]"} ${className}`}
   >
     {children}
   </span>
@@ -72,7 +72,7 @@ export const PageHero = ({ label, title, gold, subtitle, bgImage, imgPosition = 
         <div className={children ? "lg:col-span-6 text-left" : ""}>
           {label && (
             <span
-              className={`font-mono text-xs uppercase tracking-wide block mb-4 ${
+              className={`font-heading text-xs uppercase tracking-normal block mb-4 ${
                 bgImage ? "text-teal-300 font-bold" : "text-[#157082] font-bold"
               }`}
             >

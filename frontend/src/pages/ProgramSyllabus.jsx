@@ -101,17 +101,14 @@ const ProgramSyllabus = () => {
               </div>
 
               {syllabus.available ? (
-                <>
-                  <p className="text-[#333333]/80 mt-7">This syllabus is sourced from <span className="font-semibold text-[#003366]">{syllabus.source_document}</span>.</p>
-                  <ul className="grid sm:grid-cols-2 gap-3 mt-6" data-testid="syllabus-subjects">
-                    {syllabus.subjects.map((subject) => (
-                      <li key={subject} className="flex items-start gap-3 rounded-xl bg-[#F0F5FA] px-4 py-3 text-[#333333]">
-                        <span className="text-[#157082] mt-0.5">&#8227;</span>
-                        <span>{subject}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </>
+                <ul className="grid sm:grid-cols-2 gap-3 mt-6" data-testid="syllabus-subjects">
+                  {syllabus.subjects.map((subject) => (
+                    <li key={subject} className="flex items-start gap-3 rounded-xl bg-[#F0F5FA] px-4 py-3 text-[#333333]">
+                      <span className="text-[#157082] mt-0.5">&#8227;</span>
+                      <span>{subject}</span>
+                    </li>
+                  ))}
+                </ul>
               ) : (
                 <div className="mt-8 rounded-2xl bg-amber-50 border border-amber-200 p-7" data-testid="syllabus-unavailable">
                   <div className="flex items-start gap-3">

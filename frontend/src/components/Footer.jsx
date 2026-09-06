@@ -33,8 +33,9 @@ const Footer = () => (
           <p>Vision · Opportunity · Knowledge</p>
           <p>Transformation · Ambition · Achievement</p>
         </div>
-        <div className="font-mono text-[11px] text-slate-300 mt-3">
+        <div className="font-mono text-[11px] text-slate-300 mt-3 space-y-0.5">
           <p><strong className="text-[#68CEDB]">CIN:</strong> U85302AP2026PTC127560</p>
+          <p className="text-slate-300 font-semibold">UDYAM-AP-04-0144742</p>
         </div>
         <p className="text-slate-300 text-sm mt-4 leading-relaxed max-w-xs">
           Corporate Learning &amp; Employability Solutions: building confident communicators, skilled professionals, and future-ready leaders.
@@ -102,8 +103,10 @@ const Footer = () => (
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
         <div>
           <p className="text-slate-400 text-xs">© 2026 VOKTAA Solutions. All rights reserved.</p>
-          <p className="font-mono text-[11px] text-slate-400 mt-1">
-            <strong className="text-[#68CEDB]">CIN:</strong> U85302AP2026PTC127560
+          <p className="font-mono text-[11px] text-slate-400 mt-1 flex flex-wrap gap-x-3 gap-y-0.5 justify-center md:justify-start">
+            <span><strong className="text-[#68CEDB]">CIN:</strong> U85302AP2026PTC127560</span>
+            <span className="hidden sm:inline">•</span>
+            <span>UDYAM-AP-04-0144742</span>
           </p>
         </div>
         <p className="font-mono text-xs uppercase tracking-wide text-[#157082]">Speak. Shine. Succeed.</p>

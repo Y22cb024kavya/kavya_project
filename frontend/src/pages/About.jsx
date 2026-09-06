@@ -50,7 +50,7 @@ const About = () => {
         <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto px-6 md:px-12 text-center z-10">
-          <span className="font-mono text-xs uppercase tracking-wide block mb-5 text-[#157082] font-black">
+          <span className="font-heading text-xs uppercase tracking-normal block mb-5 text-[#157082] font-black">
             About VOKTAA Solutions
           </span>
 
