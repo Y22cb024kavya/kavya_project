@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
-import { api, setToken } from "../lib/api";
+import { loginAdmin, getCurrentUser, setToken } from "../lib/api";
 import Logo from "../components/Logo";
 
 const AdminLogin = () => {
@@ -11,17 +11,25 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    getCurrentUser().then((user) => {
+      if (user) {
+        setToken(user.$id);
+        navigate("/admin");
+      }
+    });
+  }, [navigate]);
+
   const submit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      const { data } = await api.post("/auth/login", { email, password });
-      setToken(data.token);
+      const { user } = await loginAdmin(email, password);
+      setToken(user.$id);
       navigate("/admin");
     } catch (err) {
-      const detail = err.response?.data?.detail;
-      setError(typeof detail === "string" ? detail : "Login failed. Check your credentials.");
+      setError(err.message || "Login failed. Check your credentials.");
     } finally {
       setLoading(false);
     }

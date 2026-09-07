@@ -8,71 +8,31 @@ import os
 import logging
 import asyncio
 from datetime import datetime, timezone, timedelta
-from typing import List, Optional, Annotated
+from typing import List, Optional
 
 import jwt
-import bcrypt
 import resend
-# COMMENTED OUT TO FIX MODULE ERROR:
-# from emergentintegrations.llm.chat import LlmChat, UserMessage
-from bson import ObjectId
-from fastapi import FastAPI, APIRouter, Request, HTTPException, Depends
+from fastapi import FastAPI, APIRouter, Request, HTTPException, Depends, UploadFile, File
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseModel, Field, EmailStr, BeforeValidator, ConfigDict
+from pydantic import BaseModel, Field, EmailStr
 
-# ------------------------------------------------------------------ DB
-mongo_url = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
-db_name = os.getenv('DB_NAME', 'voktaa_db')
+from database.appwrite_client import appwrite_manager
+from repositories.user_repository import UserRepository
+from repositories.enquiries_repository import EnquiryRepository
+from repositories.reviews_repository import ReviewRepository
+from repositories.events_repository import EventRepository
+from repositories.settings_repository import SettingsRepository
+from repositories import now_iso, parse_datetime, format_iso
+from services.auth_service import auth_service, hash_password, verify_password, create_access_token
+from services.storage_service import storage_service
 
-client = AsyncIOMotorClient(mongo_url)
-db = client[db_name]
-
-# ------------------------------------------------------------------ App
+# ------------------------------------------------------------------ App Setup
 app = FastAPI(title="VOKTAA Solutions API")
 api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("voktaa")
-
-if "mongodb+srv" in mongo_url:
-    logger.info("🟢 Connected to MongoDB Atlas Cloud Database")
-else:
-    logger.info("🟡 Connected to Local MongoDB Database")
-
-# ------------------------------------------------------------------ Helpers
-PyObjectId = Annotated[str, BeforeValidator(str)]
-
-JWT_ALGORITHM = "HS256"
-
-
-def get_jwt_secret() -> str:
-    return os.environ["JWT_SECRET"]
-
-
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
-
-def verify_password(plain: str, hashed: str) -> bool:
-    try:
-        return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
-    except Exception:
-        return False
-
-
-def create_access_token(user_id: str, email: str) -> str:
-    payload = {
-        "sub": user_id,
-        "email": email,
-        "exp": datetime.now(timezone.utc) + timedelta(days=7),
-        "type": "access",
-    }
-    return jwt.encode(payload, get_jwt_secret(), algorithm=JWT_ALGORITHM)
-
-
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
 
 
 async def send_enquiry_email(enquiry: dict) -> None:
@@ -109,27 +69,17 @@ async def send_enquiry_email(enquiry: dict) -> None:
 
 
 async def get_current_admin(request: Request) -> dict:
-    token = None
     auth_header = request.headers.get("Authorization", "")
-    if auth_header.startswith("Bearer "):
-        token = auth_header[7:]
+    token = auth_header[7:] if auth_header.startswith("Bearer ") else None
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    try:
-        payload = jwt.decode(token, get_jwt_secret(), algorithms=[JWT_ALGORITHM])
-        if payload.get("type") != "access":
-            raise HTTPException(status_code=401, detail="Invalid token type")
-        user = await db.users.find_one({"_id": ObjectId(payload["sub"])})
-        if not user:
-            raise HTTPException(status_code=401, detail="User not found")
-        return {"id": str(user["_id"]), "email": user["email"], "role": user.get("role", "admin")}
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+    user = await auth_service.get_user_from_token(token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid token or user not found")
+    return user
 
 
-# ------------------------------------------------------------------ Models
+# ------------------------------------------------------------------ Pydantic Models
 class LoginInput(BaseModel):
     email: EmailStr
     password: str
@@ -173,8 +123,7 @@ class ChatMessage(BaseModel):
     message: str
 
 
-# The supplied course-content document is represented as a public catalogue so
-# the frontend can resolve a program to its own syllabus instead of guessing.
+# ------------------------------------------------------------------ Program Syllabus Catalogue
 PROGRAM_SYLLABI = {
     "campus-recruitment-training": {
         "title": "Campus Recruitment Training",
@@ -332,58 +281,26 @@ PROGRAM_SYLLABI["train-the-trainer"] = PROGRAM_SYLLABI["train-the-trainer-progra
 PROGRAM_SYLLABI["public-speaking"] = PROGRAM_SYLLABI["public-speaking-debate"]
 
 
+# ------------------------------------------------------------------ Health Check Endpoint
+@api_router.get("/health")
+async def health_check():
+    """Verify FastAPI backend and Appwrite status."""
+    is_appwrite_connected = appwrite_manager.is_configured
+    db_status = "connected" if is_appwrite_connected else "local_store"
+    return {
+        "status": "healthy",
+        "database": db_status,
+        "provider": "appwrite"
+    }
 
 
-VOKTAA_SYSTEM_PROMPT = """You are the VOKTAA Solutions website assistant. VOKTAA is a Corporate Learning and Employability Solutions company based in Guntur, Andhra Pradesh, India, founded by P. Raja Sekhar.
-Contact: +91 74161 13199 | voktaasolutions@gmail.com | www.voktaa.com
-
-Answer questions about:
-
-PROGRAMS (11 total):
-1. Campus Recruitment Training (CRT) - interview skills, GD, workplace communication for final-year engineering students
-2. Soft Skills Development - communication, teamwork for college students
-3. Communication Skills & Business Communication - professional writing, presentations, verbal communication
-4. Personality Development - confidence, body language, self-presentation
-5. Public Speaking & Debate - structured speaking practice for school and college students
-6. Interview Skills - mock interviews, real-time feedback
-7. Career Guidance - career pathways, aptitude guidance
-8. Leadership Development - team management, decision-making
-9. Corporate Training - customised sessions for HR teams and employees
-10. Faculty Development - classroom delivery for educators
-11. Train-the-Trainer - equipping L&D teams
-
-ABOUT THE COMPANY:
-- Founded by P. Raja Sekhar, Assistant Professor and certified Soft Skills Trainer
-- Vision: Become India's most trusted Corporate Learning and Employability Solutions organisation
-- Tagline: Speak. Shine. Succeed.
-- Training culture, not tuition culture
-- Serves: Engineering colleges, degree colleges, universities, corporate HR teams, government agencies
-- Locations served: Guntur, Vijayawada, Vizag and across AP
-
-CONTACT & BOOKING:
-- Phone/WhatsApp: +91 74161 13199
-- Email: voktaasolutions@gmail.com
-- Website: www.voktaa.com
-- Book a demo: fill form at www.voktaa.com/contact
-
-RULES:
-- Always be helpful, warm, and professional
-- If asked about fees or schedules, say contact the team directly as programmes are customised per institution
-- If asked something unrelated to VOKTAA, politely say you can only help with VOKTAA-related questions and suggest they contact the team directly
-- Keep answers concise and friendly (2-4 short sentences)
-- Always end responses with an invitation to contact the team or book a free demo if relevant
-- Never make up information not listed above"""
-
-
-# ------------------------------------------------------------------ Auth routes
+# ------------------------------------------------------------------ Auth Routes
 @api_router.post("/auth/login")
 async def login(data: LoginInput):
-    email = data.email.lower().strip()
-    user = await db.users.find_one({"email": email})
-    if not user or not verify_password(data.password, user["password_hash"]):
+    res = await auth_service.authenticate_user(data.email, data.password)
+    if not res:
         raise HTTPException(status_code=401, detail="Invalid email or password")
-    token = create_access_token(str(user["_id"]), email)
-    return {"token": token, "user": {"email": email, "name": user.get("name", "Admin"), "role": user.get("role", "admin")}}
+    return res
 
 
 @api_router.get("/auth/me")
@@ -391,7 +308,7 @@ async def me(admin: dict = Depends(get_current_admin)):
     return admin
 
 
-# ------------------------------------------------------------------ Public routes
+# ------------------------------------------------------------------ Public Routes
 @api_router.get("/")
 async def root():
     return {"message": "VOKTAA Solutions API"}
@@ -399,8 +316,7 @@ async def root():
 
 @api_router.get("/programs/{program_slug}")
 async def get_program_syllabus(program_slug: str):
-    """Return the syllabus mapped to one program, including a safe missing state."""
-    syllabus = PROGRAM_SYLLABIES.get(program_slug)
+    syllabus = PROGRAM_SYLLABI.get(program_slug)
     if syllabus is None:
         raise HTTPException(status_code=404, detail="Program not found")
     return {
@@ -415,69 +331,47 @@ async def get_program_syllabus(program_slug: str):
 @api_router.post("/track")
 async def track(event: TrackEvent, request: Request):
     doc = event.model_dump()
-    doc["timestamp"] = now_iso()
     doc["ip"] = request.client.host if request.client else ""
-    await db.events.insert_one(doc)
+    await EventRepository.create(None, doc)
     return {"ok": True}
 
 
 @api_router.post("/enquiries")
 async def create_enquiry(data: EnquiryCreate, request: Request):
     doc = data.model_dump()
-    doc["timestamp"] = now_iso()
     doc["ip"] = request.client.host if request.client else ""
-    res = await db.enquiries.insert_one(doc)
-    # also record as a submission event for analytics
-    await db.events.insert_one({
+    enquiry = await EnquiryRepository.create(None, doc)
+    await EventRepository.create(None, {
         "type": "submission", "category": "enquiry", "label": data.program,
-        "page": "/contact", "session_id": "", "timestamp": now_iso(),
+        "page": "/contact", "session_id": "", "ip": doc["ip"],
     })
     await send_enquiry_email(doc)
-    return {"ok": True, "id": str(res.inserted_id)}
+    return {"ok": True, "id": enquiry.id}
 
 
 @api_router.post("/chat")
 async def chat_with_bot(payload: ChatMessage):
-    """AI chatbot answering VOKTAA-only questions using Claude via Emergent LLM key."""
-    llm_key = os.environ.get("EMERGENT_LLM_KEY", "").strip()
-    if not llm_key:
-        raise HTTPException(status_code=503, detail="Chat is not configured.")
     text = (payload.message or "").strip()
     if not text:
         raise HTTPException(status_code=400, detail="Empty message.")
     if len(text) > 2000:
         text = text[:2000]
     try:
-        # COMMENTED OUT TO FIX MODULE ERROR:
-        # chat = LlmChat(
-        #     api_key=llm_key,
-        #     session_id=payload.session_id or "voktaa-web",
-        #     system_message=VOKTAA_SYSTEM_PROMPT,
-        # ).with_model("anthropic", "claude-sonnet-4-5")
-        # reply = await chat.send_message(UserMessage(text=text))
-        
-        # ADDED PLACEHOLDER REPLY:
         reply = "Chat is temporarily disabled."
-        
-        # persist a lightweight log for analytics
-        await db.events.insert_one({
+        await EventRepository.create(None, {
             "type": "click", "category": "chat", "label": text[:120],
             "page": "/chat", "session_id": payload.session_id or "",
-            "timestamp": now_iso(),
         })
-        return {"reply": str(reply)}
+        return {"reply": reply}
     except Exception as e:
         logger.error("chat error: %s", e)
         raise HTTPException(status_code=502, detail="chat_unavailable")
 
 
-# ------------------------------------------------------------------ Admin routes
+# ------------------------------------------------------------------ Admin Routes
 @api_router.get("/admin/enquiries")
 async def list_enquiries(admin: dict = Depends(get_current_admin)):
-    items = await db.enquiries.find().sort("timestamp", -1).to_list(500)
-    for it in items:
-        it["id"] = str(it.pop("_id"))
-    return items
+    return await EnquiryRepository.list_all(None)
 
 
 # ---------------- Reviews ----------------
@@ -486,14 +380,11 @@ async def submit_review(data: ReviewCreate, request: Request):
     if not data.review or len(data.review.strip()) < 5:
         raise HTTPException(status_code=400, detail="Review is too short.")
     doc = data.model_dump()
-    doc["rating"] = max(1, min(5, int(doc.get("rating") or 5)))
-    doc["status"] = "approved"
-    doc["timestamp"] = now_iso()
     doc["ip"] = request.client.host if request.client else ""
-    await db.reviews.insert_one(doc)
-    await db.events.insert_one({
+    await ReviewRepository.create(None, doc)
+    await EventRepository.create(None, {
         "type": "submission", "category": "review", "label": data.program or data.role,
-        "page": "/reviews", "session_id": "", "timestamp": now_iso(),
+        "page": "/reviews", "session_id": "", "ip": doc["ip"],
     })
     return {"ok": True, "message": "Thanks! Your review is now live on the site."}
 
@@ -501,125 +392,70 @@ async def submit_review(data: ReviewCreate, request: Request):
 @api_router.get("/reviews")
 async def public_reviews(limit: int = 100):
     limit = max(1, min(200, limit))
-    items = await db.reviews.find({"status": "approved"}).sort("timestamp", -1).to_list(limit)
-    for it in items:
-        it["id"] = str(it.pop("_id"))
-        # never expose email/ip publicly
-        it.pop("email", None)
-        it.pop("ip", None)
-        it.pop("phone", None)
-    return items
+    return await ReviewRepository.list_public(None, limit)
 
 
 @api_router.get("/admin/reviews")
 async def admin_reviews(admin: dict = Depends(get_current_admin)):
-    items = await db.reviews.find().sort("timestamp", -1).to_list(500)
-    for it in items:
-        it["id"] = str(it.pop("_id"))
-    return items
+    return await ReviewRepository.list_all(None)
 
 
 @api_router.patch("/admin/reviews/{review_id}")
 async def update_review_status(review_id: str, body: ReviewStatusUpdate, admin: dict = Depends(get_current_admin)):
     if body.status not in {"approved", "rejected", "pending"}:
         raise HTTPException(status_code=400, detail="Invalid status")
-    try:
-        oid = ObjectId(review_id)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid id")
-    res = await db.reviews.update_one({"_id": oid}, {"$set": {"status": body.status}})
-    if res.matched_count == 0:
+    success = await ReviewRepository.update_status(None, review_id, body.status)
+    if not success:
         raise HTTPException(status_code=404, detail="Review not found")
     return {"ok": True}
 
 
 @api_router.delete("/admin/reviews/{review_id}")
 async def delete_review(review_id: str, admin: dict = Depends(get_current_admin)):
-    try:
-        oid = ObjectId(review_id)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid id")
-    await db.reviews.delete_one({"_id": oid})
+    success = await ReviewRepository.delete(None, review_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Review not found")
     return {"ok": True}
 
 
-# ---------------- Site settings (public read, admin write) ----------------
-DEFAULT_SETTINGS = {"reviews_visible": True}
+# ---------------- Admin Upload Endpoint ----------------
+@api_router.post("/admin/upload")
+async def upload_media(file: UploadFile = File(...), folder: str = "images", admin: dict = Depends(get_current_admin)):
+    try:
+        content = await file.read()
+        key, url = await storage_service.upload_file(content, file.filename or "upload.bin", file.content_type or "", folder=folder)
+        return {"ok": True, "key": key, "url": url}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Upload error: %s", e)
+        raise HTTPException(status_code=500, detail="Upload failed.")
 
 
-async def get_settings_doc() -> dict:
-    doc = await db.settings.find_one({"_id": "site"}) or {}
-    out = dict(DEFAULT_SETTINGS)
-    for k, v in doc.items():
-        if k != "_id":
-            out[k] = v
-    return out
-
-
+# ---------------- Settings ----------------
 @api_router.get("/settings")
 async def public_settings():
-    return await get_settings_doc()
+    return await SettingsRepository.get_settings(None)
 
 
 @api_router.patch("/admin/settings")
 async def update_settings(body: dict, admin: dict = Depends(get_current_admin)):
-    allowed = {k: bool(v) if isinstance(DEFAULT_SETTINGS.get(k), bool) else v for k, v in body.items() if k in DEFAULT_SETTINGS}
-    if not allowed:
-        raise HTTPException(status_code=400, detail="No valid settings")
-    await db.settings.update_one({"_id": "site"}, {"$set": allowed}, upsert=True)
-    return await get_settings_doc()
+    return await SettingsRepository.update_settings(None, body)
 
 
 @api_router.get("/admin/analytics")
 async def analytics(admin: dict = Depends(get_current_admin)):
-    total_visits = await db.events.count_documents({"type": "visit"})
-    submissions = await db.enquiries.count_documents({})
-    contact_clicks = await db.events.count_documents({"type": "click", "category": "contact"})
-    total_clicks = await db.events.count_documents({"type": "click"})
+    total_visits = await EventRepository.count_by_type(None, "visit")
+    submissions = await EnquiryRepository.count_all(None)
+    contact_clicks = await EventRepository.count_by_type_category(None, "click", "contact")
+    total_clicks = await EventRepository.count_by_type(None, "click")
+    unique_visitors = await EventRepository.distinct_session_visitors(None)
 
-    unique_ids = await db.events.distinct("session_id", {"type": "visit", "session_id": {"$ne": ""}})
-    unique_visitors = len([x for x in unique_ids if x])
-
-    # program breakdown from enquiries
-    program_pipeline = [
-        {"$match": {"program": {"$ne": ""}}},
-        {"$group": {"_id": "$program", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
-    ]
-    program_rows = await db.enquiries.aggregate(program_pipeline).to_list(50)
-    program_breakdown = [{"program": r["_id"], "count": r["count"]} for r in program_rows]
-
-    # program interest clicks
-    click_pipeline = [
-        {"$match": {"type": "click", "category": "program"}},
-        {"$group": {"_id": "$label", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
-    ]
-    click_rows = await db.events.aggregate(click_pipeline).to_list(50)
-    program_clicks = [{"program": r["_id"], "count": r["count"]} for r in click_rows]
-
-    # visits over last 14 days
-    days = []
-    today = datetime.now(timezone.utc).date()
-    for i in range(13, -1, -1):
-        d = today - timedelta(days=i)
-        start = datetime(d.year, d.month, d.day, tzinfo=timezone.utc).isoformat()
-        end = (datetime(d.year, d.month, d.day, tzinfo=timezone.utc) + timedelta(days=1)).isoformat()
-        c = await db.events.count_documents({"type": "visit", "timestamp": {"$gte": start, "$lt": end}})
-        days.append({"date": d.strftime("%b %d"), "visits": c})
-
-    # page views breakdown
-    page_pipeline = [
-        {"$match": {"type": "visit"}},
-        {"$group": {"_id": "$page", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
-    ]
-    page_rows = await db.events.aggregate(page_pipeline).to_list(50)
-    page_views = [{"page": r["_id"] or "/", "count": r["count"]} for r in page_rows]
-
-    recent = await db.enquiries.find().sort("timestamp", -1).to_list(10)
-    for it in recent:
-        it["id"] = str(it.pop("_id"))
+    program_breakdown = await EnquiryRepository.program_breakdown(None)
+    program_clicks = await EventRepository.click_label_breakdown(None)
+    visits_over_time = await EventRepository.daily_visits_last_14_days(None)
+    page_views = await EventRepository.page_view_breakdown(None)
+    recent_enquiries = await EnquiryRepository.list_all(None, limit=10)
 
     return {
         "totals": {
@@ -631,49 +467,52 @@ async def analytics(admin: dict = Depends(get_current_admin)):
         },
         "program_breakdown": program_breakdown,
         "program_clicks": program_clicks,
-        "visits_over_time": days,
+        "visits_over_time": visits_over_time,
         "page_views": page_views,
-        "recent_enquiries": recent,
+        "recent_enquiries": recent_enquiries,
     }
 
 
-# ------------------------------------------------------------------ Startup
+# ------------------------------------------------------------------ Startup & Seed
 async def seed_admin():
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com").lower()
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@voktaa.com").lower()
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
-    existing = await db.users.find_one({"email": admin_email})
+    existing = await UserRepository.get_by_email(None, admin_email)
     if existing is None:
-        await db.users.insert_one({
-            "email": admin_email,
-            "password_hash": hash_password(admin_password),
-            "name": "P. Raja Sekhar",
-            "role": "admin",
-            "created_at": now_iso(),
-        })
+        await UserRepository.create(
+            None,
+            email=admin_email,
+            password_hash=hash_password(admin_password),
+            name="P. Raja Sekhar",
+            role="admin",
+        )
         logger.info("Admin seeded: %s", admin_email)
-    elif not verify_password(admin_password, existing["password_hash"]):
-        await db.users.update_one({"email": admin_email}, {"$set": {"password_hash": hash_password(admin_password)}})
+    elif not verify_password(admin_password, existing.password_hash):
+        await UserRepository.update_password(None, admin_email, hash_password(admin_password))
         logger.info("Admin password updated: %s", admin_email)
 
 
 @app.on_event("startup")
 async def on_startup():
-    await db.users.create_index("email", unique=True)
-    await db.events.create_index("type")
+    appwrite_manager.validate_configuration()
     await seed_admin()
-
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
 
 
 app.include_router(api_router)
 
+# Mount local uploads directory for static file serving
+uploads_dir = Path(os.environ.get("UPLOAD_DIR", "uploads"))
+uploads_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
+
+cors_origins_raw = os.environ.get('CORS_ORIGINS', 'https://voktaa.com,https://www.voktaa.com,https://voktaasolutions.com,https://www.voktaasolutions.com,http://localhost:3000')
+origins_list = [o.strip() for o in cors_origins_raw.split(',') if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=origins_list if origins_list else ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+

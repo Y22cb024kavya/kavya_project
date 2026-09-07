@@ -6,7 +6,7 @@ import {
 } from "../components/ui/select";
 import { Reveal } from "../components/Reveal";
 import { SectionLabel, PageHero, GlassBubble } from "../components/shared";
-import { api, trackClick, CONTACT } from "../lib/api";
+import { createEnquiry, trackClick, CONTACT } from "../lib/api";
 
 const programOptions = [
   "Campus Recruitment Training", "Soft Skills Development", "Corporate Training",
@@ -46,7 +46,7 @@ const Contact = () => {
     }
     setLoading(true);
     try {
-      await api.post("/enquiries", form);
+      await createEnquiry(form);
       trackClick("contact", "enquiry-submit");
       setSubmitted(true);
       toast.success("Message sent successfully!");

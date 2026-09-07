@@ -1,10 +1,48 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MessageSquare, X, Send } from "lucide-react";
-import { api, trackClick } from "../lib/api";
+import { trackClick, trackEvent } from "../lib/api";
 import Logo from "./Logo";
 
 const WELCOME = "Hi! I'm the VOKTAA Assistant 👋 Ask me anything about our programmes, how to book a demo, or how to partner with us!";
-const FALLBACK = "I'm having trouble connecting right now. Please contact us directly at voktaasolutions@gmail.com or call +91 74161 13199.";
+
+const FAQ_KNOWLEDGE = [
+  {
+    keywords: ["demo", "book", "trial", "schedule", "register", "join"],
+    reply: "You can book a free demo session by visiting our Contact page (/contact) or messaging us directly on WhatsApp at +91 74161 13199!",
+  },
+  {
+    keywords: ["program", "course", "crt", "soft skill", "training", "syllabus", "subject", "learn"],
+    reply: "We offer Campus Recruitment Training (CRT), Soft Skills & Spoken English, Public Speaking & Debate, Leadership Development, Corporate Training, and Technical Skills (AI, Python, Cloud). Explore all programmes on our Programs page (/programs)!",
+  },
+  {
+    keywords: ["contact", "email", "phone", "number", "call", "whatsapp", "touch"],
+    reply: "You can reach us at voktaasolutions@gmail.com or call / WhatsApp us at +91 74161 13199.",
+  },
+  {
+    keywords: ["location", "address", "city", "where", "guntur", "andhra"],
+    reply: "VOKTAA Solutions is located in Guntur, Andhra Pradesh, India. We conduct both offline campus sessions and online training.",
+  },
+  {
+    keywords: ["review", "feedback", "rating", "student", "testimonial"],
+    reply: "Read authentic feedback from students, placement officers, and corporate partners on our Reviews page (/reviews)!",
+  },
+  {
+    keywords: ["college", "institution", "university", "corporate", "company", "placement"],
+    reply: "We partner with top educational institutions and corporate teams for tailored training programmes. Visit our For Institutions page (/institutions) for details!",
+  },
+];
+
+const DEFAULT_REPLY = "Thank you for reaching out! For detailed info on our programmes or custom institution training, please send us a message on our Contact page (/contact) or call us directly at +91 74161 13199.";
+
+function getBotReply(userText) {
+  const lower = userText.toLowerCase();
+  for (const item of FAQ_KNOWLEDGE) {
+    if (item.keywords.some((kw) => lower.includes(kw))) {
+      return item.reply;
+    }
+  }
+  return DEFAULT_REPLY;
+}
 
 const genSession = () => {
   let s = sessionStorage.getItem("voktaa_chat_sid");
@@ -46,14 +84,19 @@ const Chatbot = () => {
     setMessages((m) => [...m, { role: "user", text }]);
     setInput("");
     setSending(true);
-    try {
-      const { data } = await api.post("/chat", { session_id: sessionId.current, message: text });
-      setMessages((m) => [...m, { role: "bot", text: data.reply || "…" }]);
-    } catch {
-      setMessages((m) => [...m, { role: "bot", text: FALLBACK }]);
-    } finally {
+
+    trackEvent({
+      type: "click",
+      category: "chat",
+      label: text.slice(0, 120),
+      session_id: sessionId.current,
+    }).catch(() => {});
+
+    setTimeout(() => {
+      const reply = getBotReply(text);
+      setMessages((m) => [...m, { role: "bot", text: reply }]);
       setSending(false);
-    }
+    }, 400);
   };
 
   const toggle = () => {

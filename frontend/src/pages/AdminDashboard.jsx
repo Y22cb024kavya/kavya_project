@@ -5,7 +5,10 @@ import {
   BarChart, Bar, PieChart, Pie, Cell,
 } from "recharts";
 import { Eye, EyeOff, Users, Send, MousePointerClick, LogOut, RefreshCw, Download } from "lucide-react";
-import { api, authHeaders, clearToken, getToken } from "../lib/api";
+import {
+  getAnalyticsData, getSiteSettings, updateSiteSettings, getEnquiries,
+  logoutAdmin, clearToken, getCurrentUser,
+} from "../lib/api";
 
 const GOLD = "#D9A23B";
 const NAVY = "#0B3943";
@@ -40,28 +43,33 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const [analytics, cfg] = await Promise.all([
-        api.get("/admin/analytics", { headers: authHeaders() }),
-        api.get("/settings").catch(() => ({ data: { reviews_visible: true } })),
+        getAnalyticsData(),
+        getSiteSettings().catch(() => ({ reviews_visible: true })),
       ]);
-      setData(analytics.data);
-      setSettings(cfg.data);
+      setData(analytics);
+      setSettings(cfg);
     } catch (err) {
-      if (err.response?.status === 401) {
-        clearToken();
-        navigate("/admin/login");
-      }
+      clearToken();
+      navigate("/admin/login");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!getToken()) { navigate("/admin/login"); return; }
-    load();
+    getCurrentUser().then((user) => {
+      if (!user) {
+        clearToken();
+        navigate("/admin/login");
+        return;
+      }
+      load();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const logout = () => {
+  const logout = async () => {
+    await logoutAdmin();
     clearToken();
     navigate("/admin/login");
   };
@@ -70,18 +78,14 @@ const AdminDashboard = () => {
     setTogglingReviews(true);
     try {
       const next = !settings.reviews_visible;
-      const { data: updated } = await api.patch(
-        "/admin/settings",
-        { reviews_visible: next },
-        { headers: authHeaders() }
-      );
+      const updated = await updateSiteSettings({ reviews_visible: next });
       setSettings(updated);
-    } catch { /* silent */ } finally { setTogglingReviews(false); }
+    } catch { /* silent catch */ } finally { setTogglingReviews(false); }
   };
 
   const exportCSV = async () => {
     try {
-      const { data: rows } = await api.get("/admin/enquiries", { headers: authHeaders() });
+      const rows = await getEnquiries();
       const cols = ["first_name", "last_name", "email", "phone", "program", "city", "message", "timestamp"];
       const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
       const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => esc(r[c])).join(","))].join("\n");
@@ -93,7 +97,7 @@ const AdminDashboard = () => {
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      if (err.response?.status === 401) { clearToken(); navigate("/admin/login"); }
+      /* silent catch */
     }
   };
 

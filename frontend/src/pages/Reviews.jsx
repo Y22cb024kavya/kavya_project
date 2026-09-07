@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Star, ArrowRight, CheckCircle2, Sparkles, Filter, MessageSquareQuote, MessageSquare, Brain, TrendingUp } from "lucide-react";
+import { Star, ArrowRight, CheckCircle2, MessageSquare, Brain, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../components/ui/select";
 import { Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
-import { SectionLabel, PageHero, GoldLink, StagePedestalDisc } from "../components/shared";
-import { api } from "../lib/api";
+import { SectionLabel, PageHero, StagePedestalDisc } from "../components/shared";
+import { getPublicReviews, submitReview } from "../lib/api";
 
 const ROLE_OPTIONS = ["Student", "Placement Officer", "Corporate Professional", "Educator", "Other"];
 const PROGRAM_OPTIONS = [
   "Campus Recruitment Training", "Soft Skills Development", "Communication Skills",
   "Personality Development", "Public Speaking & Debate", "Interview Skills",
   "Leadership Development", "Corporate Training", "Train-the-Trainer", "Other",
-];
-
-const INITIAL_FALLBACK_REVIEWS = [
-  { id: "r1", name: "Tejasri Penubothu", role: "Student", organisation: "Student", program: "Soft Skills Development", rating: 5, review: "I started using VOKTAA Solutions last week to improve my communication skills, leadership qualities, and interview skills. The training sessions are engaging, well-organized, and easy to understand. The trainers explain every concept clearly with practical examples, which has helped me build confidence. Whenever I had a question, the support team responded quickly and was very helpful. Overall, it has been a great learning experience, and I highly recommend VOKTAA Solutions to anyone looking to improve their soft skills." },
-  { id: "r2", name: "Sahithi Srinivas S", role: "Student", organisation: "Student", program: "Campus Recruitment Training", rating: 5, review: "I started using VOKTAA Solutions last week to fix my communication skills, leadership qualities and Interview Tips. The app is very clean and fast. When I had a question, their online/offline sessions helped my interviews and the support team replied in minutes. Highly recommend." },
-  { id: "r3", name: "N Venkata Bhargavi", role: "Student", organisation: "Student", program: "Communication Skills", rating: 5, review: "This session will definitely be useful for those who want to build a strong foundation on communication skills and also boost them with confidence to face the interviews. I learned a lot of tips which helped me in my interviews." },
-  { id: "r4", name: "Anumula Abhinaya", role: "Student", organisation: "Student", program: "Public Speaking & Debate", rating: 5, review: "The session was very useful and interactive. I learned many things that will help me improve my communication and confidence." }
 ];
 
 const Stars = ({ value = 5, onChange, size = 20, testid }) => {
@@ -88,14 +81,10 @@ const Reviews = () => {
   const load = async () => {
     setLoadingList(true);
     try {
-      const rev = await api.get("/reviews");
-      if (Array.isArray(rev.data) && rev.data.length > 0) {
-        setReviews(rev.data);
-      } else {
-        setReviews(INITIAL_FALLBACK_REVIEWS);
-      }
+      const data = await getPublicReviews();
+      setReviews(data);
     } catch {
-      setReviews(INITIAL_FALLBACK_REVIEWS);
+      /* silent catch handled by getPublicReviews fallback */
     } finally {
       setLoadingList(false);
     }
@@ -111,13 +100,13 @@ const Reviews = () => {
     }
     setSubmitting(true);
     try {
-      await api.post("/reviews", form);
+      await submitReview(form);
       setSubmitted(true);
       toast.success("Review posted successfully!");
       setForm(empty);
       load();
     } catch (err) {
-      toast.error(err.response?.data?.detail || "Something went wrong. Try again.");
+      toast.error(err.message || "Something went wrong. Try again.");
     } finally {
       setSubmitting(false);
     }
@@ -143,12 +132,8 @@ const Reviews = () => {
         subtitle="Real reactions from students, placement officers, and corporate partners, collected directly from our active training cohorts."
       >
         <div className="relative flex flex-col items-center justify-center w-full">
-          {/* 3D Stage Pedestal Disc Platform (Image 2 style) */}
           <StagePedestalDisc />
-
-          {/* 3D Stage Pedestal Cards (COMMUNICATE, THINK, LEAD) beside the text */}
           <div className="relative w-full max-w-lg flex items-center justify-center gap-1.5 sm:gap-4 z-10 py-2 px-1 sm:px-0">
-            {/* Card 1: COMMUNICATE */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -163,7 +148,6 @@ const Reviews = () => {
               <span className="text-purple-900/70 text-[9px] sm:text-xs mt-0.5 sm:mt-1 font-semibold">with Confidence</span>
             </motion.div>
 
-            {/* Card 2: THINK (Center Featured) */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -178,7 +162,6 @@ const Reviews = () => {
               <span className="text-purple-900/70 text-[10px] sm:text-sm mt-0.5 sm:mt-1 font-semibold">Critically</span>
             </motion.div>
 
-            {/* Card 3: LEAD */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -196,16 +179,13 @@ const Reviews = () => {
         </div>
       </PageHero>
 
-      {/* REVIEWS DISPLAY WITH AMBIENT GLASSMORPHISM CANVAS */}
+      {/* REVIEWS DISPLAY */}
       <section className="relative bg-gradient-to-br from-purple-100/70 via-indigo-50/40 to-cyan-50/50 pt-2 md:pt-4 pb-12 overflow-hidden" data-testid="reviews-display">
-        {/* Ambient Color Orbs */}
         <div className="absolute top-10 left-10 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-12 z-10">
-          
-          {/* Category Filter Tabs */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
             {[
               { id: "all", label: "All Reviews" },
@@ -255,7 +235,7 @@ const Reviews = () => {
         </div>
       </section>
 
-      {/* SUBMIT REVIEW SECTION WITH Sleek GLASS FORM */}
+      {/* SUBMIT REVIEW SECTION */}
       <section className="bg-white py-20 md:py-28 relative overflow-hidden" data-testid="reviews-submit-section">
         <div className="max-w-3xl mx-auto px-6 md:px-12">
           <div className="text-center">

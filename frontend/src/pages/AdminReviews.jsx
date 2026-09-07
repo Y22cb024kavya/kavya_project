@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, X, Trash2, Star, LogOut, RefreshCw, ArrowLeft } from "lucide-react";
-import { api, authHeaders, clearToken, getToken } from "../lib/api";
+import {
+  getAllReviewsAdmin, updateReviewStatus, deleteReview,
+  logoutAdmin, clearToken, getCurrentUser,
+} from "../lib/api";
 
 const STATUS_TABS = ["pending", "approved", "rejected", "all"];
 
@@ -22,31 +25,42 @@ const AdminReviews = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get("/admin/reviews", { headers: authHeaders() });
+      const data = await getAllReviewsAdmin();
       setReviews(data);
     } catch (err) {
-      if (err.response?.status === 401) { clearToken(); navigate("/admin/login"); }
+      clearToken();
+      navigate("/admin/login");
     } finally { setLoading(false); }
   };
 
   useEffect(() => {
-    if (!getToken()) { navigate("/admin/login"); return; }
-    load();
+    getCurrentUser().then((user) => {
+      if (!user) {
+        clearToken();
+        navigate("/admin/login");
+        return;
+      }
+      load();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setStatus = async (id, status) => {
-    await api.patch(`/admin/reviews/${id}`, { status }, { headers: authHeaders() });
+    await updateReviewStatus(id, status);
     load();
   };
 
   const remove = async (id) => {
     if (!window.confirm("Delete this review permanently?")) return;
-    await api.delete(`/admin/reviews/${id}`, { headers: authHeaders() });
+    await deleteReview(id);
     load();
   };
 
-  const logout = () => { clearToken(); navigate("/admin/login"); };
+  const logout = async () => {
+    await logoutAdmin();
+    clearToken();
+    navigate("/admin/login");
+  };
 
   const filtered = tab === "all" ? reviews : reviews.filter((r) => r.status === tab);
   const counts = {

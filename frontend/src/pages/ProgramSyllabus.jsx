@@ -1,63 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen, FileText, Loader2 } from "lucide-react";
+import { ArrowLeft, BookOpen, FileText } from "lucide-react";
 import { PageHero } from "../components/shared";
-import { api } from "../lib/api";
 import { programSyllabi } from "../data/programSyllabi";
 
 const ProgramSyllabus = () => {
   const { slug } = useParams();
-  const [syllabus, setSyllabus] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    setError(false);
-
-    const fallback = programSyllabi[slug];
-    const fallbackSyllabus = fallback ? {
-      slug,
-      ...fallback,
-      available: Boolean(fallback.source_document && fallback.subjects && fallback.subjects.length > 0)
-    } : null;
-
-    api.get(`/programs/${slug}`)
-      .then(({ data }) => {
-        if (!active) return;
-        const isValidData = data && typeof data === "object" && typeof data !== "string" && data.title && Array.isArray(data.subjects) && data.subjects.length > 0;
-
-        if (isValidData) {
-          setSyllabus({
-            slug,
-            ...data,
-            available: Boolean(data.source_document && data.subjects.length > 0)
-          });
-        } else if (fallbackSyllabus) {
-          setSyllabus(fallbackSyllabus);
-        } else if (data && typeof data === "object" && data.title) {
-          setSyllabus({ slug, ...data, available: false });
-        } else {
-          setError(true);
-        }
-      })
-      .catch(() => {
-        if (!active) return;
-        if (fallbackSyllabus) {
-          setSyllabus(fallbackSyllabus);
-        } else {
-          setError(true);
-        }
-      })
-      .finally(() => active && setLoading(false));
-
-    return () => { active = false; };
-  }, [slug]);
+  const fallback = programSyllabi[slug];
+  const syllabus = fallback
+    ? {
+        slug,
+        ...fallback,
+        available: Boolean(fallback.source_document && fallback.subjects && fallback.subjects.length > 0),
+      }
+    : null;
 
   useEffect(() => {
     document.title = syllabus?.title ? `${syllabus.title} | VOKTAA Solutions` : "Program Syllabus | VOKTAA Solutions";
-  }, [syllabus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
   return (
     <>
@@ -73,14 +35,7 @@ const ProgramSyllabus = () => {
             <ArrowLeft size={16} /> Back to Programs
           </Link>
 
-          {loading && (
-            <div className="bg-white rounded-3xl border border-[#CCE0F5] p-16 text-center text-[#003366]" data-testid="syllabus-loading">
-              <Loader2 className="mx-auto animate-spin" size={28} />
-              <p className="mt-4">Loading syllabus...</p>
-            </div>
-          )}
-
-          {!loading && (error || !syllabus) && (
+          {!syllabus && (
             <div className="bg-white rounded-3xl border border-[#CCE0F5] p-12 text-center" data-testid="syllabus-error">
               <FileText className="mx-auto text-[#157082]" size={40} />
               <h2 className="font-heading font-bold text-2xl text-[#003366] mt-5">Program not found</h2>
@@ -88,7 +43,7 @@ const ProgramSyllabus = () => {
             </div>
           )}
 
-          {!loading && !error && syllabus && (
+          {syllabus && (
             <section className="bg-white rounded-3xl border border-[#CCE0F5] shadow-lg p-8 md:p-12" data-testid="syllabus-viewer">
               <div className="flex items-start gap-4 pb-6 border-b border-[#CCE0F5]">
                 <div className="w-12 h-12 shrink-0 rounded-2xl bg-[#CCE0F5]/60 text-[#003366] flex items-center justify-center">

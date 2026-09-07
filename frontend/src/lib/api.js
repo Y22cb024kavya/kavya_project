@@ -1,7 +1,9 @@
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || (process.env.NODE_ENV === "development" ? "http://localhost:8000" : "");
-export const API = `${BACKEND_URL}/api`;
+import { trackEvent, trackVisit, trackClick, getAnalyticsData } from "./events";
+import { loginAdmin, logoutAdmin, getCurrentUser, isAuthenticated } from "./auth";
+import { createEnquiry, getEnquiries } from "./enquiries";
+import { getPublicReviews, submitReview, getAllReviewsAdmin, updateReviewStatus, deleteReview } from "./reviews";
+import { getSiteSettings, updateSiteSettings } from "./settings";
+import { uploadMedia, getMediaViewUrl, deleteMedia } from "./storage";
 
 export const CONTACT = {
   phone: "7416113199",
@@ -15,32 +17,39 @@ export const CONTACT = {
   facebook: "https://www.facebook.com/search/top?q=voktaa%20solutions",
 };
 
-export const api = axios.create({ baseURL: API });
-
-// ---- session id for unique visitor tracking ----
-function getSessionId() {
-  let id = localStorage.getItem("voktaa_sid");
-  if (!id) {
-    id = "s_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    localStorage.setItem("voktaa_sid", id);
-  }
-  return id;
-}
-
-export function trackVisit(page) {
-  api.post("/track", { type: "visit", page, session_id: getSessionId() }).catch(() => {});
-}
-
-export function trackClick(category, label, page = window.location.pathname) {
-  api.post("/track", { type: "click", category, label, page, session_id: getSessionId() }).catch(() => {});
-}
-
-// ---- admin auth token ----
+// Re-export session helpers for backward compatibility
 export const getToken = () => localStorage.getItem("voktaa_token");
 export const setToken = (t) => localStorage.setItem("voktaa_token", t);
-export const clearToken = () => localStorage.removeItem("voktaa_token");
+export const clearToken = () => {
+  localStorage.removeItem("voktaa_token");
+  logoutAdmin();
+};
 
 export function authHeaders() {
   const t = getToken();
   return t ? { Authorization: `Bearer ${t}` } : {};
 }
+
+// Re-export Appwrite services
+export {
+  trackEvent,
+  trackVisit,
+  trackClick,
+  getAnalyticsData,
+  loginAdmin,
+  logoutAdmin,
+  getCurrentUser,
+  isAuthenticated,
+  createEnquiry,
+  getEnquiries,
+  getPublicReviews,
+  submitReview,
+  getAllReviewsAdmin,
+  updateReviewStatus,
+  deleteReview,
+  getSiteSettings,
+  updateSiteSettings,
+  uploadMedia,
+  getMediaViewUrl,
+  deleteMedia,
+};
