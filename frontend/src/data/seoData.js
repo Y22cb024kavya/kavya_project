@@ -24,7 +24,7 @@ export const ORGANIZATION_SCHEMA = {
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+91-9390246684",
+    "telephone": "+91-7416113199",
     "contactType": "customer service",
     "email": "voktaasolutions@gmail.com",
     "areaServed": "IN",
@@ -95,7 +95,7 @@ export const PAGE_SEO = {
   },
   contact: {
     title: "Contact VOKTAA Solutions | Book a Free Demo Class in Guntur, AP",
-    description: "Get in touch with VOKTAA Solutions in Guntur, Andhra Pradesh. Call +91 93902 46684, email voktaasolutions@gmail.com, or book a free demo session today.",
+    description: "Get in touch with VOKTAA Solutions in Guntur, Andhra Pradesh. Call +91 74161 13199, email voktaasolutions@gmail.com, or book a free demo session today.",
     canonical: `${SITE_URL}/contact`,
     ogImage: `${SITE_URL}/voktaa_logo.png`,
     ogType: "website"

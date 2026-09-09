@@ -12,6 +12,7 @@ import {
   searchKnowledgeBase
 } from "./knowledgeBase";
 import { getCommonConversationResponse } from "./commonConversation";
+import { getSyllabusExpertResponse } from "./syllabusExpert";
 
 export const CONTACT = {
   phone: "7416113199",
@@ -65,5 +66,6 @@ export {
   toggleKnowledgeDocument,
   deleteKnowledgeDocument,
   searchKnowledgeBase,
-  getCommonConversationResponse
+  getCommonConversationResponse,
+  getSyllabusExpertResponse
 };

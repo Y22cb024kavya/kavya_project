@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MessageSquare, X, Send } from "lucide-react";
-import { trackClick, trackEvent, searchKnowledgeBase, getCommonConversationResponse } from "../lib/api";
+import { trackClick, trackEvent, searchKnowledgeBase, getCommonConversationResponse, getSyllabusExpertResponse } from "../lib/api";
 import Logo from "./Logo";
 
 const WELCOME = "Hi! I'm the VOKTAA Assistant 👋 Ask me anything about our programmes, how to book a demo, or how to partner with us!";
@@ -100,21 +100,28 @@ const Chatbot = () => {
         return;
       }
 
-      // PRIORITY 2 — KNOWLEDGE BASE SEARCH
+      // PRIORITY 2 — SYLLABUS & ACADEMIC PROGRAM EXPERT
+      const syllabusReply = getSyllabusExpertResponse(text);
+      if (syllabusReply) {
+        setMessages((m) => [...m, { role: "bot", text: syllabusReply }]);
+        return;
+      }
+
+      // PRIORITY 3 — KNOWLEDGE BASE SEARCH
       let reply = await searchKnowledgeBase(text);
       if (reply) {
         setMessages((m) => [...m, { role: "bot", text: reply }]);
         return;
       }
 
-      // PRIORITY 3 — FAQ SEARCH
+      // PRIORITY 4 — FAQ SEARCH
       const faqReply = getBotReply(text);
       if (faqReply) {
         setMessages((m) => [...m, { role: "bot", text: faqReply }]);
         return;
       }
 
-      // PRIORITY 4 — POLITE FALLBACK
+      // PRIORITY 5 — POLITE FALLBACK
       setMessages((m) => [...m, { role: "bot", text: POLITE_FALLBACK }]);
     } catch {
       const faqReply = getBotReply(text);
