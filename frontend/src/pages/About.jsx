@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { CheckCircle2, ArrowRight, Award, Sparkles, Handshake, Zap, Lightbulb, ShieldCheck, Mail, User } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem, MaskLine } from "../components/Reveal";
 import { SectionLabel, GoldLink, OutlineLink, GlassBubble } from "../components/shared";
+import SEO from "../components/SEO";
+import Breadcrumbs from "../components/Breadcrumbs";
+import { PAGE_SEO, ORGANIZATION_SCHEMA, PRIMARY_ORG_ID, SITE_URL } from "../data/seoData";
 
 const acronym = [
   { l: "V", w: "Voice" },
@@ -31,10 +34,28 @@ const values = [
 ];
 
 const About = () => {
-  useEffect(() => { document.title = "About Us | VOKTAA Solutions"; }, []);
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${SITE_URL}/about/#webpage`,
+    "url": `${SITE_URL}/about`,
+    "name": PAGE_SEO.about.title,
+    "description": PAGE_SEO.about.description,
+    "isPartOf": { "@id": `${SITE_URL}/#website` },
+    "about": { "@id": PRIMARY_ORG_ID }
+  };
 
   return (
     <>
+      <SEO
+        title={PAGE_SEO.about.title}
+        description={PAGE_SEO.about.description}
+        canonical={PAGE_SEO.about.canonical}
+        ogImage={PAGE_SEO.about.ogImage}
+        ogType={PAGE_SEO.about.ogType}
+        schemas={[ORGANIZATION_SCHEMA, aboutSchema]}
+      />
+      <Breadcrumbs items={[{ label: "About Us" }]} />
       {/* GLASSMORPHIC HERO SECTION */}
       <section className="relative bg-gradient-to-br from-[#F0F5FA] via-[#F2FAFC] to-white pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden border-b border-[#CCE0F5]" data-testid="about-hero">
         {/* Floating Glassmorphism Bubbles */}

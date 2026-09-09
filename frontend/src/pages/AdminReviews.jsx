@@ -5,6 +5,7 @@ import {
   getAllReviewsAdmin, updateReviewStatus, deleteReview,
   logoutAdmin, clearToken, getCurrentUser,
 } from "../lib/api";
+import SEO from "../components/SEO";
 
 const STATUS_TABS = ["pending", "approved", "rejected", "all"];
 
@@ -72,6 +73,7 @@ const AdminReviews = () => {
 
   return (
     <div className="min-h-screen bg-purple-50/30" data-testid="admin-reviews">
+      <SEO title="Review Moderation | VOKTAA Admin" noindex={true} />
       <header className="bg-purple-950 border-b border-purple-800/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
           <div>

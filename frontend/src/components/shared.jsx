@@ -53,7 +53,7 @@ export const PageHero = ({ label, title, gold, subtitle, bgImage, imgPosition = 
         {/* Background photo framed with object position - bright, large & clear */}
         <img
           src={bgImage}
-          alt=""
+          alt={title ? `${title} ${gold || ""} - VOKTAA Solutions` : "VOKTAA Training Architecture"}
           className={`absolute inset-0 w-full h-full object-cover ${imgPosition} opacity-95`}
         />
         {/* Soft, subtle translucent overlay so photo is clear & dark shade is not dominating */}

@@ -1,0 +1,6 @@
+# VOKTAA Solutions robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://voktaa.com/sitemap.xml

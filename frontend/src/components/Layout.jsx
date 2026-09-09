@@ -11,16 +11,21 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    let lenis;
     let raf;
-    const loop = (time) => {
-      lenis.raf(time);
+    try {
+      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+      const loop = (time) => {
+        if (lenis) lenis.raf(time);
+        raf = requestAnimationFrame(loop);
+      };
       raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
+    } catch (e) {
+      console.warn("Lenis smooth scroll warning:", e);
+    }
     return () => {
-      cancelAnimationFrame(raf);
-      lenis.destroy();
+      if (raf) cancelAnimationFrame(raf);
+      if (lenis) lenis.destroy();
     };
   }, []);
 

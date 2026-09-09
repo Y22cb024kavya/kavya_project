@@ -9,6 +9,8 @@ import {
   getAnalyticsData, getSiteSettings, updateSiteSettings, getEnquiries,
   logoutAdmin, clearToken, getCurrentUser,
 } from "../lib/api";
+import SEO from "../components/SEO";
+import AdminKnowledgeBase from "../components/AdminKnowledgeBase";
 
 const GOLD = "#D9A23B";
 const NAVY = "#0B3943";
@@ -111,6 +113,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-purple-50/30" data-testid="admin-dashboard">
+      <SEO title="Admin Dashboard | VOKTAA" noindex={true} />
       {/* top bar */}
       <header className="bg-purple-950 border-b border-purple-800/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
@@ -162,6 +165,9 @@ const AdminDashboard = () => {
           <Metric icon={MousePointerClick} label="Contact Clicks" value={t.contact_clicks} sub="whatsapp / email / phone" />
           <Metric icon={MousePointerClick} label="Total Clicks" value={t.total_clicks} sub="tracked interactions" />
         </div>
+
+        {/* KNOWLEDGE BASE MANAGEMENT */}
+        <AdminKnowledgeBase />
 
         {/* charts */}
         <div className="grid lg:grid-cols-3 gap-6 mb-6">

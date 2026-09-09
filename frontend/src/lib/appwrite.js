@@ -22,14 +22,29 @@ export const COLLECTIONS = {
   SETTINGS: process.env.REACT_APP_APPWRITE_SETTINGS_COLLECTION_ID || "6a9e6315000d58b0186e",
 };
 
-// Helper for database operations with fallback to collection name
+// Helper for database operations with fallback to multiple collection ID candidates
 export async function withCollectionFallback(primaryCollectionId, fallbackName, fn) {
-  try {
-    return await fn(primaryCollectionId);
-  } catch (err) {
-    if (err?.code === 404 || err?.message?.includes("could not be found")) {
-      return await fn(fallbackName);
+  const candidates = Array.from(new Set([
+    primaryCollectionId,
+    fallbackName,
+    "voktaa_" + fallbackName,
+    fallbackName ? fallbackName.slice(0, -1) : "", // e.g. review, enquiry
+    fallbackName ? fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1) : "" // e.g. Reviews, Enquiries
+  ])).filter(Boolean);
+
+  let lastErr = null;
+  for (const colId of candidates) {
+    try {
+      return await fn(colId);
+    } catch (err) {
+      lastErr = err;
+      const isNotFound = err?.code === 404 || (err?.message && String(err.message).toLowerCase().includes("could not be found"));
+      if (isNotFound) {
+        console.warn(`Appwrite collection '${colId}' not found, trying next fallback...`);
+        continue;
+      }
+      throw err;
     }
-    throw err;
   }
+  throw lastErr;
 }

@@ -5,6 +5,8 @@ import { ArrowRight, GraduationCap, MessageSquare, Building2, UserCog, CheckCirc
 import Marquee from "react-fast-marquee";
 import { MaskLine, Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
 import { SectionLabel, GoldLink, OutlineLink, StagePedestalDisc } from "../components/shared";
+import SEO from "../components/SEO";
+import { PAGE_SEO, ORGANIZATION_SCHEMA, WEBSITE_SCHEMA } from "../data/seoData";
 
 const pills = [
   { icon: Sparkles, text: "SOFT SKILLS" },
@@ -81,7 +83,8 @@ const serve = [
   {
     t: "Government & Agencies",
     d: "Skill missions, training institutes, NGOs.",
-    img: "/serve_government_clean.jpg"
+    img: "/serve_government_clean.jpg?v=3",
+    pos: "object-[center_35%]"
   },
 ];
 
@@ -217,14 +220,20 @@ const companyLogos = [
 ];
 
 const Home = () => {
-  useEffect(() => { document.title = "VOKTAA | Speak. Shine. Succeed."; }, []);
-
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const gridY = useTransform(scrollYProgress, [0, 1], [0, 60]);
 
   return (
     <>
+      <SEO
+        title={PAGE_SEO.home.title}
+        description={PAGE_SEO.home.description}
+        canonical={PAGE_SEO.home.canonical}
+        ogImage={PAGE_SEO.home.ogImage}
+        ogType={PAGE_SEO.home.ogType}
+        schemas={[ORGANIZATION_SCHEMA, WEBSITE_SCHEMA]}
+      />
       {/* HERO SECTION */}
       <section ref={heroRef} className="relative bg-gradient-to-b from-purple-100/70 via-purple-50/30 to-white pt-20 sm:pt-24 pb-2 md:pb-4 overflow-hidden" data-testid="hero-section">
         <motion.div style={{ y: gridY }} className="absolute inset-0 dot-grid dot-grid-fade opacity-40" />
@@ -516,7 +525,7 @@ const Home = () => {
                   <img
                     src={s.img}
                     alt={s.t}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className={`absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ${s.pos || "object-center"}`}
                   />
                   {/* Smooth Dark Gradient Overlay for Maximum Readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-950/90 via-purple-900/40 to-transparent" />

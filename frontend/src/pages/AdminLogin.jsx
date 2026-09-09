@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
 import { loginAdmin, getCurrentUser, setToken } from "../lib/api";
 import Logo from "../components/Logo";
+import SEO from "../components/SEO";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-purple-950 flex items-center justify-center px-6 relative overflow-hidden" data-testid="admin-login">
+      <SEO title="Admin Login | VOKTAA" noindex={true} />
       <div className="absolute inset-0 dot-grid dot-grid-fade opacity-40" />
       <div className="relative w-full max-w-md">
         <div className="flex flex-col items-center justify-center text-center mb-8">

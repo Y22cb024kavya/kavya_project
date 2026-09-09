@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
 import { SectionLabel, PageHero, GoldLink } from "../components/shared";
+import SEO from "../components/SEO";
+import Breadcrumbs from "../components/Breadcrumbs";
+import { PAGE_SEO, ORGANIZATION_SCHEMA, PRIMARY_ORG_ID, SITE_URL } from "../data/seoData";
 import { trackClick } from "../lib/api";
 
 const programs = [
@@ -126,10 +129,33 @@ const programs = [
 ];
 
 const Programs = () => {
-  useEffect(() => { document.title = "Programs | VOKTAA Solutions"; }, []);
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "VOKTAA Solutions Training Programmes",
+    "itemListElement": programs.map((p, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Course",
+        "name": p.t,
+        "description": p.d,
+        "provider": { "@id": PRIMARY_ORG_ID }
+      }
+    }))
+  };
 
   return (
     <>
+      <SEO
+        title={PAGE_SEO.programs.title}
+        description={PAGE_SEO.programs.description}
+        canonical={PAGE_SEO.programs.canonical}
+        ogImage={PAGE_SEO.programs.ogImage}
+        ogType={PAGE_SEO.programs.ogType}
+        schemas={[ORGANIZATION_SCHEMA, itemListSchema]}
+      />
+      <Breadcrumbs items={[{ label: "Programmes" }]} />
       {/* PAGE HERO WITH RICH BACKGROUND IMAGE */}
       <PageHero
         testid="programs-hero"

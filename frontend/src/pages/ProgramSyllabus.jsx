@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, BookOpen, FileText } from "lucide-react";
 import { PageHero } from "../components/shared";
 import { programSyllabi } from "../data/programSyllabi";
+import SEO from "../components/SEO";
+import Breadcrumbs from "../components/Breadcrumbs";
+import { PROGRAM_SLUG_SEO, ORGANIZATION_SCHEMA, SITE_URL, PRIMARY_ORG_ID } from "../data/seoData";
 
 const ProgramSyllabus = () => {
   const { slug } = useParams();
@@ -16,13 +19,44 @@ const ProgramSyllabus = () => {
       }
     : null;
 
-  useEffect(() => {
-    document.title = syllabus?.title ? `${syllabus.title} | VOKTAA Solutions` : "Program Syllabus | VOKTAA Solutions";
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  const seoInfo = PROGRAM_SLUG_SEO[slug] || {
+    title: syllabus?.title ? `${syllabus.title} | VOKTAA Solutions` : "Program Syllabus | VOKTAA Solutions",
+    description: `Explore syllabus details for ${syllabus?.title || "VOKTAA training programme"} mapped for students and professionals.`,
+    canonical: `${SITE_URL}/programs/${slug}`,
+    ogImage: `${SITE_URL}/classroom_training.jpg`
+  };
+
+  const courseSchema = syllabus
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": syllabus.title,
+        "description": seoInfo.description,
+        "provider": { "@id": PRIMARY_ORG_ID },
+        "hasCourseInstance": {
+          "@type": "CourseInstance",
+          "courseMode": "InPerson",
+          "location": "VOKTAA Training Center, Guntur, AP"
+        }
+      }
+    : null;
 
   return (
     <>
+      <SEO
+        title={seoInfo.title}
+        description={seoInfo.description}
+        canonical={seoInfo.canonical}
+        ogImage={seoInfo.ogImage}
+        ogType="website"
+        schemas={[ORGANIZATION_SCHEMA, courseSchema]}
+      />
+      <Breadcrumbs
+        items={[
+          { label: "Programmes", to: "/programs" },
+          { label: syllabus?.title || "Syllabus" }
+        ]}
+      />
       <PageHero
         label="Programme Syllabus"
         title={syllabus?.title || "Programme details"}

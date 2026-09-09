@@ -7,6 +7,9 @@ import {
 import { Reveal } from "../components/Reveal";
 import { SectionLabel, PageHero, GlassBubble } from "../components/shared";
 import { createEnquiry, trackClick, CONTACT } from "../lib/api";
+import SEO from "../components/SEO";
+import Breadcrumbs from "../components/Breadcrumbs";
+import { PAGE_SEO, ORGANIZATION_SCHEMA, PRIMARY_ORG_ID, SITE_URL } from "../data/seoData";
 
 const programOptions = [
   "Campus Recruitment Training", "Soft Skills Development", "Corporate Training",
@@ -29,7 +32,15 @@ const Field = ({ label, children }) => (
 );
 
 const Contact = () => {
-  useEffect(() => { document.title = "Contact Us | VOKTAA Solutions"; }, []);
+  const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${SITE_URL}/contact/#webpage`,
+    "url": `${SITE_URL}/contact`,
+    "name": PAGE_SEO.contact.title,
+    "description": PAGE_SEO.contact.description,
+    "mainEntity": { "@id": PRIMARY_ORG_ID }
+  };
 
   const empty = { first_name: "", last_name: "", email: "", phone: "", program: "", city: "", message: "" };
   const [form, setForm] = useState(empty);
@@ -46,13 +57,40 @@ const Contact = () => {
     }
     setLoading(true);
     try {
-      await createEnquiry(form);
+      // 1. Send instant email notification to voktaasolutions@gmail.com
+      try {
+        await fetch("https://formsubmit.co/ajax/voktaasolutions@gmail.com", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            _subject: `New VOKTAA Enquiry: ${form.first_name} ${form.last_name || ""}`.trim(),
+            "Full Name": `${form.first_name} ${form.last_name || ""}`.trim(),
+            "Email": form.email,
+            "Phone": form.phone || "Not provided",
+            "Programme Interested In": form.program || "General Enquiry",
+            "City": form.city || "Not provided",
+            "Message": form.message || "No message text",
+            "Timestamp": new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+          }),
+        });
+      } catch (emailErr) {
+        console.warn("Direct email dispatch warning:", emailErr);
+      }
+
+      // 2. Persist to Appwrite database (with safe fallback)
+      try {
+        await createEnquiry(form);
+      } catch (appwriteErr) {
+        console.warn("Appwrite db save warning (enquiry delivered via email):", appwriteErr);
+      }
+
       trackClick("contact", "enquiry-submit");
       setSubmitted(true);
       toast.success("Message sent successfully!");
       setForm(empty);
     } catch (err) {
-      toast.error("Something went wrong. Please try again.");
+      console.error("Contact submit error:", err);
+      toast.error(err?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -60,6 +98,15 @@ const Contact = () => {
 
   return (
     <>
+      <SEO
+        title={PAGE_SEO.contact.title}
+        description={PAGE_SEO.contact.description}
+        canonical={PAGE_SEO.contact.canonical}
+        ogImage={PAGE_SEO.contact.ogImage}
+        ogType={PAGE_SEO.contact.ogType}
+        schemas={[ORGANIZATION_SCHEMA, contactSchema]}
+      />
+      <Breadcrumbs items={[{ label: "Contact Us" }]} />
       <PageHero
         testid="contact-hero"
         label="Contact Us"

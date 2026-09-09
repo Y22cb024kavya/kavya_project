@@ -4,6 +4,14 @@ import { createEnquiry, getEnquiries } from "./enquiries";
 import { getPublicReviews, submitReview, getAllReviewsAdmin, updateReviewStatus, deleteReview } from "./reviews";
 import { getSiteSettings, updateSiteSettings } from "./settings";
 import { uploadMedia, getMediaViewUrl, deleteMedia } from "./storage";
+import {
+  uploadKnowledgeDocument,
+  getKnowledgeDocuments,
+  toggleKnowledgeDocument,
+  deleteKnowledgeDocument,
+  searchKnowledgeBase
+} from "./knowledgeBase";
+import { getCommonConversationResponse } from "./commonConversation";
 
 export const CONTACT = {
   phone: "7416113199",
@@ -52,4 +60,10 @@ export {
   uploadMedia,
   getMediaViewUrl,
   deleteMedia,
+  uploadKnowledgeDocument,
+  getKnowledgeDocuments,
+  toggleKnowledgeDocument,
+  deleteKnowledgeDocument,
+  searchKnowledgeBase,
+  getCommonConversationResponse
 };

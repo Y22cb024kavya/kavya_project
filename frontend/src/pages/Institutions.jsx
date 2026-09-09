@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle2, Building2, Users2, School, ShieldCheck, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem, MaskLine } from "../components/Reveal";
 import { SectionLabel, GoldLink, OutlineLink } from "../components/shared";
+import SEO from "../components/SEO";
+import Breadcrumbs from "../components/Breadcrumbs";
+import { PAGE_SEO, ORGANIZATION_SCHEMA, PRIMARY_ORG_ID, SITE_URL } from "../data/seoData";
 
 const whyPoints = [
   "Customised curriculum matching student skill levels and target companies",
@@ -60,11 +63,33 @@ const Institutions = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Institutional & Campus Placement Training",
+    "serviceType": "Campus Recruitment & Faculty Development Training",
+    "provider": { "@id": PRIMARY_ORG_ID },
+    "areaServed": {
+      "@type": "AdministrativeArea",
+      "name": "Andhra Pradesh"
+    },
+    "description": PAGE_SEO.institutions.description
+  };
+
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
 
   return (
     <>
+      <SEO
+        title={PAGE_SEO.institutions.title}
+        description={PAGE_SEO.institutions.description}
+        canonical={PAGE_SEO.institutions.canonical}
+        ogImage={PAGE_SEO.institutions.ogImage}
+        ogType={PAGE_SEO.institutions.ogType}
+        schemas={[ORGANIZATION_SCHEMA, serviceSchema]}
+      />
+      <Breadcrumbs items={[{ label: "For Institutions" }]} />
       {/* HERO SECTION WITH 3-IMAGE CAROUSEL BESIDE TEXT MATCHING USER REQUEST */}
       <section className="relative bg-gradient-to-br from-purple-100/70 via-indigo-50/40 to-cyan-50/50 pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden border-b border-purple-100/80" data-testid="institutions-hero">
         {/* Ambient Glowing Color Orbs */}

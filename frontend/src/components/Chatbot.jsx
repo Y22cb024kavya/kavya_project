@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MessageSquare, X, Send } from "lucide-react";
-import { trackClick, trackEvent } from "../lib/api";
+import { trackClick, trackEvent, searchKnowledgeBase, getCommonConversationResponse } from "../lib/api";
 import Logo from "./Logo";
 
 const WELCOME = "Hi! I'm the VOKTAA Assistant 👋 Ask me anything about our programmes, how to book a demo, or how to partner with us!";
@@ -32,7 +32,7 @@ const FAQ_KNOWLEDGE = [
   },
 ];
 
-const DEFAULT_REPLY = "Thank you for reaching out! For detailed info on our programmes or custom institution training, please send us a message on our Contact page (/contact) or call us directly at +91 74161 13199.";
+const POLITE_FALLBACK = "I'm sorry, I couldn't find information about that. 😊 You can ask me about VOKTAA Solutions, our training programmes, courses, soft skills, placement preparation, or institutions.";
 
 function getBotReply(userText) {
   const lower = userText.toLowerCase();
@@ -41,7 +41,7 @@ function getBotReply(userText) {
       return item.reply;
     }
   }
-  return DEFAULT_REPLY;
+  return null;
 }
 
 const genSession = () => {
@@ -92,11 +92,36 @@ const Chatbot = () => {
       session_id: sessionId.current,
     }).catch(() => {});
 
-    setTimeout(() => {
-      const reply = getBotReply(text);
-      setMessages((m) => [...m, { role: "bot", text: reply }]);
+    try {
+      // PRIORITY 1 — COMMON CONVERSATION
+      const commonReply = getCommonConversationResponse(text);
+      if (commonReply) {
+        setMessages((m) => [...m, { role: "bot", text: commonReply }]);
+        return;
+      }
+
+      // PRIORITY 2 — KNOWLEDGE BASE SEARCH
+      let reply = await searchKnowledgeBase(text);
+      if (reply) {
+        setMessages((m) => [...m, { role: "bot", text: reply }]);
+        return;
+      }
+
+      // PRIORITY 3 — FAQ SEARCH
+      const faqReply = getBotReply(text);
+      if (faqReply) {
+        setMessages((m) => [...m, { role: "bot", text: faqReply }]);
+        return;
+      }
+
+      // PRIORITY 4 — POLITE FALLBACK
+      setMessages((m) => [...m, { role: "bot", text: POLITE_FALLBACK }]);
+    } catch {
+      const faqReply = getBotReply(text);
+      setMessages((m) => [...m, { role: "bot", text: faqReply || POLITE_FALLBACK }]);
+    } finally {
       setSending(false);
-    }, 400);
+    }
   };
 
   const toggle = () => {

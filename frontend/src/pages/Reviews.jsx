@@ -8,6 +8,9 @@ import {
 import { Reveal, StaggerGroup, StaggerItem } from "../components/Reveal";
 import { SectionLabel, PageHero, StagePedestalDisc } from "../components/shared";
 import { getPublicReviews, submitReview } from "../lib/api";
+import SEO from "../components/SEO";
+import Breadcrumbs from "../components/Breadcrumbs";
+import { PAGE_SEO, ORGANIZATION_SCHEMA, PRIMARY_ORG_ID } from "../data/seoData";
 
 const ROLE_OPTIONS = ["Student", "Placement Officer", "Corporate Professional", "Educator", "Other"];
 const PROGRAM_OPTIONS = [
@@ -77,6 +80,25 @@ const Reviews = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const verifiedCount = reviews.length;
+  const verifiedAvg = verifiedCount > 0
+    ? (reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / verifiedCount).toFixed(1)
+    : "5.0";
+
+  const aggregateSchema = verifiedCount > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "@id": PRIMARY_ORG_ID,
+    "name": "VOKTAA Solutions",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": verifiedAvg,
+      "reviewCount": String(verifiedCount),
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  } : null;
 
   const load = async () => {
     setLoadingList(true);
