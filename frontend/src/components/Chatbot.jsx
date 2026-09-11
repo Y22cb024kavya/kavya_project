@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { X, Send } from "lucide-react";
+import { X, Send, Headset, Sparkles } from "lucide-react";
 import { trackClick, trackEvent, searchKnowledgeBase, getCommonConversationResponse, getSyllabusExpertResponse } from "../lib/api";
 import Logo from "./Logo";
 
@@ -136,34 +136,10 @@ const Chatbot = () => {
     setOpen((v) => !v);
   };
 
-const HeadsetAssistantIcon = ({ className = "w-8 h-8" }) => (
-  <svg viewBox="0 0 100 100" fill="currentColor" className={className}>
-    {/* Headphones headband arc */}
-    <path
-      d="M26 44 C26 22, 74 22, 74 44"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="7"
-      strokeLinecap="round"
-    />
-    {/* Left Earcup */}
-    <rect x="18" y="38" width="10" height="20" rx="4" fill="currentColor" />
-    {/* Right Earcup */}
-    <rect x="72" y="38" width="10" height="20" rx="4" fill="currentColor" />
-    {/* Person Head */}
-    <circle cx="50" cy="44" r="18" fill="currentColor" />
-    {/* Shoulders / Body */}
-    <path
-      d="M20 78 C20 62, 32 58, 50 58 C68 58, 80 62, 80 78 C80 84, 20 84, 20 78 Z"
-      fill="currentColor"
-    />
-  </svg>
-);
-
   return (
     <>
-      {/* Floating trigger with Ask Voktaa label */}
-      <div className="fixed bottom-4 right-4 sm:right-24 z-[60] flex flex-col items-center gap-1 group">
+      {/* Floating trigger side-by-side with WhatsApp button at exact same vertical level */}
+      <div className="fixed bottom-10 right-24 z-[60] flex flex-col items-center">
         <button
           onClick={toggle}
           aria-label={open ? "Close chat" : "Open chat"}
@@ -173,19 +149,28 @@ const HeadsetAssistantIcon = ({ className = "w-8 h-8" }) => (
           {open ? (
             <X size={26} />
           ) : (
-            <HeadsetAssistantIcon className="w-8 h-8 text-white" />
+            <Headset size={28} className="text-white drop-shadow-sm" />
           )}
         </button>
-        <span className="text-[11px] font-bold tracking-wide text-[#003366] bg-white/95 backdrop-blur-md px-2.5 py-0.5 rounded-full shadow-md border border-[#CCE0F5] whitespace-nowrap group-hover:scale-105 transition-all">
-          Ask Voktaa
-        </span>
+        <div className="absolute top-[58px] left-1/2 -translate-x-1/2 pointer-events-none">
+          <div className="flex items-center gap-1.5 bg-[#003366] text-white px-3 py-1 rounded-full shadow-[0_8px_20px_rgba(0,51,102,0.35)] border border-[#68CEDB]/30 transition-all duration-300">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+            </span>
+            <Sparkles className="w-3.5 h-3.5 text-[#68CEDB]" />
+            <span className="text-[11px] font-heading font-extrabold tracking-wider text-white uppercase whitespace-nowrap">
+              Ask VOKTAA
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Chat window */}
       {open && (
         <div
           className="fixed z-[65] bg-white rounded-2xl shadow-[0_25px_60px_rgba(0,51,102,0.25)] border border-[#CCE0F5] overflow-hidden flex flex-col
-                     bottom-24 right-4 sm:right-24 w-[calc(100vw-2rem)] sm:w-[350px] h-[70vh] sm:h-[500px] max-h-[600px]"
+                     bottom-28 right-4 sm:right-24 w-[calc(100vw-2rem)] sm:w-[350px] h-[70vh] sm:h-[500px] max-h-[600px]"
           data-testid="chatbot-window"
         >
           {/* Header */}
