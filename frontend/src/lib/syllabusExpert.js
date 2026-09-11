@@ -257,7 +257,7 @@ export function getSyllabusExpertResponse(userText) {
   // 2. Exact Match / Alias Match for 11 VOKTAA Course Categories
   for (const [key, course] of Object.entries(VOKTAA_COURSES)) {
     if (course.aliases.some((alias) => lower === alias || lower.includes(alias))) {
-      return formatVoktaaCourseResponse(course, lang);
+      return formatVoktaaCourseResponse(course, lower);
     }
   }
 
@@ -281,63 +281,28 @@ export function getSyllabusExpertResponse(userText) {
 
 /**
  * Format Course Category Overview (Single Course Input)
+ * Returns simple bullet points by default unless "detailed syllabus" is explicitly requested.
  */
-function formatVoktaaCourseResponse(course, lang) {
-  if (lang === "telugu" || lang === "teluglish") {
-    return `# 🎓 ${course.title}
+function formatVoktaaCourseResponse(course, lowerQuery) {
+  const isDetailed =
+    lowerQuery.includes("detailed syllabus") ||
+    lowerQuery.includes("detailed overview") ||
+    lowerQuery.includes("full breakdown") ||
+    lowerQuery.includes("detailed breakdown");
 
-**సిలబస్ వర్గీకరణ (Syllabus Classification):** Official VOKTAA Course Content
-
----
-
-### 📚 నేర్చుకునే ప్రధాన సబ్జెక్ట్‌లు (Subjects Covered)
-${course.subjects.map((sub, i) => `${i + 1}. **${sub}**`).join("\n")}
-
----
-
-### 🎯 మీరు ఏమి నేర్చుకుంటారు (What You Will Learn)
-${course.whatYouWillLearn}
-
-### 💼 కెరీర్ మరియు ప్లాస్‌మెంట్ ప్రాముఖ్యత (Career / Placement Relevance)
-${course.relevance}
-
----
-
-🚀 **మరింత సహాయం కోసం నెక్స్ట్ స్టెప్స్ (Explore Further):**
-- 📖 **"Subject-wise explanation"** (ప్రత్యేక సబ్జెక్ట్ వివరణ)
-- 🗓️ **"Detailed syllabus"** (లోతైన సిలబస్)
-- 🎯 **"Study plan"** (స్టడీ ప్లాన్)
-- 💡 **"Practice questions & Interview prep"** (ఇంటర్వ్యూ ప్రశ్నలు)`;
+  if (!isDetailed) {
+    return course.subjects.map((sub) => `* ${sub}`).join("\n");
   }
 
-  return `# 🎓 ${course.title}
+  return `### 📚 Detailed Syllabus: ${course.title}
 
-**Syllabus Classification:** Official VOKTAA Course Content
-
----
-
-### 📚 Subjects Covered
-
-${course.subjects.map((sub, i) => `${i + 1}. **${sub}**`).join("\n")}
-
----
+${course.subjects.map((sub) => `* ${sub}`).join("\n")}
 
 ### 🎯 What You Will Learn
 ${course.whatYouWillLearn}
 
 ### 💼 Career / Placement Relevance
-${course.relevance}
-
----
-
-### 🚀 Explore Further
-Reply with any of these options for deeper guidance:
-1. **Subject-wise explanation** — Detailed breakdown of any subject.
-2. **Detailed syllabus** — Module-by-module learning objectives.
-3. **Learning roadmap** — Step-by-step skill progression.
-4. **Practice questions** — Practical drills and case studies.
-5. **Interview preparation** — Key HR & technical interview questions.
-6. **Study plan** — Structured learning schedule.`;
+${course.relevance}`;
 }
 
 /**
@@ -349,8 +314,6 @@ function formatSubjectExplanationResponse(subject, course, lang) {
 
 **కోర్సు (Course):** ${course.title}  
 **సిలబస్ వర్గీకరణ:** Official VOKTAA Course Content
-
----
 
 📌 **ఈ సబ్జెక్ట్ వివరణ (What It Means):**
 **${subject}** అనేది VOKTAA సొల్యూషన్స్ **${course.title}** కోర్సులో భాగమైన ఒక ముఖ్యమైన సబ్జెక్ట్. ఇది విద్యార్థులు మరియు ప్రొఫెషనల్స్ వర్క్‌ప్లేస్ నైపుణ్యాలను మరియు ప్రాక్టికల్ నాలెడ్జ్‌ను పెంపొందించుకోవడానికి సహాయపడుతుంది.
@@ -365,8 +328,6 @@ function formatSubjectExplanationResponse(subject, course, lang) {
 2. మాక్ సెషన్స్ మరియు రోల్-ప్లే విశ్లేషణ.
 3. ఫీడ్‌బ్యాక్ ఆధారంగా నైపుణ్యాలను మెరుగుపరుచుకోవడం.
 
----
-
 🚀 **నెక్స్ట్ స్టెప్స్ (Explore Further):**
 - 💡 **"${subject} interview questions"**
 - 🗓️ **"${course.title} study plan"**`;
@@ -376,8 +337,6 @@ function formatSubjectExplanationResponse(subject, course, lang) {
 
 **Course:** ${course.title}  
 **Syllabus Classification:** Official VOKTAA Course Content
-
----
 
 ### 📌 What It Means
 **${subject}** is an essential subject under VOKTAA's **${course.title}** module. It focuses on equipping learners with practical application, strategic understanding, and real-world performance capability.
@@ -398,8 +357,6 @@ In today's competitive corporate landscape, mastering **${subject}** directly im
 - **Step 1**: Review the core subject guidelines and structural frameworks.
 - **Step 2**: Participate in VOKTAA's practical mock sessions and role-play exercises.
 - **Step 3**: Incorporate trainer feedback to refine your execution.
-
----
 
 ### 🚀 Explore Further
 Reply with any of these to continue:
@@ -422,8 +379,6 @@ VOKTAA Solutions అందించే 11 ప్రధాన కోర్సు�
 ${Object.values(VOKTAA_COURSES).map((c, i) => `### ${i + 1}. 🎓 ${c.title}
 ${c.subjects.map((sub) => `- ${sub}`).join("\n")}`).join("\n\n")}
 
----
-
 > 💡 మీరు ఏదైనా కోర్సు పేరు (ఉదాహరణకు: **CRT**, **FDP**, **Soft Skills**, **Technical Skills**) టైప్ చేసి దాని లోతైన సిలబస్ చూడవచ్చు.`;
   }
 
@@ -436,8 +391,6 @@ Below are all 11 official VOKTAA course categories and their subjects:
 ${Object.values(VOKTAA_COURSES).map((c, i) => `### ${i + 1}. 🎓 ${c.title}
 
 ${c.subjects.map((sub) => `- **${sub}**`).join("\n")}`).join("\n\n")}
-
----
 
 ### 🚀 Explore Further
 Type any course name (e.g. **"CRT"**, **"Soft Skills"**, **"FDP"**, **"Technical Skills"**, **"Leadership"**) to see its full syllabus, career relevance, and learning objectives!`;

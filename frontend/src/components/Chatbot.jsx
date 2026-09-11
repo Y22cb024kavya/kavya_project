@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MessageSquare, X, Send } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { trackClick, trackEvent, searchKnowledgeBase, getCommonConversationResponse, getSyllabusExpertResponse } from "../lib/api";
 import Logo from "./Logo";
 
@@ -136,17 +136,50 @@ const Chatbot = () => {
     setOpen((v) => !v);
   };
 
+const HeadsetAssistantIcon = ({ className = "w-8 h-8" }) => (
+  <svg viewBox="0 0 100 100" fill="currentColor" className={className}>
+    {/* Headphones headband arc */}
+    <path
+      d="M26 44 C26 22, 74 22, 74 44"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="7"
+      strokeLinecap="round"
+    />
+    {/* Left Earcup */}
+    <rect x="18" y="38" width="10" height="20" rx="4" fill="currentColor" />
+    {/* Right Earcup */}
+    <rect x="72" y="38" width="10" height="20" rx="4" fill="currentColor" />
+    {/* Person Head */}
+    <circle cx="50" cy="44" r="18" fill="currentColor" />
+    {/* Shoulders / Body */}
+    <path
+      d="M20 78 C20 62, 32 58, 50 58 C68 58, 80 62, 80 78 C80 84, 20 84, 20 78 Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
   return (
     <>
-      {/* Floating trigger */}
-      <button
-        onClick={toggle}
-        aria-label={open ? "Close chat" : "Open chat"}
-        data-testid="chatbot-toggle"
-        className="fixed bottom-6 right-24 z-[60] w-14 h-14 rounded-full bg-gradient-to-r from-[#003366] to-[#157082] text-white flex items-center justify-center shadow-[0_10px_30px_rgba(21,112,130,0.45)] hover:scale-110 transition-transform duration-300"
-      >
-        {open ? <X size={24} /> : <MessageSquare size={24} />}
-      </button>
+      {/* Floating trigger with Ask Voktaa label */}
+      <div className="fixed bottom-4 right-4 sm:right-24 z-[60] flex flex-col items-center gap-1 group">
+        <button
+          onClick={toggle}
+          aria-label={open ? "Close chat" : "Open chat"}
+          data-testid="chatbot-toggle"
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-[#003366] to-[#157082] text-white flex items-center justify-center shadow-[0_10px_30px_rgba(21,112,130,0.45)] hover:scale-110 transition-transform duration-300 cursor-pointer"
+        >
+          {open ? (
+            <X size={26} />
+          ) : (
+            <HeadsetAssistantIcon className="w-8 h-8 text-white" />
+          )}
+        </button>
+        <span className="text-[11px] font-bold tracking-wide text-[#003366] bg-white/95 backdrop-blur-md px-2.5 py-0.5 rounded-full shadow-md border border-[#CCE0F5] whitespace-nowrap group-hover:scale-105 transition-all">
+          Ask Voktaa
+        </span>
+      </div>
 
       {/* Chat window */}
       {open && (
