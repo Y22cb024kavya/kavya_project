@@ -151,9 +151,10 @@ const About = () => {
               <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-10 rounded-3xl text-white text-left relative overflow-hidden shadow-[0_20px_50px_rgba(21,112,130,0.3)] border border-[#CCE0F5]/40 backdrop-blur-2xl">
                 <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30 pointer-events-none" />
                 <div className="relative text-left">
-                  <span className="font-heading font-bold text-6xl text-white/70 leading-none block text-left">“</span>
-                  <p className="text-white text-base sm:text-lg leading-relaxed font-bold -mt-4 text-left">
-                    Ours is a training culture, not a tuition culture. Conversations matter here. Participation matters. Practice matters even more.<span className="font-heading font-bold text-6xl text-white/70 inline-block align-middle leading-none ml-1.5">”</span>
+                  <p className="text-white text-base sm:text-lg leading-relaxed font-bold text-left">
+                    <span className="font-heading font-bold text-2xl text-white/70 inline-block align-top mr-1.5 leading-none">“</span>
+                    Ours is a training culture, not a tuition culture. Conversations matter here. Participation matters. Practice matters even more.
+                    <span className="font-heading font-bold text-2xl text-white/70 inline-block align-baseline ml-1.5 leading-none">”</span>
                   </p>
                 </div>
               </div>

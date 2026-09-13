@@ -383,9 +383,10 @@ const Home = () => {
             <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-10 rounded-3xl text-white text-left relative overflow-hidden shadow-[0_20px_50px_rgba(21,112,130,0.3)] border border-[#CCE0F5]/40">
               <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
               <div className="relative text-left">
-                <span className="font-heading font-bold text-6xl text-white/70 leading-none block text-left">“</span>
-                <p className="text-white text-base sm:text-lg leading-relaxed font-bold -mt-4 text-left">
-                  Learning is not merely about acquiring knowledge; it is about transforming potential into performance.<span className="font-heading font-bold text-6xl text-white/70 inline-block align-middle leading-none ml-1.5">”</span>
+                <p className="text-white text-base sm:text-lg leading-relaxed font-bold text-left">
+                  <span className="font-heading font-bold text-2xl text-white/70 inline-block align-top mr-1.5 leading-none">“</span>
+                  Learning is not merely about acquiring knowledge; it is about transforming potential into performance.
+                  <span className="font-heading font-bold text-2xl text-white/70 inline-block align-baseline ml-1.5 leading-none">”</span>
                 </p>
                 <p className="font-mono text-xs uppercase tracking-wide text-teal-200 mt-6 font-bold text-left">VOKTAA Solutions</p>
               </div>

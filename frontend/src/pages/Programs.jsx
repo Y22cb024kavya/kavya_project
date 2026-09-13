@@ -250,10 +250,11 @@ const Programs = () => {
             <div className="card-purple bg-gradient-to-br from-[#003366] via-[#157082] to-[#002244] p-10 rounded-3xl text-white text-left relative overflow-hidden shadow-xl">
               <div className="absolute inset-0 dot-grid dot-grid-fade opacity-30" />
               <div className="relative text-left">
-                <span className="font-heading font-bold text-6xl text-[#68CEDB]/40 leading-none block text-left">“</span>
-                <p className="text-white text-base sm:text-lg leading-relaxed font-bold -mt-4 text-left">
+                <p className="text-white text-base sm:text-lg leading-relaxed font-bold text-left">
+                  <span className="font-heading font-bold text-2xl text-[#68CEDB]/70 inline-block align-top mr-1.5 leading-none">“</span>
                   Practice creates confidence. Ours is a training culture, not a tuition culture: activity-driven,
-                  interactive, and built for involvement, not instruction.<span className="font-heading font-bold text-6xl text-[#68CEDB]/40 inline-block align-middle leading-none ml-1.5">”</span>
+                  interactive, and built for involvement, not instruction.
+                  <span className="font-heading font-bold text-2xl text-[#68CEDB]/70 inline-block align-baseline ml-1.5 leading-none">”</span>
                 </p>
                 <p className="font-mono text-xs uppercase tracking-wide text-[#68CEDB] mt-6 text-left">VOKTAA Solutions</p>
               </div>
