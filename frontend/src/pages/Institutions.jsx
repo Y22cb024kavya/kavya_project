@@ -91,7 +91,7 @@ const Institutions = () => {
       />
       <Breadcrumbs items={[{ label: "For Institutions" }]} />
       {/* HERO SECTION WITH 3-IMAGE CAROUSEL BESIDE TEXT MATCHING USER REQUEST */}
-      <section className="relative bg-gradient-to-br from-purple-100/70 via-indigo-50/40 to-cyan-50/50 pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden border-b border-purple-100/80" data-testid="institutions-hero">
+      <section className="relative bg-gradient-to-br from-purple-100/70 via-indigo-50/40 to-cyan-50/50 pt-16 pb-16 md:pt-20 md:pb-20 overflow-hidden border-b border-purple-100/80" data-testid="institutions-hero">
         {/* Ambient Glowing Color Orbs */}
         <div className="absolute -top-24 -left-24 w-[480px] h-[480px] rounded-full bg-purple-300/35 blur-3xl pointer-events-none" />
         <div className="absolute top-10 -right-20 w-[520px] h-[520px] rounded-full bg-cyan-300/30 blur-3xl pointer-events-none" />
@@ -104,17 +104,17 @@ const Institutions = () => {
               For Institutions
             </span>
 
-            <h1 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight text-purple-950 mb-5">
-              <MaskLine>Partner with us to build an</MaskLine>
+            <h1 className="font-heading font-bold text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-snug text-purple-950 mb-4">
+              <MaskLine>Partner with us to cultivate</MaskLine>
               <MaskLine
                 delay={0.15}
                 className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 block mt-1"
               >
-                industry-confident student body.
+                industry-ready graduates, confident and prepared for real-world success.
               </MaskLine>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-purple-900/80 max-w-2xl text-left font-medium mb-8">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed text-purple-900/80 max-w-2xl text-left font-medium mb-8">
               A partnership designed for Training & Placement Officers, HR heads, and academic decision-makers who want measurable results, not just a workshop.
             </p>
 

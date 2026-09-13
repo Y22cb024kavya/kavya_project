@@ -12,8 +12,8 @@ const ORGANIZATION_SCHEMA = {
   "name": BRAND_NAME,
   "legalName": "VOKTAA Solutions Training Academy",
   "url": SITE_URL,
-  "logo": `${SITE_URL}/voktaa_logo.png`,
-  "image": `${SITE_URL}/voktaa_logo.png`,
+  "logo": `${SITE_URL}/voktaa_icon.png`,
+  "image": `${SITE_URL}/voktaa_icon.png`,
   "description": "VOKTAA Solutions provides industry-focused soft skills, spoken English, public speaking, and campus placement training across Andhra Pradesh.",
   "address": {
     "@type": "PostalAddress",
@@ -34,7 +34,7 @@ const routeMetadata = {
     title: "VOKTAA Solutions | Soft Skills, Spoken English & Placement Training in AP",
     description: "VOKTAA Solutions provides industry-focused soft skills, spoken English, public speaking, and campus placement training across Andhra Pradesh. Empowering learners from classroom to career.",
     canonical: `${SITE_URL}/`,
-    ogImage: `${SITE_URL}/voktaa_logo.png`,
+    ogImage: `${SITE_URL}/voktaa_icon.png`,
     schemas: [
       ORGANIZATION_SCHEMA,
       {
@@ -115,7 +115,7 @@ const routeMetadata = {
     title: "Contact VOKTAA Solutions | Book a Free Demo Class in Guntur, AP",
     description: "Get in touch with VOKTAA Solutions in Guntur, Andhra Pradesh. Call +91 74161 13199, email voktaasolutions@gmail.com, or book a free demo session today.",
     canonical: `${SITE_URL}/contact`,
-    ogImage: `${SITE_URL}/voktaa_logo.png`,
+    ogImage: `${SITE_URL}/voktaa_icon.png`,
     schemas: [ORGANIZATION_SCHEMA]
   }
 };

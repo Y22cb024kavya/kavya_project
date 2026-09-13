@@ -153,7 +153,7 @@ const About = () => {
                 <div className="relative text-left">
                   <span className="font-heading font-bold text-6xl text-white/70 leading-none block text-left">“</span>
                   <p className="text-white text-base sm:text-lg leading-relaxed font-bold -mt-4 text-left">
-                    Ours is a training culture, not a tuition culture. Conversations matter here. Participation matters. Practice matters even more.
+                    Ours is a training culture, not a tuition culture. Conversations matter here. Participation matters. Practice matters even more.<span className="font-heading font-bold text-6xl text-white/70 inline-block align-middle leading-none ml-1.5">”</span>
                   </p>
                 </div>
               </div>
