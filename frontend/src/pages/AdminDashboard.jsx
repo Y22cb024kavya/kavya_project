@@ -4,13 +4,15 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar, PieChart, Pie, Cell,
 } from "recharts";
-import { Eye, EyeOff, Users, Send, MousePointerClick, LogOut, RefreshCw, Download } from "lucide-react";
+import { Eye, EyeOff, Users, Send, MousePointerClick, LogOut, RefreshCw, Download, FileSpreadsheet } from "lucide-react";
 import {
   getAnalyticsData, getSiteSettings, updateSiteSettings, getEnquiries,
   logoutAdmin, clearToken, getCurrentUser,
 } from "../lib/api";
+import { exportToExcel, exportToCSV } from "../lib/excelExport";
 import SEO from "../components/SEO";
 import AdminKnowledgeBase from "../components/AdminKnowledgeBase";
+import AdminContactExcel from "../components/AdminContactExcel";
 
 const GOLD = "#D9A23B";
 const NAVY = "#0B3943";
@@ -85,22 +87,18 @@ const AdminDashboard = () => {
     } catch { /* silent catch */ } finally { setTogglingReviews(false); }
   };
 
+  const exportExcel = async () => {
+    try {
+      const rows = await getEnquiries();
+      exportToExcel(rows);
+    } catch { /* silent catch */ }
+  };
+
   const exportCSV = async () => {
     try {
       const rows = await getEnquiries();
-      const cols = ["first_name", "last_name", "email", "phone", "program", "city", "message", "timestamp"];
-      const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-      const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => esc(r[c])).join(","))].join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `voktaa-enquiries-${new Date().toISOString().slice(0, 10)}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      /* silent catch */
-    }
+      exportToCSV(rows);
+    } catch { /* silent catch */ }
   };
 
   if (loading && !data) {
@@ -119,11 +117,12 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
           <div>
             <span className="font-heading font-bold text-xl tracking-[0.18em] text-white">VOKTAA</span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-purple-300 ml-3">Analytics</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-purple-300 ml-3">Analytics & Admin</span>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/admin/reviews")} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-reviews-link">Reviews →</button>
             <button onClick={load} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-refresh"><RefreshCw size={14} /> Refresh</button>
+            <button onClick={exportExcel} className="flex items-center gap-2 text-emerald-300 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-export-excel"><FileSpreadsheet size={14} /> Excel (.xlsx)</button>
             <button onClick={exportCSV} className="flex items-center gap-2 text-purple-200 hover:text-white font-mono text-xs uppercase tracking-wider" data-testid="admin-export-csv"><Download size={14} /> Export CSV</button>
             <button onClick={logout} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold uppercase tracking-wider text-xs px-4 py-2.5 rounded-xl hover:shadow-lg transition-all" data-testid="admin-logout"><LogOut size={14} /> Logout</button>
           </div>
@@ -165,6 +164,9 @@ const AdminDashboard = () => {
           <Metric icon={MousePointerClick} label="Contact Clicks" value={t.contact_clicks} sub="whatsapp / email / phone" />
           <Metric icon={MousePointerClick} label="Total Clicks" value={t.total_clicks} sub="tracked interactions" />
         </div>
+
+        {/* CONTACT US DATA (EXCEL INTEGRATION) */}
+        <AdminContactExcel />
 
         {/* KNOWLEDGE BASE MANAGEMENT */}
         <AdminKnowledgeBase />

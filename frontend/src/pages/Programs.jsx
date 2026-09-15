@@ -253,8 +253,7 @@ const Programs = () => {
                 <p className="text-white text-base sm:text-lg leading-relaxed font-bold text-left">
                   <span className="font-heading font-bold text-2xl text-[#68CEDB]/70 inline-block align-top mr-1.5 leading-none">“</span>
                   Practice creates confidence. Ours is a training culture, not a tuition culture: activity-driven,
-                  interactive, and built for involvement, not instruction.
-                  <span className="font-heading font-bold text-2xl text-[#68CEDB]/70 inline-block align-baseline ml-1.5 leading-none">”</span>
+                  interactive, and built for involvement, <span className="whitespace-nowrap">not instruction.<span className="font-heading font-bold text-2xl text-[#68CEDB]/70 inline-block align-top ml-1.5 leading-none">”</span></span>
                 </p>
                 <p className="font-mono text-xs uppercase tracking-wide text-[#68CEDB] mt-6 text-left">VOKTAA Solutions</p>
               </div>

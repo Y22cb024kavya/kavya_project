@@ -385,8 +385,7 @@ const Home = () => {
               <div className="relative text-left">
                 <p className="text-white text-base sm:text-lg leading-relaxed font-bold text-left">
                   <span className="font-heading font-bold text-2xl text-white/70 inline-block align-top mr-1.5 leading-none">“</span>
-                  Learning is not merely about acquiring knowledge; it is about transforming potential into performance.
-                  <span className="font-heading font-bold text-2xl text-white/70 inline-block align-baseline ml-1.5 leading-none">”</span>
+                  Learning is not merely about acquiring knowledge; it is about transforming potential into <span className="whitespace-nowrap">performance.<span className="font-heading font-bold text-2xl text-white/70 inline-block align-top ml-1.5 leading-none">”</span></span>
                 </p>
                 <p className="font-mono text-xs uppercase tracking-wide text-teal-200 mt-6 font-bold text-left">VOKTAA Solutions</p>
               </div>
