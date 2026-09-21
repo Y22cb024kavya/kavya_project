@@ -59,7 +59,7 @@ const SEEDED_CHUNKS = [
   {
     documentId: "seed_voktaa_qa_doc",
     chunkIndex: 8,
-    content: "Course Fees, Enrollment & Contact Info: To enroll in a VOKTAA course or enquire about course fees, pricing, or custom batch structures, call/WhatsApp +91 74161 13199, email voktaasolutions@gmail.com, or visit our website at voktaa.com / contact page.",
+    content: "Course Fees, Enrollment & Contact Info: To enroll in a VOKTAA course or enquire about course fees, pricing, or custom batch structures, call/WhatsApp +91 74163 43149, email voktaasolutions@gmail.com, or visit our website at voktaa.com / contact page.",
     isActive: true
   },
   {
@@ -71,13 +71,13 @@ const SEEDED_CHUNKS = [
   {
     documentId: "seed_voktaa_qa_doc",
     chunkIndex: 10,
-    content: "School Students Training: VOKTAA Solutions primarily focuses on college students (engineering & degree graduates) and job aspirants. However, school students interested in building public speaking, spoken English, and foundational confidence can participate in our Speak Bold program. Contact +91 74161 13199 for custom school sessions.",
+    content: "School Students Training: VOKTAA Solutions primarily focuses on college students (engineering & degree graduates) and job aspirants. However, school students interested in building public speaking, spoken English, and foundational confidence can participate in our Speak Bold program. Contact +91 74163 43149 for custom school sessions.",
     isActive: true
   },
   {
     documentId: "seed_voktaa_qa_doc",
     chunkIndex: 11,
-    content: "Institutional Partnerships & MOU: VOKTAA partners with engineering colleges, degree universities, and institutions for tailored campus recruitment training, MOU signing, NAAC/NIRF placement metric support, and faculty development. Visit voktaa.com/institutions or call +91 74161 13199.",
+    content: "Institutional Partnerships & MOU: VOKTAA partners with engineering colleges, degree universities, and institutions for tailored campus recruitment training, MOU signing, NAAC/NIRF placement metric support, and faculty development. Visit voktaa.com/institutions or call +91 74163 43149.",
     isActive: true
   },
   {

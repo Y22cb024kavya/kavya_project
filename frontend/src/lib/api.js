@@ -15,9 +15,9 @@ import { getCommonConversationResponse } from "./commonConversation";
 import { getSyllabusExpertResponse } from "./syllabusExpert";
 
 export const CONTACT = {
-  phone: "7416113199",
-  phoneDisplay: "+91 74161 13199",
-  whatsapp: "917416113199",
+  phone: "7416343149",
+  phoneDisplay: "+91 74163 43149",
+  whatsapp: "917416343149",
   email: "voktaasolutions@gmail.com",
   location: "Guntur, Andhra Pradesh, India",
   website: "www.voktaa.com",

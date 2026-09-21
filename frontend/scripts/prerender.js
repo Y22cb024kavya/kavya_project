@@ -23,7 +23,7 @@ const ORGANIZATION_SCHEMA = {
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+91-7416113199",
+    "telephone": "+91-7416343149",
     "contactType": "customer service",
     "email": "voktaasolutions@gmail.com"
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, Mail, Phone, MapPin, Globe, ArrowRight, Linkedin, Instagram, Youtube, Facebook, AtSign } from "lucide-react";
+import { CheckCircle2, Mail, Phone, MapPin, Globe, ArrowRight, Linkedin, Instagram, Youtube, Facebook, AtSign, MessageCircle, User } from "lucide-react";
 import { toast } from "sonner";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -233,13 +233,46 @@ const Contact = () => {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-purple-800/60">
-                  <SectionLabel dark className="block mb-3">Scheduling & Programme Enquiries</SectionLabel>
-                  <div className="flex items-start gap-3 text-purple-200">
-                    <Phone size={16} className="text-purple-400 mt-0.5 shrink-0" />
-                    <div className="text-sm">
-                      <p className="font-heading font-extrabold text-white text-base">Gowripatnam Kavya</p>
-                      <p className="font-mono text-xs text-purple-300 font-bold mt-0.5">Co-ordinator, VOKTAA Solutions</p>
-                      <a href="mailto:voktaasolutions@gmail.com" className="font-mono text-xs text-purple-200 hover:text-white underline block mt-1">voktaasolutions@gmail.com</a>
+                  <SectionLabel dark className="block mb-4">Scheduling & Programme Enquiries</SectionLabel>
+                  
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/15 shadow-xl hover:border-amber-400/30 transition-all duration-300">
+                    <div className="flex items-center gap-3.5 mb-4">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-500 to-amber-300 text-purple-950 font-bold flex items-center justify-center font-heading text-sm shadow-md shrink-0 border border-amber-200/50">
+                        GK
+                      </div>
+                      <div>
+                        <h4 className="font-heading font-extrabold text-white text-base tracking-tight leading-tight">Gowripatnam Kavya</h4>
+                        <p className="font-mono text-xs text-amber-300/90 font-medium mt-0.5">Co-ordinator, VOKTAA Solutions</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2.5 pt-3 border-t border-white/10">
+                      <a 
+                        href="mailto:voktaasolutions@gmail.com" 
+                        className="flex items-center gap-2.5 px-3.5 py-2.5 bg-purple-900/40 hover:bg-purple-800/60 border border-purple-700/50 hover:border-purple-500/60 rounded-xl text-xs font-mono text-purple-100 hover:text-white transition-all group"
+                      >
+                        <div className="w-6 h-6 rounded-lg bg-purple-500/20 text-amber-300 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <Mail size={13} />
+                        </div>
+                        <span className="truncate">voktaasolutions@gmail.com</span>
+                      </a>
+
+                      <a 
+                        href="https://wa.me/917416343149" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center justify-between px-3.5 py-2.5 bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-500/40 hover:border-emerald-400/60 rounded-xl text-xs font-mono text-emerald-200 hover:text-white transition-all group"
+                      >
+                        <div className="flex items-center gap-2.5 truncate">
+                          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <MessageCircle size={13} />
+                          </div>
+                          <span className="font-bold text-white">+91 74163 43149</span>
+                        </div>
+                        <span className="text-[10px] font-mono uppercase tracking-wider bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30 shrink-0 font-semibold">
+                          WhatsApp
+                        </span>
+                      </a>
                     </div>
                   </div>
                 </div>
