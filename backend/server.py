@@ -12,7 +12,8 @@ from typing import List, Optional
 
 import jwt
 import resend
-from fastapi import FastAPI, APIRouter, Request, HTTPException, Depends, UploadFile, File
+import httpx
+from fastapi import FastAPI, APIRouter, Request, HTTPException, Depends, UploadFile, File, Query
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, EmailStr
@@ -366,6 +367,177 @@ async def chat_with_bot(payload: ChatMessage):
     except Exception as e:
         logger.error("chat error: %s", e)
         raise HTTPException(status_code=502, detail="chat_unavailable")
+
+
+# ------------------------------------------------------------------ WhatsApp Webhook Helper & Routes
+VOKTAA_SYSTEM_PROMPT = """You are the official AI Assistant for VOKTAA Solutions — a premier Soft Skills, CRT (Campus Recruitment Training), Spoken English, and Professional Etiquette Training Academy located in Guntur, Andhra Pradesh, India.
+Founder & CEO: P. RAJA SEKHAR.
+Tagline: Speak. Shine. Succeed.
+Key Offerings: Campus Recruitment Training (CRT), Soft Skills & Spoken English, Public Speaking & Debate, Leadership Development, Corporate Training, Faculty Development Programmes (FDP), Train-the-Trainer (TTT).
+WhatsApp / Call: +91 74161 13199
+Email: voktaasolutions@gmail.com
+Website: https://voktaa.com
+Be professional, polite, encouraging, and helpful. Always invite users to book a free demo session or visit https://voktaa.com/contact."""
+
+
+def get_voktaa_bot_reply(user_text: str) -> str:
+    text = (user_text or "").lower().strip()
+    if any(k in text for k in ["demo", "book", "trial", "schedule", "register", "join", "session", "hi", "hello", "hey"]):
+        return (
+            "Thank you for considering VOKTAA! 🎓\n\n"
+            "VOKTAA Solutions helps engineering graduates, college students, educators, and corporate teams communicate with confidence, think critically, and lead effectively.\n\n"
+            "We offer:\n\n"
+            "• Campus Recruitment Training (CRT)\n"
+            "• Soft Skills Development\n"
+            "• Corporate Training\n"
+            "• Train-the-Trainer\n"
+            "• Career Guidance & Leadership Development\n\n"
+            "What would you like to know more about?\n\n"
+            "1. Book a free demo (https://voktaa.com/contact)\n"
+            "2. Explore our courses (https://voktaa.com/programs)\n"
+            "3. Talk to our team (+91 74161 13199)"
+        )
+    elif any(k in text for k in ["crt", "placement", "campus", "recruitment", "aptitude", "interview", "course", "program", "training"]):
+        return (
+            "VOKTAA Training Programmes 📚\n\n"
+            "• Campus Recruitment Training (CRT): Aptitude, GD, Mock Technical & HR Interviews.\n"
+            "• Soft Skills Development: Spoken English, Communication & Workplace Etiquette.\n"
+            "• Public Speaking & Debate: Stage presence, voice modulation & storytelling.\n"
+            "• Leadership Development: Strategic thinking & team management.\n"
+            "• Corporate & Faculty Training: Customized modules for institutions.\n\n"
+            "Explore all programmes at https://voktaa.com/programs or reply to speak with our team!"
+        )
+    elif any(k in text for k in ["contact", "talk", "team", "phone", "number", "call", "whatsapp", "email"]):
+        return (
+            "Contact VOKTAA Solutions 📞\n\n"
+            "Gowripatnam Kavya (Co-ordinator)\n"
+            "Phone / WhatsApp: +91 74161 13199\n"
+            "Email: voktaasolutions@gmail.com\n"
+            "Website: https://voktaa.com\n"
+            "Location: Guntur, Andhra Pradesh, India"
+        )
+    else:
+        return (
+            "Thank you for contacting VOKTAA Solutions! 🌟 Speak. Shine. Succeed.\n\n"
+            "We provide industry-focused soft skills, spoken English, and campus placement training across Andhra Pradesh.\n\n"
+            "How can we assist you today? Feel free to ask about our training programmes or book a free demo session at https://voktaa.com/contact!"
+        )
+
+
+@api_router.get("/webhook/whatsapp")
+async def verify_whatsapp_webhook(
+    mode: Optional[str] = Query(None, alias="hub.mode"),
+    token: Optional[str] = Query(None, alias="hub.verify_token"),
+    challenge: Optional[str] = Query(None, alias="hub.challenge")
+):
+    """Handles the one-time verification handshake from Meta."""
+    verify_token = os.environ.get("WHATSAPP_VERIFY_TOKEN", "voktaa_whatsapp_verify_123")
+    if mode == "subscribe" and token == verify_token:
+        logger.info("WhatsApp Webhook verified successfully!")
+        try:
+            return int(challenge)
+        except (ValueError, TypeError):
+            return challenge
+    raise HTTPException(status_code=403, detail="Forbidden")
+
+
+@api_router.post("/webhook/whatsapp")
+async def handle_whatsapp_message(request: Request):
+    """Handles incoming messages from WhatsApp users."""
+    logger.info("[STAGE 1] Incoming WhatsApp webhook hit.")
+    try:
+        data = await request.json()
+    except Exception as e:
+        logger.error("[STAGE 1 FAIL] Malformed JSON payload: %s", e)
+        return {"status": "INVALID_JSON"}
+
+    try:
+        entry = data.get("entry", [{}])[0]
+        changes = entry.get("changes", [{}])[0]
+        value = changes.get("value", {})
+
+        # Ignore status updates (delivery, read receipts)
+        if "messages" not in value:
+            statuses = value.get("statuses", [])
+            if statuses:
+                logger.info("[STAGE 1 NOTE] Received status update (delivery/read): %s", statuses[0].get("status"))
+            return {"status": "EVENT_RECEIVED"}
+
+        message_data = value["messages"][0]
+        if message_data.get("type") != "text":
+            logger.info("[STAGE 1 NOTE] Ignoring non-text message type: %s", message_data.get("type"))
+            return {"status": "EVENT_RECEIVED"}
+
+        sender_phone = message_data.get("from", "")
+        incoming_text = message_data.get("text", {}).get("body", "")
+        meta_target_phone_id = value.get("metadata", {}).get("phone_number_id", "")
+
+        logger.info("[STAGE 2] Message parsed. From: %s | Meta Target Phone ID: %s | Text: '%s'", sender_phone, meta_target_phone_id, incoming_text)
+
+        # 1. Generate bot response using AI / Knowledge Base logic
+        bot_reply = None
+        try:
+            llm_key = os.environ.get("EMERGENT_LLM_KEY", "").strip()
+            if llm_key:
+                try:
+                    from emergentintegrations.llm import LlmChat, UserMessage
+                    chat = LlmChat(
+                        api_key=llm_key,
+                        session_id=f"wa-{sender_phone}",
+                        system_message=VOKTAA_SYSTEM_PROMPT,
+                    ).with_model("anthropic", "claude-sonnet-4-5")
+                    bot_reply = await chat.send_message(UserMessage(text=incoming_text))
+                except Exception as ai_err:
+                    logger.warning("[STAGE 3 NOTE] Emergent LLM chat notice: %s. Using VOKTAA bot response fallback.", ai_err)
+                    bot_reply = get_voktaa_bot_reply(incoming_text)
+            else:
+                bot_reply = get_voktaa_bot_reply(incoming_text)
+            logger.info("[STAGE 3] Reply generated successfully.")
+        except Exception as bot_err:
+            logger.error("[STAGE 3 FAIL] Chatbot generation error: %s", bot_err)
+            bot_reply = get_voktaa_bot_reply(incoming_text)
+
+        # 2. Outbound Dispatch to Meta Graph API
+        phone_id = os.environ.get("WHATSAPP_PHONE_ID", "").strip()
+        wa_token = os.environ.get("WHATSAPP_ACCESS_TOKEN", "").strip()
+
+        logger.info("[STAGE 4] Credentials check: WHATSAPP_PHONE_ID=%s | WHATSAPP_ACCESS_TOKEN=%s", "SET" if phone_id else "MISSING", "SET" if wa_token else "MISSING")
+
+        if not phone_id or not wa_token:
+            logger.error("[STAGE 4 FAIL] Missing environment variables on server (WHATSAPP_PHONE_ID or WHATSAPP_ACCESS_TOKEN). Bypassing outbound call.")
+            return {"status": "EVENT_RECEIVED"}
+
+        url = f"https://graph.facebook.com/v21.0/{phone_id}/messages"
+        headers = {
+            "Authorization": f"Bearer {wa_token}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": sender_phone,
+            "type": "text",
+            "text": {
+                "preview_url": False,
+                "body": str(bot_reply)
+            }
+        }
+
+        logger.info("[STAGE 5] Sending POST to Graph API: %s -> Recipient: %s", url, sender_phone)
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.post(url, json=payload, headers=headers)
+            logger.info("[STAGE 6] Meta Response HTTP %s: %s", resp.status_code, resp.text)
+            resp.raise_for_status()
+            logger.info("[SUCCESS] Successfully replied to WhatsApp user: %s", sender_phone)
+
+        return {"status": "EVENT_RECEIVED"}
+
+    except httpx.HTTPStatusError as http_err:
+        logger.error("[STAGE 6 FAIL] Graph API Error: %s - %s", http_err.response.status_code, http_err.response.text)
+        return {"status": "EVENT_RECEIVED"}
+    except Exception as e:
+        logger.error("[FATAL HANDLER ERROR]: %s", e, exc_info=True)
+        return {"status": "EVENT_RECEIVED"}
 
 
 # ------------------------------------------------------------------ Admin Routes
