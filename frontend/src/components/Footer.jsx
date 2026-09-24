@@ -5,11 +5,41 @@ import { trackClick, CONTACT } from "../lib/api";
 import Logo from "./Logo";
 
 const socials = [
-  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/voktaa-undefined-6331a8434/" },
-  { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/voktaasolutions/" },
-  { icon: Youtube, label: "YouTube", href: "#" },
-  { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/search/top?q=voktaa%20solutions" },
-  { icon: AtSign, label: "Threads", href: "#" },
+  {
+    icon: Instagram,
+    label: "Instagram",
+    href: "https://www.instagram.com/voktaasolutions/",
+    bgColor: "bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(238,42,123,0.5)]"
+  },
+  {
+    icon: AtSign,
+    label: "Threads",
+    href: "#",
+    bgColor: "bg-black",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(255,255,255,0.2)]"
+  },
+  {
+    icon: Youtube,
+    label: "YouTube",
+    href: "#",
+    bgColor: "bg-[#FF0000]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(255,0,0,0.5)]"
+  },
+  {
+    icon: Facebook,
+    label: "Facebook",
+    href: "https://www.facebook.com/search/top?q=voktaa%20solutions",
+    bgColor: "bg-[#1877F2]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(24,119,242,0.5)]"
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/voktaa-undefined-6331a8434/",
+    bgColor: "bg-[#0A66C2]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(10,102,194,0.5)]"
+  }
 ];
 
 const explore = [
@@ -40,21 +70,24 @@ const Footer = () => (
         <p className="text-slate-300 text-sm mt-4 leading-relaxed max-w-xs">
           Corporate Learning &amp; Employability Solutions: building confident communicators, skilled professionals, and future-ready leaders.
         </p>
-        <div className="flex gap-3 mt-6">
-          {socials.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target={s.href !== "#" ? "_blank" : undefined}
-              rel={s.href !== "#" ? "noopener noreferrer" : undefined}
-              aria-label={s.label}
-              onClick={() => trackClick("nav", `social-${s.label.toLowerCase()}`)}
-              data-testid={`footer-social-${s.label.toLowerCase()}`}
-              className="w-9 h-9 flex items-center justify-center border border-[#157082]/40 text-teal-200 hover:text-white hover:bg-[#157082] hover:border-[#157082] transition-colors duration-300 rounded-xl"
-            >
-              <s.icon size={16} />
-            </a>
-          ))}
+        <div className="mt-6 pt-4 border-t border-slate-800/80">
+          <p className="font-mono text-xs uppercase tracking-wider text-[#68CEDB] font-bold mb-3">Follow Us</p>
+          <div className="flex items-center gap-3">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.href !== "#" ? "_blank" : undefined}
+                rel={s.href !== "#" ? "noopener noreferrer" : undefined}
+                aria-label={s.label}
+                onClick={() => trackClick("nav", `social-${s.label.toLowerCase()}`)}
+                data-testid={`footer-social-${s.label.toLowerCase()}`}
+                className={`w-9 h-9 rounded-full flex items-center justify-center text-white ${s.bgColor} ${s.hoverShadow} transition-all duration-300 transform hover:-translate-y-1 shadow-md shrink-0`}
+              >
+                <s.icon size={17} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 

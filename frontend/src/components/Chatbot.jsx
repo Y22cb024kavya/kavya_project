@@ -8,7 +8,7 @@ const WELCOME = "Hi! I'm the VOKTAA Assistant 👋 Ask me anything about our pro
 const FAQ_KNOWLEDGE = [
   {
     keywords: ["demo", "book", "trial", "schedule", "register", "join"],
-    reply: "You can book a free demo session by visiting our Contact page (/contact) or messaging us directly on WhatsApp at +91 74163 43149!",
+    reply: "You can book a free demo session by visiting our Contact page (/contact) or messaging us directly on WhatsApp at +91 74161 13199!",
   },
   {
     keywords: ["program", "course", "crt", "soft skill", "training", "syllabus", "subject", "learn"],
@@ -16,7 +16,7 @@ const FAQ_KNOWLEDGE = [
   },
   {
     keywords: ["contact", "email", "phone", "number", "call", "whatsapp", "touch"],
-    reply: "You can reach us at voktaasolutions@gmail.com or call / WhatsApp us at +91 74163 43149.",
+    reply: "You can reach us at voktaasolutions@gmail.com or call / WhatsApp us at +91 74161 13199.",
   },
   {
     keywords: ["location", "address", "city", "where", "guntur", "andhra"],

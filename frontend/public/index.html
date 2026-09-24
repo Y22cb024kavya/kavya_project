@@ -10,8 +10,25 @@
         <!-- Favicons & App Identity -->
         <link rel="icon" type="image/x-icon" href="%PUBLIC_URL%/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon.png" />
+        <link rel="icon" type="image/png" sizes="48x48" href="%PUBLIC_URL%/favicon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <!-- Open Graph (For Social Previews & Search) -->
+        <meta property="og:title" content="VOKTAA Solutions" />
+        <meta property="og:image" content="%PUBLIC_URL%/logo.png" />
+        <meta property="og:url" content="https://voktaa.com" />
+
+        <!-- Force Google to index the new logo using Structured Data (JSON-LD) -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "VOKTAA Solutions",
+          "url": "https://voktaa.com",
+          "logo": "https://voktaa.com/logo.png"
+        }
+        </script>
         
         <!-- Preconnect & Font Optimization for Core Web Vitals -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />

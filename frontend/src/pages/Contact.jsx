@@ -17,11 +17,41 @@ const programOptions = [
 ];
 
 const socials = [
-  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/voktaa-undefined-6331a8434/" },
-  { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/voktaasolutions/" },
-  { icon: Youtube, label: "YouTube", href: "#" },
-  { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/search/top?q=voktaa%20solutions" },
-  { icon: AtSign, label: "Threads", href: "#" },
+  {
+    icon: Instagram,
+    label: "Instagram",
+    href: "https://www.instagram.com/voktaasolutions/",
+    bgColor: "bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(238,42,123,0.5)]"
+  },
+  {
+    icon: AtSign,
+    label: "Threads",
+    href: "#",
+    bgColor: "bg-black",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(255,255,255,0.2)]"
+  },
+  {
+    icon: Youtube,
+    label: "YouTube",
+    href: "#",
+    bgColor: "bg-[#FF0000]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(255,0,0,0.5)]"
+  },
+  {
+    icon: Facebook,
+    label: "Facebook",
+    href: "https://www.facebook.com/search/top?q=voktaa%20solutions",
+    bgColor: "bg-[#1877F2]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(24,119,242,0.5)]"
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/voktaa-undefined-6331a8434/",
+    bgColor: "bg-[#0A66C2]",
+    hoverShadow: "hover:shadow-[0_4px_15px_rgba(10,102,194,0.5)]"
+  }
 ];
 
 const Field = ({ label, children }) => (
@@ -258,19 +288,19 @@ const Contact = () => {
                       </a>
 
                       <a 
-                        href="https://wa.me/917416343149" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="flex items-center justify-between px-3.5 py-2.5 bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-500/40 hover:border-emerald-400/60 rounded-xl text-xs font-mono text-emerald-200 hover:text-white transition-all group"
+                        href="tel:+917416343149"
+                        onClick={() => trackClick("contact", "coordinator_call")}
+                        className="flex items-center justify-between px-3.5 py-2.5 bg-amber-950/40 hover:bg-amber-900/50 border border-amber-500/40 hover:border-amber-400/60 rounded-xl text-xs font-mono text-amber-200 hover:text-white transition-all group"
+                        data-testid="coordinator-call-button"
                       >
                         <div className="flex items-center gap-2.5 truncate">
-                          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                            <MessageCircle size={13} />
+                          <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                            <Phone size={13} />
                           </div>
                           <span className="font-bold text-white">+91 74163 43149</span>
                         </div>
-                        <span className="text-[10px] font-mono uppercase tracking-wider bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30 shrink-0 font-semibold">
-                          WhatsApp
+                        <span className="text-[10px] font-mono uppercase tracking-wider bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30 shrink-0 font-semibold">
+                          Call
                         </span>
                       </a>
                     </div>
@@ -287,20 +317,23 @@ const Contact = () => {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-purple-800/60">
-                  <div className="flex gap-3">
-                    {socials.map((s) => (
-                      <a
-                        key={s.label}
-                        href={s.href}
-                        target={s.href !== "#" ? "_blank" : undefined}
-                        rel={s.href !== "#" ? "noopener noreferrer" : undefined}
-                        aria-label={s.label}
-                        onClick={() => trackClick("nav", `social-${s.label.toLowerCase()}`)}
-                        className="w-9 h-9 flex items-center justify-center border border-purple-500/30 text-purple-200 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-colors rounded-xl"
-                      >
-                        <s.icon size={16} />
-                      </a>
-                    ))}
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <span className="font-heading font-bold text-white text-base">Follow Us</span>
+                    <div className="flex items-center gap-3">
+                      {socials.map((s) => (
+                        <a
+                          key={s.label}
+                          href={s.href}
+                          target={s.href !== "#" ? "_blank" : undefined}
+                          rel={s.href !== "#" ? "noopener noreferrer" : undefined}
+                          aria-label={s.label}
+                          onClick={() => trackClick("nav", `social-${s.label.toLowerCase()}`)}
+                          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white ${s.bgColor} ${s.hoverShadow} transition-all duration-300 transform hover:-translate-y-1 shadow-md shrink-0`}
+                        >
+                          <s.icon size={18} />
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
