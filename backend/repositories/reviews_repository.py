@@ -6,7 +6,7 @@ from database.appwrite_client import (
     APPWRITE_DATABASE_ID,
     APPWRITE_REVIEWS_COLLECTION_ID,
 )
-from repositories import parse_datetime, format_iso, extract_docs, extract_total, _local_store
+from repositories import parse_datetime, format_iso, extract_docs, extract_total, _local_store, save_local_store
 
 logger = logging.getLogger("voktaa.repositories.reviews")
 
@@ -53,6 +53,7 @@ class ReviewRepository:
 
         item = {"id": doc_id, **payload}
         _local_store["reviews"].append(item)
+        save_local_store()
         return item
 
     @staticmethod
@@ -165,6 +166,7 @@ class ReviewRepository:
         for r in _local_store["reviews"]:
             if r["id"] == review_id:
                 r["status"] = status
+                save_local_store()
                 return True
         return False
 
@@ -177,10 +179,14 @@ class ReviewRepository:
                     collection_id=APPWRITE_REVIEWS_COLLECTION_ID,
                     document_id=review_id
                 )
+                # Also remove from local store if present
+                _local_store["reviews"] = [r for r in _local_store["reviews"] if r["id"] != review_id]
+                save_local_store()
                 return True
             except Exception as e:
                 logger.warning("Appwrite delete review error: %s", e)
 
         initial_len = len(_local_store["reviews"])
         _local_store["reviews"] = [r for r in _local_store["reviews"] if r["id"] != review_id]
+        save_local_store()
         return len(_local_store["reviews"]) < initial_len

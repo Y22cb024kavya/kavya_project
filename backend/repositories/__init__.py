@@ -53,11 +53,97 @@ def extract_total(res: Any) -> int:
     return getattr(res, "total", 0)
 
 
-# Shared local fallback store for testing / offline mode
-_local_store = {
-    "users": [],
-    "enquiries": [],
-    "reviews": [],
-    "events": [],
-    "settings": [{"key": "reviews_visible", "value": json.dumps(True)}],
-}
+import os
+
+DB_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "db_store.json")
+
+INITIAL_BASELINE_REVIEWS = [
+    {
+        "id": "r1",
+        "name": "Tejasri Penubothu",
+        "role": "Student",
+        "organisation": "Student",
+        "program": "Soft Skills Development",
+        "rating": 5,
+        "review": "I started using VOKTAA Solutions last week to improve my communication skills, leadership qualities, and interview skills. The training sessions are engaging, well-organized, and easy to understand. The trainers explain every concept clearly with practical examples, which has helped me build confidence. Whenever I had a question, the support team responded quickly and was very helpful. Overall, it has been a great learning experience, and I highly recommend VOKTAA Solutions to anyone looking to improve their soft skills.",
+        "status": "approved",
+        "timestamp": "2026-01-01T00:00:00+00:00",
+    },
+    {
+        "id": "r2",
+        "name": "Sahithi Srinivas S",
+        "role": "Student",
+        "organisation": "Student",
+        "program": "Campus Recruitment Training",
+        "rating": 5,
+        "review": "I started using VOKTAA Solutions last week to fix my communication skills, leadership qualities and Interview Tips. The app is very clean and fast. When I had a question, their online/offline sessions helped my interviews and the support team replied in minutes. Highly recommend.",
+        "status": "approved",
+        "timestamp": "2026-01-02T00:00:00+00:00",
+    },
+    {
+        "id": "r3",
+        "name": "N Venkata Bhargavi",
+        "role": "Student",
+        "organisation": "Student",
+        "program": "Communication Skills",
+        "rating": 5,
+        "review": "This session will definitely be useful for those who want to build a strong foundation on communication skills and also boost them with confidence to face the interviews. I learned a lot of tips which helped me in my interviews.",
+        "status": "approved",
+        "timestamp": "2026-01-03T00:00:00+00:00",
+    },
+    {
+        "id": "r4",
+        "name": "Anumula Abhinaya",
+        "role": "Student",
+        "organisation": "Student",
+        "program": "Public Speaking & Debate",
+        "rating": 5,
+        "review": "The session was very useful and interactive. I learned many things that will help me improve my communication and confidence.",
+        "status": "approved",
+        "timestamp": "2026-01-04T00:00:00+00:00",
+    },
+    {
+        "id": "r5",
+        "name": "VOKTAA Student",
+        "role": "Student",
+        "organisation": "Student",
+        "program": "Soft Skills & Communication",
+        "rating": 5,
+        "review": "I joined the program to improve my communication skills, but I gained much more than that. It helped me become more confident, improve my body language, and interact professionally with others.",
+        "status": "approved",
+        "timestamp": "2026-01-05T00:00:00+00:00",
+    },
+]
+
+
+def load_local_store() -> Dict[str, List[Dict[str, Any]]]:
+    store = {
+        "users": [],
+        "enquiries": [],
+        "reviews": list(INITIAL_BASELINE_REVIEWS),
+        "events": [],
+        "settings": [{"key": "reviews_visible", "value": json.dumps(True)}],
+    }
+    if os.path.exists(DB_FILE_PATH):
+        try:
+            with open(DB_FILE_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict):
+                    for k in store.keys():
+                        if k in data and isinstance(data[k], list):
+                            store[k] = data[k]
+        except Exception:
+            pass
+    return store
+
+
+_local_store = load_local_store()
+
+
+def save_local_store():
+    try:
+        os.makedirs(os.path.dirname(DB_FILE_PATH), exist_ok=True)
+        with open(DB_FILE_PATH, "w", encoding="utf-8") as f:
+            json.dump(_local_store, f, indent=2, ensure_ascii=False)
+    except Exception:
+        pass

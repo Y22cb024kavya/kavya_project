@@ -11,7 +11,10 @@ from datetime import datetime, timezone, timedelta
 from typing import List, Optional
 
 import jwt
-import resend
+try:
+    import resend
+except ImportError:
+    resend = None
 import httpx
 from fastapi import FastAPI, APIRouter, Request, HTTPException, Depends, UploadFile, File, Query
 from fastapi.staticfiles import StaticFiles
@@ -553,12 +556,13 @@ async def submit_review(data: ReviewCreate, request: Request):
         raise HTTPException(status_code=400, detail="Review is too short.")
     doc = data.model_dump()
     doc["ip"] = request.client.host if request.client else ""
-    await ReviewRepository.create(None, doc)
+    created = await ReviewRepository.create(None, doc)
     await EventRepository.create(None, {
         "type": "submission", "category": "review", "label": data.program or data.role,
         "page": "/reviews", "session_id": "", "ip": doc["ip"],
     })
-    return {"ok": True, "message": "Thanks! Your review is now live on the site."}
+    review_id = created.get("id") if isinstance(created, dict) else ""
+    return {"ok": True, "id": review_id, "message": "Thanks! Your review is now live on the site."}
 
 
 @api_router.get("/reviews")

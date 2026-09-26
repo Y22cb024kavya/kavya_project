@@ -1,0 +1,135 @@
+{
+  "users": [
+    {
+      "id": "9005e986-0a67-442b-86bf-3712f5118044",
+      "email": "admin@voktaa.com",
+      "password_hash": "$2b$12$VvfjypV6P18tj2Sir/5tj.Baqjp0/oQx6nCGVnrqn5GhIGjhWLkw6",
+      "name": "P. Raja Sekhar",
+      "role": "admin",
+      "legacy_id": "",
+      "created_at": "2026-09-26T08:59:09.428728+00:00"
+    }
+  ],
+  "enquiries": [],
+  "reviews": [
+    {
+      "id": "r1",
+      "name": "Tejasri Penubothu",
+      "role": "Student",
+      "organisation": "Student",
+      "program": "Soft Skills Development",
+      "rating": 5,
+      "review": "I started using VOKTAA Solutions last week to improve my communication skills, leadership qualities, and interview skills. The training sessions are engaging, well-organized, and easy to understand. The trainers explain every concept clearly with practical examples, which has helped me build confidence. Whenever I had a question, the support team responded quickly and was very helpful. Overall, it has been a great learning experience, and I highly recommend VOKTAA Solutions to anyone looking to improve their soft skills.",
+      "status": "approved",
+      "timestamp": "2026-01-01T00:00:00+00:00"
+    },
+    {
+      "id": "r2",
+      "name": "Sahithi Srinivas S",
+      "role": "Student",
+      "organisation": "Student",
+      "program": "Campus Recruitment Training",
+      "rating": 5,
+      "review": "I started using VOKTAA Solutions last week to fix my communication skills, leadership qualities and Interview Tips. The app is very clean and fast. When I had a question, their online/offline sessions helped my interviews and the support team replied in minutes. Highly recommend.",
+      "status": "approved",
+      "timestamp": "2026-01-02T00:00:00+00:00"
+    },
+    {
+      "id": "r3",
+      "name": "N Venkata Bhargavi",
+      "role": "Student",
+      "organisation": "Student",
+      "program": "Communication Skills",
+      "rating": 5,
+      "review": "This session will definitely be useful for those who want to build a strong foundation on communication skills and also boost them with confidence to face the interviews. I learned a lot of tips which helped me in my interviews.",
+      "status": "approved",
+      "timestamp": "2026-01-03T00:00:00+00:00"
+    },
+    {
+      "id": "r4",
+      "name": "Anumula Abhinaya",
+      "role": "Student",
+      "organisation": "Student",
+      "program": "Public Speaking & Debate",
+      "rating": 5,
+      "review": "The session was very useful and interactive. I learned many things that will help me improve my communication and confidence.",
+      "status": "approved",
+      "timestamp": "2026-01-04T00:00:00+00:00"
+    },
+    {
+      "id": "ad22fd07-a58a-4637-91b2-0c9e2022d36d",
+      "name": "Student A",
+      "email": "studenta@example.com",
+      "phone": "",
+      "role": "Student",
+      "organisation": "VOKTAA Academy",
+      "program": "Soft Skills Development",
+      "rating": 5,
+      "review": "Great soft skills training. The sessions improved my communication and confidence.",
+      "status": "approved",
+      "timestamp": "2026-09-26T08:54:29.267704+00:00",
+      "ip": "testclient",
+      "legacy_id": ""
+    },
+    {
+      "id": "a8e963df-d50f-4ecc-af4e-a407f556e90a",
+      "name": "Student A",
+      "email": "studenta@example.com",
+      "phone": "",
+      "role": "Student",
+      "organisation": "VOKTAA Academy",
+      "program": "Soft Skills Development",
+      "rating": 5,
+      "review": "Great soft skills training. The sessions improved my communication and confidence.",
+      "status": "approved",
+      "timestamp": "2026-09-26T08:55:21.628959+00:00",
+      "ip": "testclient",
+      "legacy_id": ""
+    },
+    {
+      "id": "e4ba2b02-e714-437f-8928-5ec1120f6991",
+      "name": "Student A",
+      "email": "studenta@example.com",
+      "phone": "",
+      "role": "Student",
+      "organisation": "VOKTAA Academy",
+      "program": "Soft Skills Development",
+      "rating": 5,
+      "review": "Great soft skills training. The sessions improved my communication and confidence.",
+      "status": "approved",
+      "timestamp": "2026-09-26T08:57:30.851192+00:00",
+      "ip": "testclient",
+      "legacy_id": ""
+    }
+  ],
+  "events": [
+    {
+      "id": "691a97c0-f0a9-4299-85ac-9b7050b7f28d",
+      "type": "submission",
+      "category": "review",
+      "label": "Soft Skills Development",
+      "page": "/reviews",
+      "session_id": "",
+      "timestamp": "2026-09-26T08:59:13.708322+00:00",
+      "ip": "testclient",
+      "legacy_id": ""
+    },
+    {
+      "id": "0dfe94b7-19e9-45e5-9731-1b00c8c10e87",
+      "type": "submission",
+      "category": "review",
+      "label": "Soft Skills Development",
+      "page": "/reviews",
+      "session_id": "",
+      "timestamp": "2026-09-26T09:27:16.441563+00:00",
+      "ip": "testclient",
+      "legacy_id": ""
+    }
+  ],
+  "settings": [
+    {
+      "key": "reviews_visible",
+      "value": "true"
+    }
+  ]
+}
