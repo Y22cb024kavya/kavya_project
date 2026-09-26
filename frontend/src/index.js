@@ -4,6 +4,23 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/index.css";
 import App from "@/App";
 
+// Safe requestAnimationFrame wrapper for ResizeObserver to prevent synchronous layout feedback loops
+if (typeof window !== "undefined" && window.ResizeObserver) {
+  const NativeResizeObserver = window.ResizeObserver;
+  window.ResizeObserver = class extends NativeResizeObserver {
+    constructor(callback) {
+      let rafId = null;
+      const safeCallback = (entries, observer) => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          callback(entries, observer);
+        });
+      };
+      super(safeCallback);
+    }
+  };
+}
+
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);

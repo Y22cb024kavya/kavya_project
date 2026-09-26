@@ -12,21 +12,33 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     let lenis;
-    let raf;
+    let rafId;
+    let resizeRafId;
     try {
-      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+      lenis = new Lenis({ duration: 1.1, smoothWheel: true, autoResize: false });
       const loop = (time) => {
         if (lenis) lenis.raf(time);
-        raf = requestAnimationFrame(loop);
+        rafId = requestAnimationFrame(loop);
       };
-      raf = requestAnimationFrame(loop);
+      rafId = requestAnimationFrame(loop);
+
+      const handleResize = () => {
+        if (resizeRafId) cancelAnimationFrame(resizeRafId);
+        resizeRafId = requestAnimationFrame(() => {
+          if (lenis) lenis.resize();
+        });
+      };
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        if (resizeRafId) cancelAnimationFrame(resizeRafId);
+        window.removeEventListener("resize", handleResize);
+        if (lenis) lenis.destroy();
+      };
     } catch (e) {
       console.warn("Lenis smooth scroll warning:", e);
     }
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      if (lenis) lenis.destroy();
-    };
   }, []);
 
   useEffect(() => {

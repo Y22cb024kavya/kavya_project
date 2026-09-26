@@ -13,6 +13,7 @@ import { exportToExcel, exportToCSV } from "../lib/excelExport";
 import SEO from "../components/SEO";
 import AdminKnowledgeBase from "../components/AdminKnowledgeBase";
 import AdminContactExcel from "../components/AdminContactExcel";
+import AdminReviewManagement from "../components/AdminReviewManagement";
 
 const GOLD = "#D9A23B";
 const NAVY = "#0B3943";
@@ -30,7 +31,7 @@ const Metric = ({ icon: Icon, label, value, sub }) => (
 );
 
 const Panel = ({ title, children }) => (
-  <div className="card-purple bg-white border border-purple-100 p-6 rounded-2xl shadow-sm">
+  <div className="card-purple bg-white border border-purple-100 p-6 rounded-2xl shadow-sm min-w-0 w-full overflow-hidden">
     <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-purple-950 mb-6">{title}</h3>
     {children}
   </div>
@@ -171,11 +172,14 @@ const AdminDashboard = () => {
         {/* KNOWLEDGE BASE MANAGEMENT */}
         <AdminKnowledgeBase />
 
+        {/* REVIEW MODERATION & REMOVAL */}
+        <AdminReviewManagement />
+
         {/* charts */}
         <div className="grid lg:grid-cols-3 gap-6 mb-6">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 min-w-0">
             <Panel title="Visits · Last 14 Days">
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={280} debounce={50} minWidth={0} minHeight={0}>
                 <AreaChart data={data.visits_over_time}>
                   <defs>
                     <linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
@@ -195,7 +199,7 @@ const AdminDashboard = () => {
 
           <Panel title="Program Interest">
             {programData.length ? (
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={280} debounce={50} minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie data={programData} dataKey="count" nameKey="program" cx="50%" cy="50%" outerRadius={95} label={(e) => e.program}>
                     {programData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
@@ -210,7 +214,7 @@ const AdminDashboard = () => {
         <div className="grid lg:grid-cols-2 gap-6 mb-6">
           <Panel title="Page Views by Route">
             {data.page_views.length ? (
-              <ResponsiveContainer width="100%" height={240}>
+              <ResponsiveContainer width="100%" height={240} debounce={50} minWidth={0} minHeight={0}>
                 <BarChart data={data.page_views}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e6e0d5" vertical={false} />
                   <XAxis dataKey="page" tick={{ fontSize: 11, fontFamily: "IBM Plex Mono" }} stroke="#9a9384" />
@@ -224,7 +228,7 @@ const AdminDashboard = () => {
 
           <Panel title="Program Clicks (interest signals)">
             {data.program_clicks.length ? (
-              <ResponsiveContainer width="100%" height={240}>
+              <ResponsiveContainer width="100%" height={240} debounce={50} minWidth={0} minHeight={0}>
                 <BarChart data={data.program_clicks} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#e6e0d5" horizontal={false} />
                   <XAxis type="number" allowDecimals={false} tick={{ fontSize: 11, fontFamily: "IBM Plex Mono" }} stroke="#9a9384" />

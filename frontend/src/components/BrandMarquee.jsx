@@ -7,7 +7,7 @@ const items = [
 ];
 
 const BrandMarquee = () => (
-  <div className="bg-navy-deep border-y border-gold/20 py-5 overflow-hidden" data-testid="brand-marquee">
+  <div className="bg-navy-deep border-y border-gold/20 py-5 overflow-hidden w-full min-w-0" data-testid="brand-marquee">
     <Marquee speed={38} gradient={false} autoFill>
       {items.map((t, i) => (
         <span key={i} className="marquee-item font-mono uppercase text-gold-light/80 text-lg md:text-2xl tracking-[0.35em] mx-8 flex items-center">
