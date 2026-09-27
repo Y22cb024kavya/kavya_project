@@ -46,6 +46,8 @@ class AuthService:
         token = create_access_token(user.id, user.email)
         return {
             "token": token,
+            "access_token": token,
+            "token_type": "bearer",
             "user": {"email": user.email, "name": user.name, "role": user.role}
         }
 

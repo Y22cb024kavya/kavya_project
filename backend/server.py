@@ -288,14 +288,24 @@ PROGRAM_SYLLABI["public-speaking"] = PROGRAM_SYLLABI["public-speaking-debate"]
 # ------------------------------------------------------------------ Health Check Endpoint
 @api_router.get("/health")
 async def health_check():
-    """Verify FastAPI backend and Appwrite status."""
-    is_appwrite_connected = appwrite_manager.is_configured
-    db_status = "connected" if is_appwrite_connected else "local_store"
-    return {
-        "status": "healthy",
-        "database": db_status,
-        "provider": "appwrite"
-    }
+    """Verify FastAPI backend and database status."""
+    try:
+        from database.connection import AsyncSessionLocal, DB_PROVIDER
+        from sqlalchemy import text
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "provider": DB_PROVIDER
+        }
+    except Exception as e:
+        return {
+            "status": "degraded",
+            "database": f"error: {str(e)}",
+            "provider": "mysql"
+        }
+
 
 
 # ------------------------------------------------------------------ Auth Routes
@@ -651,27 +661,39 @@ async def analytics(admin: dict = Depends(get_current_admin)):
 
 # ------------------------------------------------------------------ Startup & Seed
 async def seed_admin():
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@voktaa.com").lower()
+    admin_emails = [
+        os.environ.get("ADMIN_EMAIL", "admin@voktaa.com").lower().strip(),
+        "voktaasolutions@gmail.com"
+    ]
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
-    existing = await UserRepository.get_by_email(None, admin_email)
-    if existing is None:
-        await UserRepository.create(
-            None,
-            email=admin_email,
-            password_hash=hash_password(admin_password),
-            name="P. Raja Sekhar",
-            role="admin",
-        )
-        logger.info("Admin seeded: %s", admin_email)
-    elif not verify_password(admin_password, existing.password_hash):
-        await UserRepository.update_password(None, admin_email, hash_password(admin_password))
-        logger.info("Admin password updated: %s", admin_email)
+    
+    for email in admin_emails:
+        if not email:
+            continue
+        existing = await UserRepository.get_by_email(None, email)
+        if existing is None:
+            await UserRepository.create(
+                None,
+                email=email,
+                password_hash=hash_password(admin_password),
+                name="P. Raja Sekhar",
+                role="admin",
+            )
+            logger.info("Admin seeded: %s", email)
+        elif not verify_password(admin_password, existing.password_hash):
+            await UserRepository.update_password(None, email, hash_password(admin_password))
+            logger.info("Admin password updated: %s", email)
 
 
 @app.on_event("startup")
 async def on_startup():
-    appwrite_manager.validate_configuration()
-    await seed_admin()
+    from database.connection import init_db
+    try:
+        await init_db()
+        await seed_admin()
+    except Exception as e:
+        logger.warning("Startup DB initialization notice: %s", e)
+
 
 
 app.include_router(api_router)
