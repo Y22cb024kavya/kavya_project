@@ -1,63 +1,50 @@
-import { account } from "./appwrite";
-
-const MASTER_PASSWORDS = ["VoktaaAdmin2026!", "voktaa2026", "voktaa123"];
-
 export async function loginAdmin(email, password) {
-  const cleanEmail = (email || "").trim().toLowerCase();
-  const cleanPass = (password || "").trim();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+  const res = await fetch(`${backendUrl}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
-  // 1. Check Master Admin Credentials Fallback
-  if (MASTER_PASSWORDS.includes(cleanPass)) {
-    const masterUser = {
-      $id: "master_admin_" + Date.now(),
-      name: "VOKTAA Solutions Admin",
-      email: cleanEmail || "voktaasolutions@gmail.com"
-    };
-    const masterSession = { $id: "master_session" };
-    localStorage.setItem("voktaa_token", masterUser.$id);
-    return { session: masterSession, user: masterUser };
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    throw new Error("API routing error: Backend returned non-JSON response. Ensure /api/ is routed to FastAPI backend.");
   }
 
-  // 2. Appwrite Cloud Session Authentication
-  try {
-    try {
-      await account.deleteSession("current");
-    } catch {
-      /* ignore if no session active */
-    }
-    const session = await account.createEmailPasswordSession(email, password);
-    const user = await account.get();
-    localStorage.setItem("voktaa_token", user.$id);
-    return { session, user };
-  } catch (err) {
-    throw new Error(err.message || "Invalid email or password");
+  if (!res.ok) {
+    const errJson = await res.json().catch(() => ({}));
+    throw new Error(errJson.detail || "Invalid email or password");
   }
+
+  const data = await res.json();
+  const token = data.access_token || data.token;
+  if (token) {
+    localStorage.setItem("voktaa_token", token);
+  }
+  return data;
 }
 
 export async function logoutAdmin() {
   localStorage.removeItem("voktaa_token");
-  try {
-    await account.deleteSession("current");
-  } catch (err) {
-    console.warn("Logout session error:", err);
-  }
 }
 
 export async function getCurrentUser() {
   const token = localStorage.getItem("voktaa_token");
-  if (token && token.startsWith("master_admin")) {
-    return {
-      $id: token,
-      name: "VOKTAA Solutions Admin",
-      email: "voktaasolutions@gmail.com"
-    };
-  }
+  if (!token) return null;
 
   try {
-    return await account.get();
-  } catch {
-    return token ? { $id: token, name: "VOKTAA Admin", email: "voktaasolutions@gmail.com" } : null;
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
+    const res = await fetch(`${backendUrl}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn("Fetch current user error:", err);
   }
+
+  return null;
 }
 
 export async function isAuthenticated() {

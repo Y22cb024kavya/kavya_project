@@ -17,8 +17,16 @@
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 4. Fallback to route index.html if pre-rendered, otherwise main index.html
+  # 4. Fallback to route index.html if pre-rendered, otherwise main index.html (EXCLUDING /api/ routes)
+  RewriteCond %{REQUEST_URI} !^/api/ [NC]
   RewriteRule ^ index.html [L]
+</IfModule>
+
+# Reverse Proxy /api/ requests to local FastAPI backend process
+<IfModule mod_proxy.c>
+  ProxyPreserveHost On
+  ProxyPass /api/ http://127.0.0.1:8000/api/
+  ProxyPassReverse /api/ http://127.0.0.1:8000/api/
 </IfModule>
 
 # Security & SEO Headers for Admin Routes
