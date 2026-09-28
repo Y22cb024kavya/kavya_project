@@ -13,7 +13,7 @@ logger = logging.getLogger("voktaa.appwrite")
 APPWRITE_ENDPOINT = os.environ.get("APPWRITE_ENDPOINT", "https://fra.cloud.appwrite.io/v1").strip()
 APPWRITE_PROJECT_ID = os.environ.get("APPWRITE_PROJECT_ID", "").strip()
 APPWRITE_API_KEY = os.environ.get("APPWRITE_API_KEY", "").strip()
-APPWRITE_DATABASE_ID = os.environ.get("APPWRITE_DATABASE_ID", "voktaa_production").strip()
+APPWRITE_DATABASE_ID = os.environ.get("APPWRITE_DATABASE_ID", "6a9e62d20038b6046ebf").strip()
 APPWRITE_BUCKET_ID = os.environ.get("APPWRITE_BUCKET_ID", os.environ.get("APPWRITE_STORAGE_BUCKET_ID", "media_uploads")).strip()
 
 APPWRITE_ENQUIRIES_COLLECTION_ID = os.environ.get("APPWRITE_ENQUIRIES_COLLECTION_ID", "6a9e62ea003a27aa71c1").strip()
