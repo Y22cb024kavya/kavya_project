@@ -313,8 +313,15 @@ async def health_check():
 async def login(data: LoginInput):
     res = await auth_service.authenticate_user(data.email, data.password)
     if not res:
+        try:
+            await seed_admin()
+            res = await auth_service.authenticate_user(data.email, data.password)
+        except Exception as seed_err:
+            logger.warning("Lazy seed_admin attempt notice: %s", seed_err)
+    if not res:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     return res
+
 
 
 @api_router.get("/auth/me")
@@ -661,10 +668,17 @@ async def analytics(admin: dict = Depends(get_current_admin)):
 
 # ------------------------------------------------------------------ Startup & Seed
 async def seed_admin():
+    from database.connection import init_db
+    try:
+        await init_db()
+    except Exception as e:
+        logger.warning("init_db notice inside seed_admin: %s", e)
+
     admin_emails = [
         os.environ.get("ADMIN_EMAIL", "admin@voktaa.com").lower().strip(),
         "voktaasolutions@gmail.com"
     ]
+
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
     
     for email in admin_emails:
