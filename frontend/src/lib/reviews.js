@@ -20,7 +20,8 @@ export async function getPublicReviews() {
   try {
     const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
     const res = await fetch(`${backendUrl}/api/reviews`);
-    if (res.ok) {
+    const contentType = res.headers.get("content-type") || "";
+    if (res.ok && contentType.includes("application/json")) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         return data.filter(isRealReview);
@@ -48,15 +49,38 @@ export async function submitReview(data) {
   };
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
-  const res = await fetch(`${backendUrl}/api/reviews`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(doc),
-  });
+  let res;
+
+  try {
+    res = await fetch(`${backendUrl}/api/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(doc),
+    });
+  } catch (netErr) {
+    throw new Error(
+      "Network connection error: Unable to connect to review service. Please try again later."
+    );
+  }
+
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      "API routing error: Backend returned non-JSON response. Ensure /api/ is routed to FastAPI backend."
+    );
+  }
 
   if (!res.ok) {
     const errJson = await res.json().catch(() => ({}));
-    throw new Error(errJson.detail || "Failed to submit review.");
+    if (errJson.detail) {
+      throw new Error(errJson.detail);
+    }
+    if (res.status === 422) {
+      throw new Error("Invalid review submission. Please check all required fields.");
+    } else if (res.status >= 500) {
+      throw new Error("Server error saving review. Please try again later.");
+    }
+    throw new Error(`Failed to submit review (HTTP ${res.status}).`);
   }
 
   const resData = await res.json();
@@ -71,7 +95,8 @@ export async function getAllReviewsAdmin() {
       const res = await fetch(`${backendUrl}/api/admin/reviews`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.ok) {
+      const contentType = res.headers.get("content-type") || "";
+      if (res.ok && contentType.includes("application/json")) {
         return await res.json();
       }
     }
@@ -86,14 +111,19 @@ export async function updateReviewStatus(id, status) {
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
   const token = localStorage.getItem("voktaa_token");
   if (token) {
-    const res = await fetch(`${backendUrl}/api/admin/reviews/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status }),
-    });
+    let res;
+    try {
+      res = await fetch(`${backendUrl}/api/admin/reviews/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status }),
+      });
+    } catch (netErr) {
+      throw new Error("Network error updating review status.");
+    }
 
     if (!res.ok) {
       throw new Error("Failed to update review status.");
@@ -106,10 +136,15 @@ export async function deleteReview(id) {
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
   const token = localStorage.getItem("voktaa_token");
   if (token) {
-    const res = await fetch(`${backendUrl}/api/admin/reviews/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    let res;
+    try {
+      res = await fetch(`${backendUrl}/api/admin/reviews/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (netErr) {
+      throw new Error("Network error deleting review.");
+    }
 
     if (!res.ok) {
       throw new Error("Failed to delete review.");

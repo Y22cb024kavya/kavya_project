@@ -1,19 +1,43 @@
 export async function loginAdmin(email, password) {
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
-  const res = await fetch(`${backendUrl}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+  let res;
+
+  try {
+    res = await fetch(`${backendUrl}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+  } catch (netErr) {
+    throw new Error(
+      "Network connection error: Unable to reach backend API. Please verify server status and network settings."
+    );
+  }
 
   const contentType = res.headers.get("content-type") || "";
   if (!contentType.includes("application/json")) {
-    throw new Error("API routing error: Backend returned non-JSON response. Ensure /api/ is routed to FastAPI backend.");
+    throw new Error(
+      "API routing error: Backend returned non-JSON response. Ensure /api/ is routed to FastAPI backend."
+    );
   }
 
   if (!res.ok) {
     const errJson = await res.json().catch(() => ({}));
-    throw new Error(errJson.detail || "Invalid email or password");
+    if (errJson.detail) {
+      throw new Error(errJson.detail);
+    }
+    if (res.status === 401) {
+      throw new Error("Invalid email or password.");
+    } else if (res.status === 403) {
+      throw new Error("Access denied. Admin privileges required.");
+    } else if (res.status === 404) {
+      throw new Error("Authentication endpoint not found.");
+    } else if (res.status === 422) {
+      throw new Error("Invalid email format or missing password.");
+    } else if (res.status >= 500) {
+      throw new Error("Server error. Please try again later.");
+    }
+    throw new Error(`Authentication failed (HTTP ${res.status}).`);
   }
 
   const data = await res.json();
@@ -37,7 +61,8 @@ export async function getCurrentUser() {
     const res = await fetch(`${backendUrl}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (res.ok) {
+    const contentType = res.headers.get("content-type") || "";
+    if (res.ok && contentType.includes("application/json")) {
       return await res.json();
     }
   } catch (err) {
